@@ -1,6 +1,6 @@
 <template>
   <u-navbar :is-back="false" :background="navBarBg" :border-bottom="false">
-    <view class="slot-wrap">
+    <view pl-28rpx>
       <view
         flex
         items-center

@@ -27,8 +27,4 @@ const { hello } = useAppStore()
 console.log(hello)
 </script>
 
-<style>
-.slot-wrap {
-  padding-left: 28rpx;
-}
-</style>
+<style></style>
