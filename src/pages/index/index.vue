@@ -12,7 +12,6 @@
 import { ref } from 'vue'
 import { get } from '@/api/request'
 import { useAppStore } from '@/store/modules/app'
-import NavBar from '@/components/nav-bar.vue'
 
 // import request from '@/api/request'
 const title = ref('Hello')

@@ -1,22 +1,24 @@
 <template>
   <u-navbar :is-back="false" :background="navBarBg" :border-bottom="false">
-    <view class="slot-wrap" relative>
-      <input
-        type="text"
-        w-360rpx
-        h-64rpx
-        pl-86rpx
+    <view class="slot-wrap">
+      <view
+        flex
+        items-center
         rounded-32rpx
         bg-white
-        placeholder-style="color:#B8B8B8"
-        placeholder="搜索比赛组队信息"
-      />
-      <i
-        class="iconfont icon-sousuo text-44rpx text-#B8B8B8"
-        absolute
-        top-8rpx
-        left-52rpx
-      ></i>
+        pl-20rpx
+        class="text-#B8B8B8"
+      >
+        <i class="iconfont icon-sousuo text-44rpx"></i>
+        <input
+          type="text"
+          w-340rpx
+          h-64rpx
+          pl-24rpx
+          placeholder-style="color:#B8B8B8"
+          placeholder="搜索比赛组队信息"
+        />
+      </view>
     </view>
   </u-navbar>
 </template>
