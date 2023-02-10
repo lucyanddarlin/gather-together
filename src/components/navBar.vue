@@ -1,5 +1,5 @@
 <template>
-  <u-navbar :is-back="false" :background="navBarBg">
+  <u-navbar :is-back="false" :background="navBarBg" :border-bottom="false">
     <view class="slot-wrap" relative>
       <input
         type="text"
