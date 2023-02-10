@@ -26,8 +26,4 @@ const navBarBg = {
 }
 </script>
 
-<style scoped>
-.slot-wrap {
-  padding-left: 28rpx;
-}
-</style>
+<style scoped></style>

@@ -1,6 +1,6 @@
 <template>
   <view class="content">
-    <navBar></navBar>
+    <NavBar></NavBar>
     <view text-100px class="text-area text-red">
       <view> sd dasdasdsadasdasd </view>
       <text class="title">{{ title }}</text>
@@ -12,7 +12,7 @@
 import { ref } from 'vue'
 import { get } from '@/api/request'
 import { useAppStore } from '@/store/modules/app'
-import navBar from '@/components/navBar.vue'
+import NavBar from '@/components/nav-bar.vue'
 
 // import request from '@/api/request'
 const title = ref('Hello')
@@ -28,4 +28,8 @@ const { hello } = useAppStore()
 console.log(hello)
 </script>
 
-<style></style>
+<style>
+.slot-wrap {
+  padding-left: 28rpx;
+}
+</style>
