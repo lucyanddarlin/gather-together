@@ -1,5 +1,6 @@
 <template>
   <view class="content">
+    <navBar></navBar>
     <view text-100px class="text-area text-red">
       <view> sd dasdasdsadasdasd </view>
       <text class="title">{{ title }}</text>
@@ -11,6 +12,7 @@
 import { ref } from 'vue'
 import { get } from '@/api/request'
 import { useAppStore } from '@/store/modules/app'
+import navBar from '@/components/navBar.vue'
 
 // import request from '@/api/request'
 const title = ref('Hello')
