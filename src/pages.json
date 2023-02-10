@@ -1,4 +1,10 @@
 {
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^u-(.*)": "./uni_modules/vk-uview-ui/components/u-$1/u-$1.vue"
+    }
+  },
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index",
@@ -19,6 +25,19 @@
 			}
 		}
 	],
+  "subPackages": [
+    {
+      "root": "pagesSub",
+      "pages": [
+        {
+          "path": "testSub/index",
+          "style": {
+            "navigationBarTitleText": "test"
+          }
+        }
+      ]
+    }
+  ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

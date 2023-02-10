@@ -1,13 +1,18 @@
 {
   "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
     "lib": ["esnext", "dom"],
-    "types": ["@dcloudio/types"]
+    "types": ["@dcloudio/types","@uni-helper/uni-app-types","@uni-helper/uni-ui-types"]
+  },
+  "vueCompilerOptions": {
+    "experimentalRuntimeMode": "runtime-uni-app",
+    "nativeTags": ["block", "component", "template", "slot"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

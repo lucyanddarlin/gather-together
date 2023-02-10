@@ -11,13 +11,11 @@ type RequestData<T> = {
 }
 //请求设置
 type RequestConfig = {
-  /** 父路径 */
+  port?: string
   baseUrl?: string
-  /** 请求头 */
   header?: any
   /** 是否加载 */
   loading?: boolean
-  /** 传递的data数据类型 */
   dataType?: string
 }
 //返回数据类型
@@ -54,6 +52,7 @@ const RequestMethod: request = (
   { methodType = 'GET', data = {}, url = '' },
   {
     baseUrl = BaseRequestConfig.baseUrl,
+    port = BaseRequestConfig.port,
     header = {},
     loading = true,
     dataType = 'json',
@@ -75,7 +74,7 @@ const RequestMethod: request = (
     const requestKey = createKey(url, data)
     // 加载动画
     const requestClose = uni.request({
-      url: `${baseUrl}${url}`,
+      url: `${baseUrl}:${port}${url}`,
       data,
       header,
       method: methodType,
