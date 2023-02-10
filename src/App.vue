@@ -12,4 +12,9 @@ onHide(() => {
 </script>
 <style lang="scss">
 @import './uni_modules/vk-uview-ui/index.scss';
+view,
+input,
+i {
+  box-sizing: border-box;
+}
 </style>

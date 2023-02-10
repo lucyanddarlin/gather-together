@@ -1,24 +1,24 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
-			}
-		},
+  "pages": [
+    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
-			"path": "pages/gather/gather",
-			"style": {
-				"navigationBarTitleText": "uni-app"
-			}
-		},
+      "path": "pages/index/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTextStyle": "white"
+      }
+    },
     {
-			"path": "pages/profile/profile",
-			"style": {
-				"navigationBarTitleText": "uni-app"
-			}
-		}
-	],
+      "path": "pages/gather/gather",
+      "style": {}
+    },
+    {
+      "path": "pages/profile/profile",
+      "style": {
+        "navigationBarTitleText": "uni-app"
+      }
+    }
+  ],
   "subPackages": [
     {
       "root": "pagesSub",
@@ -32,35 +32,35 @@
       ]
     }
   ],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	},
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
   "tabBar": {
-    "color": "#1d1e2c",
-    "selectedColor" : "#fa4169",
+    "color": "#979797",
+    "selectedColor": "#598DF9",
     "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "home",
-        "iconPath": "static/logo.png",
-        "selectedIconPath": "static/logo.png"
+        "text": "首页",
+        "iconPath": "static/icons/tabbar-icons/index.png",
+        "selectedIconPath": "static/icons/tabbar-icons/index_sel.png"
       },
       {
         "pagePath": "pages/gather/gather",
-        "text": "gather",
-        "iconPath": "static/logo.png",
-        "selectedIconPath": "static/logo.png"
+        "text": "荟聚",
+        "iconPath": "static/icons/tabbar-icons/gather.png",
+        "selectedIconPath": "static/icons/tabbar-icons/gather_sel.png"
       },
-			{
+      {
         "pagePath": "pages/profile/profile",
-        "text": "profile",
-        "iconPath": "static/logo.png",
-        "selectedIconPath": "static/logo.png"
-			}
+        "text": "我的",
+        "iconPath": "static/icons/tabbar-icons/mine.png",
+        "selectedIconPath": "static/icons/tabbar-icons/mine_sel.png"
+      }
     ]
   }
 }

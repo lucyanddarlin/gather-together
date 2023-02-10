@@ -1,5 +1,6 @@
 <template>
   <view class="content">
+    <NavBar></NavBar>
     <view text-100px class="text-area text-red">
       <view> sd dasdasdsadasdasd </view>
       <text class="title">{{ title }}</text>
