@@ -3,9 +3,6 @@ import { setupStore } from '@/store'
 import App from './App.vue'
 import 'uno.css'
 
-// 引入iconfont
-import '@/static/icons/iconfont.css'
-
 import uView from './uni_modules/vk-uview-ui'
 
 export function createApp() {
