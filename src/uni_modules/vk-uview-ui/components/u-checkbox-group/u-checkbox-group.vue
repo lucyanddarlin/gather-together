@@ -1,9 +1,13 @@
 <template>
-	<view class="u-checkbox-group u-clearfix" :class="uFromData.inputAlign == 'right' ? 'flex-end' : ''"><slot></slot></view>
+  <view
+    class="u-checkbox-group u-clearfix"
+    :class="uFromData.inputAlign == 'right' ? 'flex-end' : ''"
+    ><slot></slot
+  ></view>
 </template>
 
 <script>
-import Emitter from "../../libs/util/emitter.js";
+import Emitter from '../../libs/util/emitter.js'
 /**
  * checkboxGroup 开关选择器父组件Group
  * @description 复选框组件一般用于需要多个选择的场景，该组件功能完整，使用方便
@@ -22,157 +26,157 @@ import Emitter from "../../libs/util/emitter.js";
  * @example <u-checkbox-group></u-checkbox-group>
  */
 export default {
-	name: "u-checkbox-group",
-	emits: ["update:modelValue", "input", "change"],
-	mixins: [Emitter],
-	props: {
-		// 匹配某一个radio组件，如果某个radio的name值等于此值，那么这个radio就被会选中
-		value: {
-			type: [String, Number, Array, Boolean],
-			default: ""
-		},
-		modelValue: {
-			type: [String, Number, Array, Boolean],
-			default: ""
-		},
-		// 最多能选中多少个checkbox
-		max: {
-			type: [Number, String],
-			default: 999
-		},
-		// 所有选中项的 name
-		// value: {
-		// 	default: Array,
-		// 	default() {
-		// 		return []
-		// 	}
-		// },
-		// 是否禁用所有复选框
-		disabled: {
-			type: Boolean,
-			default: false
-		},
-		// 在表单内提交时的标识符
-		name: {
-			type: [Boolean, String],
-			default: ""
-		},
-		// 是否禁止点击提示语选中复选框
-		labelDisabled: {
-			type: Boolean,
-			default: false
-		},
-		// 形状，square为方形，circle为圆型
-		shape: {
-			type: String,
-			default: "square"
-		},
-		// 选中状态下的颜色
-		activeColor: {
-			type: String,
-			default: "#2979ff"
-		},
-		// 组件的整体大小
-		size: {
-			type: [String, Number],
-			default: 34
-		},
-		// 每个checkbox占u-checkbox-group的宽度
-		width: {
-			type: String,
-			default: "auto"
-		},
-		// 是否每个checkbox都换行
-		wrap: {
-			type: Boolean,
-			default: false
-		},
-		// 图标的大小，单位rpx
-		iconSize: {
-			type: [String, Number],
-			default: 20
-		}
-	},
-	data() {
-		return {
-			values: [],
-			uFromData: {
-				inputAlign: "left"
-			}
-		};
-	},
-	created() {
-		// 如果将children定义在data中，在微信小程序会造成循环引用而报错
-		this.children = [];
-	},
-	mounted() {
-		// 支付宝、头条小程序不支持provide/inject，所以使用这个方法获取整个父组件，在created定义，避免循环应用
-		let parent = this.$u.$parent.call(this, "u-form");
-		if (parent) {
-			Object.keys(this.uFromData).map(key => {
-				this.uFromData[key] = parent[key];
-			});
-		}
-	},
-	methods: {
-		emitEvent(obj) {
-			let values = this.values || [];
-			if (obj.value) {
-				let index = values.indexOf(obj.name);
-				if (index === -1) {
-					values.push(obj.name);
-				}
-			} else {
-				let index = values.indexOf(obj.name);
-				if (index > -1) {
-					values.splice(index, 1);
-				}
-			}
+  name: 'UCheckboxGroup',
+  mixins: [Emitter],
+  props: {
+    // 匹配某一个radio组件，如果某个radio的name值等于此值，那么这个radio就被会选中
+    value: {
+      type: [String, Number, Array, Boolean],
+      default: '',
+    },
+    modelValue: {
+      type: [String, Number, Array, Boolean],
+      default: '',
+    },
+    // 最多能选中多少个checkbox
+    max: {
+      type: [Number, String],
+      default: 999,
+    },
+    // 所有选中项的 name
+    // value: {
+    // 	default: Array,
+    // 	default() {
+    // 		return []
+    // 	}
+    // },
+    // 是否禁用所有复选框
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    // 在表单内提交时的标识符
+    name: {
+      type: [Boolean, String],
+      default: '',
+    },
+    // 是否禁止点击提示语选中复选框
+    labelDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    // 形状，square为方形，circle为圆型
+    shape: {
+      type: String,
+      default: 'square',
+    },
+    // 选中状态下的颜色
+    activeColor: {
+      type: String,
+      default: '#2979ff',
+    },
+    // 组件的整体大小
+    size: {
+      type: [String, Number],
+      default: 34,
+    },
+    // 每个checkbox占u-checkbox-group的宽度
+    width: {
+      type: String,
+      default: 'auto',
+    },
+    // 是否每个checkbox都换行
+    wrap: {
+      type: Boolean,
+      default: false,
+    },
+    // 图标的大小，单位rpx
+    iconSize: {
+      type: [String, Number],
+      default: 20,
+    },
+  },
+  emits: ['update:modelValue', 'input', 'change'],
+  data() {
+    return {
+      values: [],
+      uFromData: {
+        inputAlign: 'left',
+      },
+    }
+  },
+  created() {
+    // 如果将children定义在data中，在微信小程序会造成循环引用而报错
+    this.children = []
+  },
+  mounted() {
+    // 支付宝、头条小程序不支持provide/inject，所以使用这个方法获取整个父组件，在created定义，避免循环应用
+    const parent = this.$u.$parent.call(this, 'u-form')
+    if (parent) {
+      Object.keys(this.uFromData).map((key) => {
+        this.uFromData[key] = parent[key]
+      })
+    }
+  },
+  methods: {
+    emitEvent(obj) {
+      const values = this.values || []
+      if (obj.value) {
+        const index = values.indexOf(obj.name)
+        if (index === -1) {
+          values.push(obj.name)
+        }
+      } else {
+        const index = values.indexOf(obj.name)
+        if (index > -1) {
+          values.splice(index, 1)
+        }
+      }
 
-			this.$emit("change", values);
-			// 通过emit事件，设置父组件通过v-model双向绑定的值
-			this.$emit("input", values);
-			this.$emit("update:modelValue", values);
-			// 发出事件，用于在表单组件中嵌入checkbox的情况，进行验证
-			// 由于头条小程序执行迟钝，故需要用几十毫秒的延时
-			setTimeout(() => {
-				// 将当前的值发送到 u-form-item 进行校验
-				this.dispatch("u-form-item", "onFieldChange", values);
-			}, 60);
-		},
-		_emitEvent(obj) {
-			let values = this.values || [];
-			if (obj.value) {
-				let index = values.indexOf(obj.name);
-				if (index === -1) {
-					values.push(obj.name);
-				}
-			} else {
-				let index = values.indexOf(obj.name);
-				if (index > -1) {
-					values.splice(index, 1);
-				}
-			}
-			//this.$emit("change", values);
-		}
-	}
-};
+      this.$emit('change', values)
+      // 通过emit事件，设置父组件通过v-model双向绑定的值
+      this.$emit('input', values)
+      this.$emit('update:modelValue', values)
+      // 发出事件，用于在表单组件中嵌入checkbox的情况，进行验证
+      // 由于头条小程序执行迟钝，故需要用几十毫秒的延时
+      setTimeout(() => {
+        // 将当前的值发送到 u-form-item 进行校验
+        this.dispatch('u-form-item', 'onFieldChange', values)
+      }, 60)
+    },
+    _emitEvent(obj) {
+      const values = this.values || []
+      if (obj.value) {
+        const index = values.indexOf(obj.name)
+        if (index === -1) {
+          values.push(obj.name)
+        }
+      } else {
+        const index = values.indexOf(obj.name)
+        if (index > -1) {
+          values.splice(index, 1)
+        }
+      }
+      //this.$emit("change", values);
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../../libs/css/style.components.scss";
+@import '../../libs/css/style.components.scss';
 
 .u-checkbox-group {
-	/* #ifndef MP || APP-NVUE */
-	display: inline-flex;
-	flex-wrap: wrap;
-	/* #endif */
+  /* #ifndef MP || APP-NVUE */
+  display: inline-flex;
+  flex-wrap: wrap;
+  /* #endif */
 }
 .u-checkbox-group.flex-end {
-	/* #ifndef APP-NVUE */
-	display: inline-flex;
-	justify-content: flex-end;
-	flex-wrap: wrap;
-	/* #endif */
+  /* #ifndef APP-NVUE */
+  display: inline-flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  /* #endif */
 }
 </style>
