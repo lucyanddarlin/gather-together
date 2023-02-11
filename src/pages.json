@@ -1,4 +1,5 @@
 {
+  "lazyCodeLoading": "requiredComponents",
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
@@ -46,20 +47,20 @@
       {
         "pagePath": "pages/index/index",
         "text": "首页",
-        "iconPath": "static/icons/tabbar-icons/index.png",
-        "selectedIconPath": "static/icons/tabbar-icons/index_sel.png"
+        "iconPath": "static/tabbar/index.png",
+        "selectedIconPath": "static/tabbar/index_sel.png"
       },
       {
         "pagePath": "pages/gather/gather",
         "text": "荟聚",
-        "iconPath": "static/icons/tabbar-icons/gather.png",
-        "selectedIconPath": "static/icons/tabbar-icons/gather_sel.png"
+        "iconPath": "static/tabbar/gather.png",
+        "selectedIconPath": "static/tabbar/gather_sel.png"
       },
       {
         "pagePath": "pages/profile/profile",
         "text": "我的",
-        "iconPath": "static/icons/tabbar-icons/mine.png",
-        "selectedIconPath": "static/icons/tabbar-icons/mine_sel.png"
+        "iconPath": "static/tabbar/mine.png",
+        "selectedIconPath": "static/tabbar/mine_sel.png"
       }
     ]
   }

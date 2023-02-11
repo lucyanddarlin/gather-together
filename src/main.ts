@@ -4,6 +4,7 @@ import { setupStore } from '@/store'
 import NavBar from '@/components/nav-bar.vue'
 import App from './App.vue'
 import 'uno.css'
+import '@/styles/index.scss'
 import uView from './uni_modules/vk-uview-ui'
 
 export function createApp() {
