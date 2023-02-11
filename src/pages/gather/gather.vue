@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <view>
     <NavBar></NavBar>
     <TopSelectpage :page-select-list="gatherSelectList" />
-  </div>
+    <view></view>
+  </view>
 </template>
 
 <script setup lang="ts">

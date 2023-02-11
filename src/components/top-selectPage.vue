@@ -1,14 +1,14 @@
 <template>
-  <div flex h-84rpx pt-12px justify-around text-16px class="text-#ABABAB">
-    <div
+  <view flex h-84rpx pt-12px justify-around text-16px class="text-#ABABAB">
+    <view
       v-for="option in props.pageSelectList"
       :key="option.id"
       :class="option.id == selected ? 'selected' : ''"
       @click="toSelectedPage(option.id)"
     >
       {{ option.title }}
-    </div>
-  </div>
+    </view>
+  </view>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
