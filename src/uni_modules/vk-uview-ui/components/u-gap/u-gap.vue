@@ -1,5 +1,5 @@
 <template>
-	<view class="u-gap" :style="[gapStyle]"></view>
+  <view class="u-gap" :style="[gapStyle]"></view>
 </template>
 
 <script>
@@ -14,41 +14,41 @@
  * @example <u-gap height="80" bg-color="#bbb"></u-gap>
  */
 export default {
-	name: "u-gap",
-	props: {
-		bgColor: {
-			type: String,
-			default: 'transparent ' // 背景透明
-		},
-		// 高度
-		height: {
-			type: [String, Number],
-			default: 30
-		},
-		// 与上一个组件的距离
-		marginTop: {
-			type: [String, Number],
-			default: 0
-		},
-		// 与下一个组件的距离
-		marginBottom: {
-			type: [String, Number],
-			default: 0
-		},
-	},
-	computed: {
-		gapStyle() {
-			return {
-				backgroundColor: this.bgColor,
-				height: this.height + 'rpx',
-				marginTop: this.marginTop + 'rpx',
-				marginBottom: this.marginBottom + 'rpx'
-			};
-		}
-	}
-};
+  name: 'UGap',
+  props: {
+    bgColor: {
+      type: String,
+      default: 'transparent ', // 背景透明
+    },
+    // 高度
+    height: {
+      type: [String, Number],
+      default: 30,
+    },
+    // 与上一个组件的距离
+    marginTop: {
+      type: [String, Number],
+      default: 0,
+    },
+    // 与下一个组件的距离
+    marginBottom: {
+      type: [String, Number],
+      default: 0,
+    },
+  },
+  computed: {
+    gapStyle() {
+      return {
+        backgroundColor: this.bgColor,
+        height: `${this.height}rpx`,
+        marginTop: `${this.marginTop}rpx`,
+        marginBottom: `${this.marginBottom}rpx`,
+      }
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-	@import "../../libs/css/style.components.scss";
+@import '../../libs/css/style.components.scss';
 </style>

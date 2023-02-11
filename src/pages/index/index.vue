@@ -1,30 +1,41 @@
 <template>
-  <view class="content">
-    <NavBar></NavBar>
-    <view text-100px class="text-area text-red">
-      <view> sd dasdasdsadasdasd </view>
-      <text class="title">{{ title }}</text>
-    </view>
-  </view>
+  <NavBar></NavBar>
+  <TabSection :default-active="activeIndex" @tab-switch="handleTabSwitch">
+    <TabItem v-for="item in topNavList" :key="item.index" :index="item.index">
+      <text>{{ item.title }}</text>
+    </TabItem>
+  </TabSection>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { get } from '@/api/request'
-import { useAppStore } from '@/store/modules/app'
-
-// import request from '@/api/request'
-const title = ref('Hello')
-const test = () =>
-  get<{ code: number; body: any }>('/api/home/get/forum', { page: 0, size: 5 })
-const test2 = async () => {
-  const res = await test()
-  console.log(res.data.body)
+const topNavList = [
+  { title: '综合', index: 0 },
+  { title: '关注', index: 1 },
+  { title: '广场', index: 2 },
+]
+const activeIndex = ref<number>(1)
+const handleTabSwitch = (index: number) => {
+  activeIndex.value = index
 }
-test2()
-
-const { hello } = useAppStore()
-console.log(hello)
 </script>
 
-<style></style>
+<style lang="scss">
+.tab-section {
+  padding: 0 120rpx;
+  padding-bottom: 32rpx;
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid rgba(195, 195, 195, 0.17);
+  .tab-item {
+    color: #c3c3c3;
+    font-size: 32rpx;
+    font-weight: bold;
+    padding-bottom: 8rpx;
+    &.active {
+      color: #000000;
+      border-bottom: 2px solid #361d1e;
+    }
+  }
+}
+</style>
