@@ -2,7 +2,6 @@
   "name": "uni-preset-vue",
   "version": "0.0.0",
   "scripts": {
-    "git": "git add .",
     "dev": "uni -p mp-weixin",
     "build": "uni build -p mp-weixin",
     "dev:app": "uni -p app",
