@@ -1,5 +1,13 @@
 <template>
-  <view w-full p-28rpx mb-16rpx text-24rpx min-h-200rpx bg-white>
+  <view
+    w-full
+    p-28rpx
+    mb-16rpx
+    text-24rpx
+    min-h-200rpx
+    bg-white
+    @click="$emit('toPeopleDetail')"
+  >
     <!-- 项目名 学校 头像 -->
     <view
       text-32rpx
@@ -44,6 +52,7 @@
 </template>
 <script setup lang="ts">
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
+const emit = defineEmits(['toPeopleDetail'])
 
 const props = defineProps({
   name: {

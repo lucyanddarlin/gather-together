@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
   <NavBar></NavBar>
   <view fixed z-9 w-full bg-white>
@@ -56,7 +57,7 @@
           justify-between
           class="text-#534E4E"
           ><view font-bold>{{ item.project_name }}</view
-          ><i class="iconfont icon-gengduo" @click="test"></i
+          ><i class="iconfont icon-gengduo"></i
         ></view>
         <!-- 标签tag todo 后期要更换新的数据 -->
         <view flex mb-20rpx>
@@ -83,6 +84,7 @@
         :school="item.school"
         :profession="item.profession"
         :content="item.profile"
+        @toPeopleDetail="toPeopleDetail(item.user_id)"
       />
     </view>
   </view>
@@ -90,27 +92,20 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import {
-  PROJECT_LIBRARY,
-  PEOPLE_LIBRARY,
-  SOURCE_LIBRARY,
-} from '@/store/gatherPage'
-
+import { storeToRefs } from 'pinia'
+import { currentUserVitaStore } from '@/store/UserVitaStore'
+import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
 import GatherPeople from './components/gather-people.vue'
-const test = () => {
-  console.log(1)
+const userStore = currentUserVitaStore()
+const { currentUserVitaId, UserVita, topNavList, filterNavList } =
+  storeToRefs(userStore)
+
+// 跳转到 人才库 详情页
+const toPeopleDetail = (id: number) => {
+  currentUserVitaId.value = id
+  uni.navigateTo({ url: '../../pagesSub/gatherSub/gatherSub-person' })
 }
-// 顶部栏 列表
-const topNavList = [
-  { title: '项目库', index: 0 },
-  { title: '人才库', index: 1 },
-  { title: '资源库', index: 2 },
-]
-// 筛选列表
-const filterNavList = [
-  { title: '本校', index: 0 },
-  { title: '综合', index: 1 },
-]
+
 // 项目库
 const gatherProject = reactive([
   {
@@ -176,45 +171,7 @@ const gatherProject = reactive([
     state: 1,
   },
 ])
-// 人才库 简历
-const UserVita = reactive([
-  {
-    //todo 类别，tag，后续需要针对后端进行更改
-    class: ['软件/硬件', '理工类'],
-    certs: [
-      { cert_id: 123, cert_name: '了赛打', date: '2022-10', user_id: 123321 },
-    ],
-    college: 'dasdas',
-    college_id: 3213123,
-    contact: '193291321',
-    good_at: '能迅速准确的完成领导布置的工作，工作认真负责，经验丰富',
-    grade: 1,
-    head_url: 'dsaljdla',
-    name: '用户名称',
-    profession: '软件工程专业',
-    profile: '能迅速准确的完成领导布置的工作，工作认真负责，经验丰富',
-    races: [
-      {
-        award: 'dsadas',
-        description: 'dsadas',
-        race_id: 123321,
-        race_name: 'cjlkasd',
-        user_id: 123321,
-      },
-    ],
-    school: '广州大学',
-    sex: 0,
-    skills: [
-      {
-        description: 'ldjaskdajsk',
-        skill_id: 12321,
-        skill_name: 'ldiasjdals',
-        user_id: 123321,
-      },
-    ],
-    user_id: 123321,
-  },
-])
+
 const navActiveIndex = ref<number>(0)
 const filterActiveIndex = ref<number>(0)
 const handleNavBarSwitch = (index: number) => {
