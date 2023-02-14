@@ -4,6 +4,8 @@ import { defineStore } from 'pinia'
 // 使用setup模式定义
 export const gatherFilterStore = defineStore('manner', () => {
   //筛选菜单
+
+  //   能力筛选
   const mannerFilterList = reactive([
     {
       mainName: '能力类型',
@@ -18,6 +20,7 @@ export const gatherFilterStore = defineStore('manner', () => {
       ],
     },
   ])
+  //   方向筛选
   const directionFilterList = reactive([
     {
       mainName: '学习方向',
@@ -36,8 +39,39 @@ export const gatherFilterStore = defineStore('manner', () => {
     },
   ])
 
+  // 项目模式 筛选
+
+  const projectModeFilterList = reactive([
+    {
+      mainName: '项目模式',
+      singSelect: true,
+      selectList: [
+        { id: 0, value: 'IT/软件' },
+        { id: 1, value: '硬件/电子' },
+        { id: 2, value: '互联网+' },
+        { id: 3, value: '线下运营' },
+        { id: 4, value: '成果转化' },
+        { id: 5, value: '调研/探究' },
+      ],
+    },
+  ])
+  // 项目类型 筛选
+
+  const projectTypeFilterList = reactive([
+    {
+      mainName: '项目类型',
+      singSelect: true,
+      selectList: [
+        { id: 0, value: '创新创业' },
+        { id: 1, value: '科技学术' },
+        { id: 2, value: '人文社科' },
+      ],
+    },
+  ])
   return {
     mannerFilterList,
     directionFilterList,
+    projectModeFilterList,
+    projectTypeFilterList,
   }
 })

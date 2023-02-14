@@ -11,7 +11,7 @@
     <!-- 项目名 学校 头像 -->
     <view
       text-32rpx
-      mb-20px
+      mb-40rpx
       flex
       justify-between
       items-center
@@ -19,23 +19,23 @@
     >
       <!-- 名称和 专业 -->
       <view>
-        <view font-bold mb-6px>{{ props.name }}</view>
+        <view font-bold mb-12rpx>{{ props.name }}</view>
         <view flex>
           <GatherContentBlock
             :content="props.school"
-            class="text-#598DF9 text-12px"
+            class="text-#598DF9 text-24rpx"
           />
           <GatherContentBlock
             :content="props.profession"
-            class="text-#598DF9 text-12px"
+            class="text-#598DF9 text-24rpx"
           />
         </view>
       </view>
       <!-- 头绪 -->
-      <view bg-red rounded-50% w-62px h-62px mr-30px></view>
+      <view bg-red rounded-50% w-124rpx h-124rpx mr-60rpx></view>
     </view>
     <!-- tag 类 -->
-    <view flex mb-6px>
+    <view flex mb-12rpx>
       <!-- todo 后期更换 tag源头 和key 源 -->
       <GatherContentBlock
         v-for="(tag, index) in props.tags"

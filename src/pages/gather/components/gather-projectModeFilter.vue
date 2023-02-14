@@ -1,8 +1,8 @@
 <template>
-  <view v-for="item in directionFilterList" :key="item.mainName">
+  <view v-for="item in projectModeFilterList" :key="item.mainName" mb-40rpx>
     <view class="text-#A4A4A4 text-32rpx flex">
-      <view class="text-#4F82F3 mr-12rpx">学习方向</view>
-      <view>单选</view>
+      <view class="text-#4F82F3 mr-12rpx">{{ item.mainName }}</view>
+      <view>{{ item.singSelect ? '单选' : '多选' }}</view>
     </view>
     <view grid mt-24rpx class="filterList">
       <view
@@ -22,7 +22,7 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { gatherFilterStore } from '@/store/gatherFilter'
 const useGatherFilterStore = gatherFilterStore()
-const { directionFilterList } = storeToRefs(useGatherFilterStore)
+const { projectModeFilterList } = storeToRefs(useGatherFilterStore)
 
 const activeFilterOption = ref(0)
 const selectOption = (id: number) => {
@@ -33,7 +33,7 @@ const selectOption = (id: number) => {
 <style scoped>
 .filterList {
   grid-template-columns: 188rpx 188rpx 188rpx;
-  grid-template-rows: 80rpx 80rpx 80rpx;
+  grid-template-rows: 80rpx 80rpx;
   row-gap: 16rpx;
   column-gap: 40rpx;
 }

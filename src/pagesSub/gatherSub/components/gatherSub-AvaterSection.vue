@@ -6,7 +6,7 @@
       <view class="text-#534E4E text-40rpx mb-12rpx font-bold">{{
         props.name
       }}</view>
-      <view flex mb-12rpx
+      <view v-show="navActiveIndex == 1" flex mb-12rpx
         ><GatherContentBlock
           :content="props.school"
           class="text-#598DF9 text-24rpx" />
@@ -28,7 +28,14 @@
   </view>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
+// 导入 gatherIndex 的 pinia
+import { gatherIndexStore } from '@/store/gatherIndex'
+// 实例化 gatherIndex pinia
+const useGatherIndexStore = gatherIndexStore()
+// 导入 nav 栏 活动的值 ； 导入是否展示 筛选
+const { navActiveIndex } = storeToRefs(useGatherIndexStore)
 const props = defineProps({
   name: { type: String, default: '' },
   school: { type: String, default: '' },

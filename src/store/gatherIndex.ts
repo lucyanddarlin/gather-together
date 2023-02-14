@@ -17,10 +17,12 @@ export const gatherIndexStore = defineStore('gather', () => {
   const navActiveIndex = ref<number>(0)
   const filterActiveIndex = ref<number>(0)
 
-  const showPopup = ref<boolean>(false)
+  const showPeopleLibraryPopup = ref<boolean>(false)
+  const showProjectLibraryPopup = ref<boolean>(false)
 
   return {
-    showPopup,
+    showPeopleLibraryPopup,
+    showProjectLibraryPopup,
     navActiveIndex,
     filterActiveIndex,
     topNavList,

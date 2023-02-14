@@ -43,7 +43,8 @@ const {
   filterActiveIndex,
   topNavList,
   filterNavList,
-  showPopup,
+  showPeopleLibraryPopup,
+  showProjectLibraryPopup,
 } = storeToRefs(useGatherIndexStore)
 const handleNavBarSwitch = (index: number) => {
   navActiveIndex.value = index
@@ -52,7 +53,11 @@ const handleFilterSwitch = (index: number) => {
   filterActiveIndex.value = index
 }
 const handlePopup = () => {
-  showPopup.value = !showPopup.value
+  if (navActiveIndex.value === 1) {
+    showPeopleLibraryPopup.value = !showPeopleLibraryPopup.value
+  } else if (navActiveIndex.value === 0) {
+    showProjectLibraryPopup.value = !showProjectLibraryPopup.value
+  }
 }
 </script>
 

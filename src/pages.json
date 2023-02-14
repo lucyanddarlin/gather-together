@@ -68,6 +68,13 @@
             "navigationStyle": "custom",
             "navigationBarTextStyle": "white"
           }
+        },
+        {
+          "path": "gatherSub/gatherSub-project",
+          "style": {
+            "navigationStyle": "custom",
+            "navigationBarTextStyle": "white"
+          }
         }
       ]
     }

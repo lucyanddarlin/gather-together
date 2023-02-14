@@ -2,7 +2,7 @@
 <template>
   <NavBar></NavBar>
   <GatherSelectPage />
-  <view class="bg-#f7f7f7 w-full pt-196rpx min-h-2400rpx">
+  <view class="bg-#f7f7f7 w-full pt-196rpx min-h-1400rpx">
     <!-- 项目库 -->
     <view v-show="navActiveIndex == PROJECT_LIBRARY">
       <view
@@ -14,6 +14,7 @@
         text-24rpx
         min-h-200rpx
         bg-white
+        @click="toProjectDetail"
       >
         <!-- 项目名 -->
         <view
@@ -57,8 +58,25 @@
     </view>
   </view>
 
-  <!-- 筛选 -->
-  <u-popup v-model="showPopup" mode="bottom" length="60%" border-radius="30">
+  <!-- 项目库筛选 -->
+  <u-popup
+    v-model="showProjectLibraryPopup"
+    mode="bottom"
+    length="50%"
+    border-radius="30"
+  >
+    <view pt-44rpx flex flex-col items-center
+      ><GatherProjectModeFilter /><GatherProjectTypeFilter /><GatherButton />
+    </view>
+  </u-popup>
+
+  <!-- 人才库筛选 -->
+  <u-popup
+    v-model="showPeopleLibraryPopup"
+    mode="bottom"
+    length="60%"
+    border-radius="30"
+  >
     <view pt-44rpx flex flex-col items-center
       ><GatherMannerFilter /><GatherLearnDirection /><GatherButton />
     </view>
@@ -66,7 +84,6 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
 import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
 import { currentUserVitaStore } from '@/store/UserVitaStore'
@@ -79,87 +96,31 @@ import GatherSelectPage from '@/pages/gather/components/gather-pageSelect.vue'
 import GatherMannerFilter from '@/pages/gather/components/gather-mannerFilter.vue'
 import GatherLearnDirection from '@/pages/gather/components/gather-learnDirection.vue'
 import GatherButton from '@/pages/gather/components/gather-button.vue'
+import GatherProjectTypeFilter from '@/pages/gather/components/gather-projectTypeFilter.vue'
+import { gatherProjectStore } from '@/store/UserProjectStore'
 import GatherPeople from './components/gather-people.vue'
+import GatherProjectModeFilter from './components/gather-projectModeFilter.vue'
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()
 // 实例化 当前页面的 数据
 const userStore = currentUserVitaStore()
 // 导入 nav 栏 活动的值 ； 导入是否展示 筛选
-const { navActiveIndex, showPopup } = storeToRefs(useGatherIndexStore)
+const { navActiveIndex, showPeopleLibraryPopup, showProjectLibraryPopup } =
+  storeToRefs(useGatherIndexStore)
 // 导入选中的 人才库 id；人才库数据
 const { currentUserVitaId, UserVita } = storeToRefs(userStore)
-
+const userGatherProjectStore = gatherProjectStore()
+// todo 后续接口接入，需要换接口的id请求数据
+const { gatherProject } = storeToRefs(userGatherProjectStore)
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: number) => {
   currentUserVitaId.value = id
   uni.navigateTo({ url: '../../pagesSub/gatherSub/gatherSub-person' })
 }
-
-// 项目库
-const gatherProject = reactive([
-  {
-    // 学院 id
-    college_id: 1,
-    // 学院名称
-    college_name: '广州大学',
-    // 创建项目时间
-    create_time: '2022-10-11',
-    //  创建者 id
-    creator_id: 1111321312,
-    // 团队介绍
-    introduce:
-      '依托于核心管弦乐课程搭建音乐教育产业链，建立音乐学习数据库，涵盖音乐后蒙、水平认证、研学、升学咨询等',
-    // 团队人数
-    member_num: 12321321312,
-    // 团队成员信息
-    members: [],
-    // 招募需求
-    needs: 'dasdas',
-    // 项目唯一 id
-    project_id: 321312321,
-    // 项目名称
-    project_name: '好旋律音乐教育大数据平台',
-    // 比赛唯一 id
-    race_id: 231312,
-    // 姓名
-    race_name: 'ldasdajsl',
-    // tag 标签 todo(后期更换新接口的时候要替换，这里仅是测试用)
-    tagList: ['互联网+', '创新创业', '广州大学'],
-    // 招募状态
-    state: 1,
-  },
-  {
-    // 学院 id
-    college_id: 1,
-    // 学院名称
-    college_name: '广州大学',
-    // 创建项目时间
-    create_time: '2022-10-11',
-    //  创建者 id
-    creator_id: 1111321312,
-    // 团队介绍
-    introduce:
-      '依托于核心管弦乐课程搭建音乐教育产业链，建立音乐学习数据库，涵盖音乐后蒙、水平认证、研学、升学咨询等',
-    // 团队人数
-    member_num: 12321321312,
-    // 团队成员信息
-    members: [],
-    // 招募需求
-    needs: 'dasdas',
-    // 项目唯一 id
-    project_id: 321312321,
-    // 项目名称
-    project_name: '好旋律音乐教育大数据平台',
-    // 比赛唯一 id
-    race_id: 231312,
-    // 姓名
-    race_name: 'ldasdajsl',
-    // tag 标签 todo(后期更换新接口的时候要替换，这里仅是测试用)
-    tagList: ['互联网+', '创新创业', '广州大学'],
-    // 招募状态
-    state: 1,
-  },
-])
+// 跳转到 项目库 详情页
+const toProjectDetail = () => {
+  uni.navigateTo({ url: '../../pagesSub/gatherSub/gatherSub-project' })
+}
 </script>
 
 <style lang="scss">
