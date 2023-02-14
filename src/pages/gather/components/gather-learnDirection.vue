@@ -1,0 +1,40 @@
+<template>
+  <view v-for="item in directionFilterList" :key="item.mainName">
+    <view class="text-#A4A4A4 text-32rpx flex">
+      <view class="text-#4F82F3 mr-12rpx">学习方向</view>
+      <view>单选</view>
+    </view>
+    <view grid mt-24rpx class="filterList">
+      <view
+        v-for="option in item.selectList"
+        :key="option.id"
+        class="rounded-18rpx flex items-center justify-center text-12px bg-#F5F5F5 text-#A4A4A4"
+        :class="activeFilterOption == option.id ? 'activeFilterOption' : ''"
+        @click="selectOption(option.id)"
+      >
+        {{ option.value }}</view
+      >
+    </view></view
+  >
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { gatherFilterStore } from '@/store/gatherFilter'
+const useGatherFilterStore = gatherFilterStore()
+const { directionFilterList } = storeToRefs(useGatherFilterStore)
+
+const activeFilterOption = ref(0)
+const selectOption = (id: number) => {
+  activeFilterOption.value = id
+}
+</script>
+
+<style scoped>
+.filterList {
+  grid-template-columns: 188rpx 188rpx 188rpx;
+  grid-template-rows: 80rpx 80rpx 80rpx;
+  row-gap: 16rpx;
+  column-gap: 40rpx;
+}
+</style>

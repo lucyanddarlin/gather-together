@@ -1,40 +1,8 @@
 <!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
   <NavBar></NavBar>
-  <view fixed z-9 w-full bg-white>
-    <view class="area-1 relative">
-      <TabSection
-        :default-active="navActiveIndex"
-        @tab-switch="handleNavBarSwitch"
-      >
-        <TabItem
-          v-for="item in topNavList"
-          :key="item.index"
-          :index="item.index"
-        >
-          <text>{{ item.title }}</text>
-        </TabItem>
-      </TabSection>
-    </view>
-    <view class="area-2 relative">
-      <TabSection
-        :default-active="filterActiveIndex"
-        @tab-switch="handleFilterSwitch"
-      >
-        <TabItem
-          v-for="item in filterNavList"
-          :key="item.index"
-          :index="item.index"
-        >
-          <text>{{ item.title }}</text>
-        </TabItem>
-      </TabSection>
-      <view class="text-#598DF9 font-400 flex items-center"
-        ><view mr-8rpx>筛选</view><span class="iconfont icon-shaixuan"></span>
-      </view>
-    </view>
-  </view>
-  <view class="bg-#f7f7f7 w-full min-h-1400rpx pt-196rpx">
+  <GatherSelectPage />
+  <view class="bg-#f7f7f7 w-full pt-196rpx min-h-2400rpx">
     <!-- 项目库 -->
     <view v-show="navActiveIndex == PROJECT_LIBRARY">
       <view
@@ -80,7 +48,7 @@
         v-for="item in UserVita"
         :key="item.user_id"
         :name="item.name"
-        :tags="item.class"
+        :tags="item.tags"
         :school="item.school"
         :profession="item.profession"
         :content="item.profile"
@@ -88,17 +56,38 @@
       />
     </view>
   </view>
+
+  <!-- 筛选 -->
+  <u-popup v-model="showPopup" mode="bottom" length="60%" border-radius="30">
+    <view pt-44rpx flex flex-col items-center
+      ><GatherMannerFilter /><GatherLearnDirection /><GatherButton />
+    </view>
+  </u-popup>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { storeToRefs } from 'pinia'
+// 人才库 和 项目库数据
 import { currentUserVitaStore } from '@/store/UserVitaStore'
+// 切换页面
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
+// 导入 gatherIndex 的 pinia
+import { gatherIndexStore } from '@/store/gatherIndex'
+// 引入组件
+import GatherSelectPage from '@/pages/gather/components/gather-pageSelect.vue'
+import GatherMannerFilter from '@/pages/gather/components/gather-mannerFilter.vue'
+import GatherLearnDirection from '@/pages/gather/components/gather-learnDirection.vue'
+import GatherButton from '@/pages/gather/components/gather-button.vue'
 import GatherPeople from './components/gather-people.vue'
+// 实例化 gatherIndex pinia
+const useGatherIndexStore = gatherIndexStore()
+// 实例化 当前页面的 数据
 const userStore = currentUserVitaStore()
-const { currentUserVitaId, UserVita, topNavList, filterNavList } =
-  storeToRefs(userStore)
+// 导入 nav 栏 活动的值 ； 导入是否展示 筛选
+const { navActiveIndex, showPopup } = storeToRefs(useGatherIndexStore)
+// 导入选中的 人才库 id；人才库数据
+const { currentUserVitaId, UserVita } = storeToRefs(userStore)
 
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: number) => {
@@ -171,15 +160,6 @@ const gatherProject = reactive([
     state: 1,
   },
 ])
-
-const navActiveIndex = ref<number>(0)
-const filterActiveIndex = ref<number>(0)
-const handleNavBarSwitch = (index: number) => {
-  navActiveIndex.value = index
-}
-const handleFilterSwitch = (index: number) => {
-  filterActiveIndex.value = index
-}
 </script>
 
 <style lang="scss">
@@ -224,5 +204,15 @@ const handleFilterSwitch = (index: number) => {
 }
 .icon-gengduo {
   font-size: 48rpx;
+}
+.filterList {
+  grid-template-columns: 188rpx;
+  grid-template-rows: 80rpx;
+  row-gap: 16rpx;
+  column-gap: 40rpx;
+}
+.activeFilterOption {
+  background-color: #598df9;
+  color: white;
 }
 </style>

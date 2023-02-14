@@ -8,9 +8,20 @@ export const currentUserVitaStore = defineStore('vita', () => {
   const UserVita = reactive([
     {
       //todo 类别，tag，后续需要针对后端进行更改
-      class: ['软件/硬件', '理工类'],
+      tags: ['软件/硬件', '理工类'],
       certs: [
-        { cert_id: 123, cert_name: '了赛打', date: '2022-10', user_id: 123321 },
+        {
+          cert_id: 123,
+          cert_name: '大学英语四级',
+          date: '2022-10',
+          user_id: 123321,
+        },
+        {
+          cert_id: 123,
+          cert_name: '计算机二级',
+          date: '2022-10',
+          user_id: 123321,
+        },
       ],
       college: 'dasdas',
       college_id: 3213123,
@@ -34,9 +45,9 @@ export const currentUserVitaStore = defineStore('vita', () => {
       sex: 0,
       skills: [
         {
-          description: 'ldjaskdajsk',
+          description: '全栈型,前端VUE2/3后端JAVA SpringBoot',
           skill_id: 12321,
-          skill_name: 'ldiasjdals',
+          skill_name: '软件/硬件',
           user_id: 123321,
         },
       ],
@@ -44,15 +55,5 @@ export const currentUserVitaStore = defineStore('vita', () => {
     },
   ])
 
-  // 顶部栏 列表
-  const topNavList = reactive([
-    { title: '项目库', index: 0 },
-    { title: '人才库', index: 1 },
-  ])
-  // 筛选列表
-  const filterNavList = reactive([
-    { title: '本校', index: 0 },
-    { title: '综合', index: 1 },
-  ])
-  return { currentUserVitaId, UserVita, topNavList, filterNavList }
+  return { currentUserVitaId, UserVita }
 })

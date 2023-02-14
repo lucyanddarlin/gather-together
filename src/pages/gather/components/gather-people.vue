@@ -52,7 +52,7 @@
 </template>
 <script setup lang="ts">
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
-const emit = defineEmits(['toPeopleDetail'])
+defineEmits(['toPeopleDetail'])
 
 const props = defineProps({
   name: {
