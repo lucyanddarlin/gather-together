@@ -56,6 +56,10 @@
         @toPeopleDetail="toPeopleDetail(item.user_id)"
       />
     </view>
+
+    <!-- 发布 和 返回顶部的按钮 -->
+    <GatherPublishButton fixed top-1000rpx right-40rpx />
+    <GatherBackTopButton fixed top-1130rpx right-40rpx />
   </view>
 
   <!-- 项目库筛选 -->
@@ -97,6 +101,9 @@ import GatherMannerFilter from '@/pages/gather/components/gather-mannerFilter.vu
 import GatherLearnDirection from '@/pages/gather/components/gather-learnDirection.vue'
 import GatherButton from '@/pages/gather/components/gather-button.vue'
 import GatherProjectTypeFilter from '@/pages/gather/components/gather-projectTypeFilter.vue'
+
+import GatherPublishButton from '@/pages/gather/components/gather-publishButton.vue'
+import GatherBackTopButton from '@/pages/gather/components/gather-backTopButton.vue'
 import { gatherProjectStore } from '@/store/UserProjectStore'
 import GatherPeople from './components/gather-people.vue'
 import GatherProjectModeFilter from './components/gather-projectModeFilter.vue'
@@ -175,5 +182,12 @@ const toProjectDetail = () => {
 .activeFilterOption {
   background-color: #598df9;
   color: white;
+}
+.icon-fasong,
+.icon-shouqi {
+  font-size: 28px;
+}
+.buttonShadow {
+  box-shadow: 0px 2px 7px 2px rgba(67, 128, 255, 0.14);
 }
 </style>
