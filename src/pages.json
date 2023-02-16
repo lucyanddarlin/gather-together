@@ -29,6 +29,12 @@
           "style": {
             "navigationBarTitleText": "test"
           }
+        },
+        {
+          "path": "paperDetail/index",
+          "style": {
+            "navigationBarTitleText": "详情"
+          }
         }
       ]
     }

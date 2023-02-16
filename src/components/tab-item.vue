@@ -1,5 +1,9 @@
 <template>
-  <view class="tab-item" :class="{ active: active }" @click="handleClick">
+  <view
+    class="tab-item transition"
+    :class="[{ active: active }, { first: index === 0 }]"
+    @click="handleClick"
+  >
     <slot></slot>
   </view>
 </template>

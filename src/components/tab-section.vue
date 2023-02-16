@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, provide, reactive, ref, watch } from 'vue'
+import { computed, provide, reactive, ref } from 'vue'
 
 const props = defineProps<{
   defaultActive: number
@@ -14,17 +14,8 @@ const props = defineProps<{
 }>()
 const emit = defineEmits(['tabSwitch'])
 const items = reactive<any>({})
-const activeIndex = ref<number>(0)
+const activeIndex = ref<number>(props.defaultActive)
 
-const updateActiveIndex = (index: number) => {
-  if (items[index]) {
-    activeIndex.value = index
-  } else if (items[props.defaultActive]) {
-    activeIndex.value = props.defaultActive
-  } else {
-    activeIndex.value = 0
-  }
-}
 const handleItemClick = (index: number) => {
   if (activeIndex.value === index) return
   activeIndex.value = index
@@ -37,16 +28,6 @@ const addItem = (index: string | number) => {
 const removeItem = (index: string | number) => {
   delete items[index]
 }
-watch(
-  () => props.defaultActive,
-  (value) => {
-    if (value === activeIndex.value) {
-      return
-    }
-    updateActiveIndex(value)
-  },
-  { immediate: true, deep: true }
-)
 provide('handleItemClick', handleItemClick)
 provide('addItem', addItem)
 provide('removeItem', removeItem)

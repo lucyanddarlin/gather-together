@@ -13,6 +13,7 @@ type RequestData<T> = {
 type RequestConfig = {
   port?: string
   baseUrl?: string
+  prefix?: string
   header?: any
   /** 是否加载 */
   loading?: boolean
@@ -53,6 +54,7 @@ const RequestMethod: request = (
   {
     baseUrl = BaseRequestConfig.baseUrl,
     port = BaseRequestConfig.port,
+    prefix = BaseRequestConfig.prefix,
     header = {},
     loading = true,
     dataType = 'json',
@@ -69,20 +71,31 @@ const RequestMethod: request = (
   if (token) {
     header.Authorization = token
   }
+  console.log('request', {
+    methodType,
+    data,
+    url: `${baseUrl}:${port}${prefix}${url}`,
+  })
   return new Promise((resolve, reject) => {
     //生成key
     const requestKey = createKey(url, data)
     // 加载动画
     const requestClose = uni.request({
-      url: `${baseUrl}:${port}${url}`,
+      url: `${baseUrl}:${port}${prefix}${url}`,
       data,
       header,
       method: methodType,
       timeout: 3000,
       dataType,
       success: (res) => {
+        const resultData: any = res.data
+        console.log('response', { resultData, url })
+        const resultCode = Number.parseInt(resultData!.code)
+        if (resultCode > 400) {
+          resolve({ code: resultCode, data: null as any })
+        }
         resolve({
-          code: 200,
+          code: resultCode,
           data: res.data as any,
         })
       },

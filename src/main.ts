@@ -4,6 +4,7 @@ import { setupStore } from '@/store'
 import NavBar from '@/components/nav-bar.vue'
 import TabSection from './components/tab-section.vue'
 import TabItem from './components/tab-item.vue'
+import PaperItem from './components/paper-item.vue'
 import App from './App.vue'
 import 'uno.css'
 import '@/styles/index.scss'
@@ -16,6 +17,7 @@ export function createApp() {
   app.component('NavBar', NavBar)
   app.component('TabSection', TabSection)
   app.component('TabItem', TabItem)
+  app.component('PaperItem', PaperItem)
   return {
     app,
   }
