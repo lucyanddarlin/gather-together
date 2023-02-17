@@ -8,7 +8,7 @@
 <script setup lang="ts">
 const toGatherPublish = () => {
   uni.navigateTo({
-    url: '../../pagesSub/gatherSub/gatherSub-publish',
+    url: '/pagesSub/gatherSub/gatherSub-publish',
   })
 }
 </script>

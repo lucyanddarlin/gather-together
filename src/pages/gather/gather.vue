@@ -122,11 +122,11 @@ const { gatherProject } = storeToRefs(userGatherProjectStore)
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: number) => {
   currentUserVitaId.value = id
-  uni.navigateTo({ url: '../../pagesSub/gatherSub/gatherSub-person' })
+  uni.navigateTo({ url: '/pagesSub/gatherSub/gatherSub-person' })
 }
 // 跳转到 项目库 详情页
 const toProjectDetail = () => {
-  uni.navigateTo({ url: '../../pagesSub/gatherSub/gatherSub-project' })
+  uni.navigateTo({ url: '/pagesSub/gatherSub/gatherSub-project' })
 }
 </script>
 
