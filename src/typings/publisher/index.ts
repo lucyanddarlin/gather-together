@@ -339,7 +339,7 @@ export class Publish implements IPublish {
     // 判断是否所有字段都已填写
     const values = Object.values(this)
     for (const value of values) {
-      if (value.type !== 'text' || value.type !== 'textarea') {
+      if (value.type in ['text', 'textarea']) {
         continue
       }
       if (value instanceof Object && value.value === '') {

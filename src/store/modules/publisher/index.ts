@@ -149,15 +149,22 @@ export const usePublisherStore = defineStore('publisher', () => {
   function update(p: Publish, post_type: string) {
     const description = PubToDesc(p, post_type)
     const index = descriptions[description.post_type].findIndex(
-      (p) => p.post_id === p.post_id
+      (d) => d.post_id === p.post_id
     )
+    console.log(index)
     // 不存在
     if (index === -1) {
       descriptions[description.post_type].push(description)
       publish[description.post_type].push(p)
+      console.log('新添')
+      console.log('publish', publish)
+      console.log('description', descriptions[description.post_type])
     } else {
       descriptions[description.post_type][index] = description
       publish[description.post_type][index] = p
+      console.log('旧有')
+      console.log('publish', publish)
+      console.log('description', descriptions[description.post_type])
     }
 
     uni.navigateBack()

@@ -2,7 +2,7 @@
   <u-navbar :title="publisherStore.cur_type + '管理'" />
   <PublishFilter mt-12rpx @tap="handleFilter" />
   <PublishManageCardItem
-    v-for="item in list"
+    v-for="item in list.value"
     :key="item.post_id"
     :description="item"
     cursor-pointer
@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import uPopup from '@/uni_modules/vk-uview-ui/components/u-popup/u-popup.vue'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
@@ -90,7 +90,12 @@ import PublishButton from './components/publish-button.vue'
 type PostType = keyof typeof Type
 const publisherStore = usePublisherStore()
 const post_type = publisherStore.cur_type as PostType
-const list = ref(publisherStore.descriptions[TypeMap[post_type]])
+const list = reactive({
+  value: publisherStore.descriptions[TypeMap[post_type]],
+})
+console.log('description', publisherStore.descriptions[TypeMap[post_type]])
+console.log('list', list.value)
+
 const checked = ref(false)
 const handleClick = (id: string) => {
   uni.navigateTo({ url: `./publisher-detail?id=${id}` })

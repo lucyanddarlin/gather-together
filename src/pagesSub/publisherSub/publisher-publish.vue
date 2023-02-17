@@ -128,6 +128,7 @@
           :bg-color="isAllFilled ? '#578DF7' : '#DFDFDF'"
           color="#fff"
           rounded="24rpx"
+          @tap="save"
         ></PublishButton>
       </view>
       <view v-else>
@@ -162,7 +163,7 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import { format } from 'date-fns'
+import { addMonths, format } from 'date-fns'
 
 // import { useRoute, useRouter } from 'vue-router'
 import { usePublisherStore } from '@/store/modules/publisher'
@@ -281,36 +282,27 @@ const isPublish = computed(() => {
   return description.value && description.value.state === State.Create
 })
 
-const isAllFilled = ref(false)
-
-function checkFilled() {
-  const values = Object.values(publish)
-  for (const value of values) {
-    if (value.type === 'text' || value.type === 'textarea') {
-      if (value instanceof Object && value.value === '') {
-        isAllFilled.value = false
-        return
-      }
-    } else continue
-  }
-  isAllFilled.value = true
-}
+const isAllFilled = computed(() => {
+  return publish.value?.isAllFilled() || false
+})
 
 function change(event: any, key: string) {
   publish.value &&
     ((publish.value[key as keyof Publish] as IField).value =
       event.target.value.trim())
-  checkFilled()
 }
 
 function setDate(result: any, key: string) {
   publish.value &&
-    ((publish.value[key as keyof Publish] as IField).value = new Date(
-      result.year,
-      result.month,
-      result.day,
-      result.hour,
-      result.minute
+    ((publish.value[key as keyof Publish] as IField).value = addMonths(
+      new Date(
+        result.year,
+        result.month,
+        result.day,
+        result.hour,
+        result.minute
+      ),
+      -1
     ))
   // picker.value[key as keyof Picker].value = dateForm
 }
@@ -329,7 +321,6 @@ function chooseImage(lists: Object, key: string) {
 }
 
 function save() {
-  checkFilled()
   if (!isAllFilled.value) {
     uni.showToast({
       title: '请填写完整信息',
