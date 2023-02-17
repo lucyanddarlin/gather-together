@@ -30,7 +30,8 @@
                 :id="item.name"
                 :value="Number(item.value) + ''"
                 :checked="checked"
-              /><label :for="item.name">{{ item.name }}</label>
+                class="radio"
+              /><label class="label" :for="item.name">{{ item.name }}</label>
             </div>
           </radio-group>
         </div>
@@ -282,8 +283,8 @@ function resetFilter() {
 </script>
 
 <style scoped lang="scss">
-radio {
-  + label {
+.radio {
+  + .label {
     background-color: #f5f5f5;
     color: #a4a4a4;
     font-size: 24rpx;

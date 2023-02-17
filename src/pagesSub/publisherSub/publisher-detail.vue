@@ -148,8 +148,8 @@ import {
 } from '@/typings/publisher'
 import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
-let id = ref('')
-let description = ref<IDescription | undefined>()
+const id = ref('')
+const description = ref<IDescription | undefined>()
 onLoad((options) => {
   if (!options) {
     console.log('options 为空，请检查url参数')
