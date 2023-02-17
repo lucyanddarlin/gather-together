@@ -35,7 +35,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-
+// 引入 gather 主页 的数据
 import { gatherIndexStore } from '@/store/gatherIndex'
 const useGatherIndexStore = gatherIndexStore()
 const {
@@ -46,12 +46,16 @@ const {
   showPeopleLibraryPopup,
   showProjectLibraryPopup,
 } = storeToRefs(useGatherIndexStore)
+
+// 切换 页面
 const handleNavBarSwitch = (index: number) => {
   navActiveIndex.value = index
 }
 const handleFilterSwitch = (index: number) => {
   filterActiveIndex.value = index
 }
+
+// 判断 横幅 是否显示
 const handlePopup = () => {
   if (navActiveIndex.value === 1) {
     showPeopleLibraryPopup.value = !showPeopleLibraryPopup.value
