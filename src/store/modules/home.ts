@@ -5,6 +5,7 @@ import { isNull } from '@/utils/common'
 import type { ListMap, PaperItem } from '@/typings/home'
 
 export const useHomeStore = defineStore('home', () => {
+  const commentH = ref<number>(0)
   const homePaperListMap = reactive<ListMap<PaperItem>>({
     dataList: [],
     dataMap: {},
@@ -53,5 +54,5 @@ export const useHomeStore = defineStore('home', () => {
     homePaperListMap.page--
     homePaperListMap.status = 'more'
   }
-  return { homePaperList, getHomePaperList, homePaperListMap }
+  return { commentH, homePaperList, getHomePaperList, homePaperListMap }
 })
