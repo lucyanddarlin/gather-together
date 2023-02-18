@@ -93,6 +93,7 @@
           @send-height="handleSendHeight"
         />
       </view>
+      <LoadMore :status="commentStatus" @load-more="getComment()" />
     </view>
     <view id="inputEl" class="input-wrap">
       <view flex-1 pr-24rpx>
@@ -145,6 +146,7 @@
           child
           @set-reply-target="handleSetReplyTarget"
         />
+        <LoadMore :status="replyStatus" @load-more="getReply()" />
       </scroll-view>
       <view class="input-wrap">
         <view flex-1 pr-24rpx>
@@ -293,7 +295,8 @@ const getReply = async () => {
     currentComment.value.comment_id
   )
   if (!isNull(data)) {
-    commentStatus.value = data.body.length < size ? 'noMore' : 'more'
+    console.log('获取评论成功')
+    replyStatus.value = data.body.length < size ? 'noMore' : 'more'
     data.body.forEach((reply) => {
       if (!replyListMap[reply.reply_id!]) {
         commentListMap[reply.reply_id!] = reply
@@ -318,13 +321,10 @@ const handleSendReply = async () => {
       commentList.value.unshift(data.body)
     }
   } else {
-    console.log(replyTarget.value)
-
-    const { reply_id } = replyTarget.value
     const { data } = await reqSendReply({
       comment_id: currentComment.value.comment_id,
       content: content.value,
-      to_reply_id: reply_id,
+      to_reply_id: replyTarget.value?.reply_id,
     })
     console.log(data.body)
     replyList.value.unshift(data.body)
