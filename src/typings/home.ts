@@ -53,5 +53,8 @@ export interface ICommentItem {
   last_reply_time: Date
   head_url: string
   username: string
-  reply_head: Array<any>
+  reply_head?: Array<any>
+  reply_id?: string
+  to_reply_username?: string
+  to_reply_id: string
 }

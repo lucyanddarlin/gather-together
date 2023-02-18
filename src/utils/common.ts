@@ -1,3 +1,5 @@
+import { getCurrentInstance, ref } from 'vue'
+
 type Icon = UniNamespace.ShowToastOptions['icon']
 export const showMsg = (title: string, duration: number, icon: Icon) => {
   uni.showToast({
@@ -35,4 +37,17 @@ export const uuid = () => {
       return v.toString(16)
     }
   )
+}
+
+export const useScrollHeight = (el: string): any => {
+  const scrollHeight = ref<number>(0) // scroll组件高度
+  const currentInstance = getCurrentInstance() // vue3绑定this
+  const topEl = uni.createSelectorQuery().in(currentInstance).select(el) // 获取#top元素
+  topEl
+    .boundingClientRect((data) => {
+      // 获取顶部高度
+      scrollHeight.value = (data as any).height
+    })
+    .exec()
+  return scrollHeight
 }

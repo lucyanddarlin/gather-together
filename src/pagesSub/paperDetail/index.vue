@@ -69,7 +69,7 @@
       </view>
     </view>
     <view class="w-full h-20rpx bg-#f5f5f5" />
-    <view pb-150rpx>
+    <view pb-180rpx>
       <view
         w-full
         px-36rpx
@@ -84,25 +84,30 @@
       </view>
       <view v-if="homeTopicInfo.reply_count > 0">
         <CommentItem
-          v-for="comment in commentList"
+          v-for="(comment, index) in commentList"
+          id="commentEl"
           :key="comment.comment_id"
+          :index="index"
           :comment-item="comment"
+          @show-reply="handleShowReply"
+          @send-height="handleSendHeight"
         />
       </view>
+      <LoadMore :status="commentStatus" @load-more="getComment()" />
     </view>
-    <view class="input-wrap">
+    <view id="inputEl" class="input-wrap">
       <view flex-1 pr-24rpx>
         <textarea
           v-model="content"
           class="textarea"
-          placeholder="test"
+          placeholder="发表你的想法吧"
           placeholder-class="textarea-placeholder"
           :auto-height="true"
           :show-confirm-bar="false"
           :cursor-spacing="30"
           :maxlength="maxCommentLength"
           :focus="isFocus"
-          @blur="handleBlur"
+          @blur="handleBlur(0)"
         />
       </view>
       <view
@@ -115,18 +120,79 @@
         text-24rpx
         rounded-32rpx
         class="bg-#699AFF"
+        @click="handleSendReply"
       >
         发送
       </view>
     </view>
+    <u-popup
+      v-model="replyFlag"
+      mode="bottom"
+      height="80%"
+      border-radius="30"
+      @close="handlePopupClose"
+    >
+      <scroll-view
+        class="reply-wrap"
+        scroll-y
+        :style="{ height: `calc(100% - ${inputH}px)` }"
+      >
+        <CommentItem :comment-item="currentComment" top />
+        <view class="w-full h-20rpx bg-#f5f5f5" />
+        <CommentItem
+          v-for="reply in replyList"
+          :key="reply.reply_id"
+          :comment-item="reply"
+          child
+          @set-reply-target="handleSetReplyTarget"
+        />
+        <LoadMore :status="replyStatus" @load-more="getReply()" />
+      </scroll-view>
+      <view class="input-wrap">
+        <view flex-1 pr-24rpx>
+          <textarea
+            v-model="content"
+            class="textarea"
+            :placeholder="placeholder"
+            placeholder-class="textarea-placeholder"
+            :auto-height="true"
+            :show-confirm-bar="false"
+            :cursor-spacing="30"
+            :maxlength="maxCommentLength"
+            :focus="replyFocus"
+            @blur="handleBlur(1)"
+          />
+        </view>
+        <view
+          w-86rpx
+          h-66rpx
+          flex
+          justify-center
+          items-center
+          text-white
+          text-24rpx
+          rounded-32rpx
+          class="bg-#699AFF"
+          @click.stop="handleSendReply"
+        >
+          发送
+        </view>
+      </view>
+    </u-popup>
   </view>
 </template>
 
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
-import { computed, ref } from 'vue'
-import { reqGetHomeTopicInfo, reqGetTopicComments } from '@/api'
-import { isNull } from '@/utils/common'
+import { onLoad, onReady } from '@dcloudio/uni-app'
+import { type Ref, computed, ref, watch, watchEffect } from 'vue'
+import {
+  reqGetCommentReply,
+  reqGetHomeTopicInfo,
+  reqGetTopicComments,
+  reqSendComment,
+  reqSendReply,
+} from '@/api'
+import { isNull, useScrollHeight } from '@/utils/common'
 import CommentItem from './comment-item.vue'
 import type { HomeTopicInfo, ICommentItem } from '@/typings/home'
 const topic_id = ref<string | number>('')
@@ -145,16 +211,45 @@ const homeTopicInfo = ref<HomeTopicInfo>({
   forward_count: 0,
   like: false,
 })
-const page = ref(0)
+const commentPage = ref(0)
+const replyPage = ref(0)
 const size = 10
-const status = ref<'loading' | 'noMore' | 'more'>('loading')
+const commentStatus = ref<'loading' | 'noMore' | 'more'>('loading')
+const replyStatus = ref<'loading' | 'noMore' | 'more'>('loading')
 const commentList = ref<ICommentItem[]>([])
+const replyList = ref<ICommentItem[]>([])
 const commentListMap: any = {}
+let replyListMap: any = {}
 const content = ref<string>('')
 const isFocus = ref<boolean>(false)
+const replyFocus = ref<boolean>(false)
 const maxCommentLength = 500
 const imageFigure = ref<boolean>(false)
 const imageCount = computed(() => homeTopicInfo.value.picture_urls.length)
+const replyFlag = ref<boolean>(false)
+const currentComment = ref<ICommentItem>({} as ICommentItem)
+const replyTarget = ref<any>()
+const placeholder = computed(() =>
+  replyTarget?.value?.to_reply_username
+    ? `回复${replyTarget?.value?.to_reply_username}`
+    : '发表你都想法吧'
+)
+
+watch(
+  replyList,
+  () => {
+    for (let i = 0; i < replyList.value.length; i++) {
+      for (let j = 0; j < replyList.value.length; j++) {
+        if (!replyList.value[i] || !replyList.value[j]) break
+        if (replyList.value[i].to_reply_id === replyList.value[j].reply_id) {
+          replyList.value[i].to_reply_username = replyList.value[j].username
+          break
+        }
+      }
+    }
+  },
+  { deep: true }
+)
 
 onLoad(async (options) => {
   topic_id.value = options!.topic_id
@@ -167,27 +262,74 @@ const getPaper = async () => {
   if (!isNull(data)) {
     homeTopicInfo.value = data.body
   }
+  console.log('topic_info', homeTopicInfo.value)
 }
 const getComment = async () => {
   if (isNull(homeTopicInfo.value.topic_id)) return
-  if (status.value === 'noMore') return
-  if (status.value === 'loading' && page.value) return
+  if (commentStatus.value === 'noMore') return
+  if (commentStatus.value === 'loading' && commentPage.value) return
   const { data } = await reqGetTopicComments(
-    page.value,
+    commentPage.value,
     size,
     homeTopicInfo.value.topic_id
   )
   if (!isNull(data)) {
-    status.value = data.body.length < size ? 'noMore' : 'more'
+    commentStatus.value = data.body.length < size ? 'noMore' : 'more'
     data.body.forEach((comment) => {
       if (!commentListMap[comment.comment_id]) {
         commentListMap[comment.comment_id] = comment
         commentList.value.push(comment)
       }
     })
-    page.value++
+    commentPage.value++
     return
   }
+}
+const getReply = async () => {
+  if (isNull(currentComment.value.comment_id)) return
+  if (replyStatus.value === 'noMore') return
+  if (replyStatus.value === 'loading' && replyPage.value) return
+  const { data } = await reqGetCommentReply(
+    replyPage.value,
+    size,
+    currentComment.value.comment_id
+  )
+  if (!isNull(data)) {
+    console.log('获取评论成功')
+    replyStatus.value = data.body.length < size ? 'noMore' : 'more'
+    data.body.forEach((reply) => {
+      if (!replyListMap[reply.reply_id!]) {
+        commentListMap[reply.reply_id!] = reply
+        replyList.value.push(reply)
+      }
+    })
+    replyPage.value++
+    return
+  }
+}
+const handleSendReply = async () => {
+  if (isNull(content.value)) {
+    console.log('no content')
+    return
+  }
+  if (!replyFlag.value) {
+    const { data } = await reqSendComment({
+      topic_id: homeTopicInfo.value.topic_id,
+      content: content.value,
+    })
+    if (!isNull(data)) {
+      commentList.value.unshift(data.body)
+    }
+  } else {
+    const { data } = await reqSendReply({
+      comment_id: currentComment.value.comment_id,
+      content: content.value,
+      to_reply_id: replyTarget.value?.reply_id,
+    })
+    console.log(data.body)
+    replyList.value.unshift(data.body)
+  }
+  content.value = ''
 }
 const handleLoad = (e: any) => {
   if (imageCount.value === 1) {
@@ -201,9 +343,43 @@ const handleClickImage = (url: string) => {
   // TODO: preview image
   console.log(url)
 }
-const handleBlur = () => {
-  console.log('blur', content.value)
-  isFocus.value = false
+const handleBlur = (type: number) => {
+  if (type === 0) {
+    isFocus.value = false
+  } else if (type === 1) {
+    replyFocus.value = false
+  }
+  console.log(type, 'blur')
+}
+const handleShowReply = (value: boolean, index: number) => {
+  replyFlag.value = value
+  currentComment.value = commentList.value[index]
+  getReply()
+}
+const handleSetReplyTarget = (value: any) => {
+  replyTarget.value = value
+  replyFocus.value = true
+}
+const handlePopupClose = () => {
+  replyList.value = []
+  replyListMap = {}
+  replyPage.value = 0
+  replyStatus.value = 'loading'
+  replyTarget.value = null
+  currentComment.value = {} as ICommentItem
+}
+const inputH = ref<number>(0)
+const commentH = ref<number>(0)
+onReady(() => {
+  let inputHeight: Ref<number>
+  // eslint-disable-next-line prefer-const
+  inputHeight = useScrollHeight('#inputEl')
+  watchEffect(() => {
+    inputH.value = inputHeight.value
+  })
+})
+const handleSendHeight = (height: any) => {
+  commentH.value = height
 }
 </script>
 

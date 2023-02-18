@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import uPopup from '@/uni_modules/vk-uview-ui/components/u-popup/u-popup.vue'
+// import uPopup from '@/uni_modules/vk-uview-ui/components/u-popup/u-popup.vue'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
   HostType,
