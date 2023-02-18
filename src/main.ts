@@ -2,6 +2,7 @@ import { createSSRApp } from 'vue'
 import { setupStore } from '@/store'
 
 import NavBar from '@/components/nav-bar.vue'
+import MannerButton from '@/components/manner-button.vue'
 import TabSection from './components/tab-section.vue'
 import TabItem from './components/tab-item.vue'
 import PaperItem from './components/paper-item.vue'
@@ -18,6 +19,7 @@ export function createApp() {
   app.component('TabSection', TabSection)
   app.component('TabItem', TabItem)
   app.component('PaperItem', PaperItem)
+  app.component('MannerButton', MannerButton)
   return {
     app,
   }
