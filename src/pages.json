@@ -35,6 +35,30 @@
           "style": {
             "navigationBarTitleText": "详情"
           }
+        },
+        {
+          "path": "publisherSub/publisher-type",
+          "style": {
+            "navigationBarTitleText": "发布者模式"
+          }
+        },
+        {
+          "path": "publisherSub/publisher-manage",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publisherSub/publisher-detail",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "publisherSub/publisher-publish",
+          "style": {
+            "navigationStyle": "custom"
+          }
         }
       ]
     }
