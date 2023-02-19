@@ -5,6 +5,13 @@
       class="main-page"
       :scroll-y="true"
       :scroll-with-animation="true"
+      :scroll-top="scrollTop"
+      :refresher-enabled="true"
+      :refresher-triggered="isTriggered"
+      @scroll="handleScroll"
+      @scrolltolower="handleScrollToLower"
+      @refresherrefresh="handleRefresh"
+      @refresherabort="handleRefresherAbort"
     >
       <view>
         <TabSection :default-active="activeIndex" @tab-switch="handleTabSwitch">
@@ -16,18 +23,25 @@
             <text>{{ item.title }}</text>
           </TabItem>
         </TabSection>
-        <view v-show="activeIndex === HOME"> <Home /> </view>
+        <view v-show="activeIndex === HOME">
+          <Home />
+        </view>
         <view v-show="activeIndex === RACE">race</view>
         <view v-show="activeIndex === LECTURE">lec</view>
         <view v-show="activeIndex === ACTIVITY">act</view>
       </view>
     </scroll-view>
+    <Float
+      :type="HOME"
+      :scroll-value="oldScrollTop"
+      @back-to-top="handleBackToTop"
+    />
   </view>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { nextTick, ref } from 'vue'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { ACTIVITY, HOME, LECTURE, RACE } from '@/utils/constant'
 import { useHomeStore } from '@/store/modules/home'
 import Home from './home.vue'
@@ -42,7 +56,9 @@ const topSectionList: TopSection[] = [
 const activeIndex = ref<number>(HOME)
 // const tabMap: any = [['home', reqGetHomePaperList]]
 const { getHomePaperList } = useHomeStore()
-
+const scrollTop = ref<number>(0)
+const oldScrollTop = ref<number>(0)
+const isTriggered = ref<boolean>(false)
 // interface ListMap {
 //   [key: string]: {
 //     dataList: Array<any>
@@ -63,9 +79,26 @@ const { getHomePaperList } = useHomeStore()
 //     status: 'loading',
 //   },
 // })
-
+onLoad(() => {
+  getHomePaperList()
+  uni.$on('postNewTopic', handleRefresh)
+})
+onUnload(() => {
+  uni.$off('postNewTopic')
+})
 const handleTabSwitch = (index: number) => {
   activeIndex.value = index
+}
+const handleRefresh = async () => {
+  isTriggered.value = true
+  await getHomePaperList(true)
+  isTriggered.value = false
+}
+const handleRefresherAbort = () => {
+  isTriggered.value = false
+}
+const handleScrollToLower = () => {
+  getHomePaperList()
 }
 // const getDataList = async (
 //   isClear?: boolean,
@@ -83,9 +116,15 @@ const handleTabSwitch = (index: number) => {
 //   const { data } = await requestApi(listMap[type].page++, listMap[type].size)
 //   listMap[type].dataList = data.body
 // }
-onLoad(() => {
-  getHomePaperList()
-})
+const handleScroll = (options: any) => {
+  oldScrollTop.value = options.target.scrollTop as number
+}
+const handleBackToTop = () => {
+  scrollTop.value = oldScrollTop.value
+  nextTick(() => {
+    scrollTop.value = 0
+  })
+}
 </script>
 
 <style lang="scss">

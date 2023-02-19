@@ -8,6 +8,7 @@ import TabSection from './components/tab-section.vue'
 import TabItem from './components/tab-item.vue'
 import PaperItem from './components/paper-item.vue'
 import LoadMore from './components/load-more.vue'
+import Float from './components/float.vue'
 import App from './App.vue'
 import 'uno.css'
 import '@/styles/index.scss'
@@ -22,6 +23,7 @@ export function createApp() {
   app.component('PaperItem', PaperItem)
   app.component('MannerButton', MannerButton)
   app.component('LoadMore', LoadMore)
+  app.component('Float', Float)
   return {
     app,
   }

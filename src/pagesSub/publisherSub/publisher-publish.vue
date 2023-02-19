@@ -21,7 +21,7 @@
       <view
         v-else-if="key !== 'race_level'"
         relative
-        center
+        flex-center
         class="text-option"
         left-500rpx
         bottom-200rpx
@@ -38,8 +38,8 @@
         <view>
           {{ options[key as keyof Options].value }} >
           <u-picker
-            mode="selector"
             v-model="options[key as keyof Options].isShow"
+            mode="selector"
             :range="options[key as keyof Options].range"
             @confirm="setOptions($event, key)"
           ></u-picker>

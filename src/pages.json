@@ -39,6 +39,12 @@
           }
         },
         {
+          "path": "publishPage/index",
+          "style": {
+            "navigationBarTitleText": "发布"
+          }
+        },
+        {
           "path": "paperDetail/index",
           "style": {
             "navigationBarTitleText": "详情"

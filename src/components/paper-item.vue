@@ -2,7 +2,7 @@
   <view
     px-28rpx
     py-28rpx
-    mt-12rpx
+    mt-20rpx
     bg-white
     w-full
     relative

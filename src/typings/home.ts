@@ -58,3 +58,13 @@ export interface ICommentItem {
   to_reply_username?: string
   to_reply_id: string
 }
+
+export interface PostTopicResult {
+  accessKeyId: string
+  policy: string
+  signature: string
+  dir: string
+  host: string
+  callback: string
+  topicId: string
+}
