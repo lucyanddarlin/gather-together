@@ -1,5 +1,10 @@
 import { get, post } from './request'
-import type { HomeTopicInfo, ICommentItem, PaperItem } from '@/typings/home'
+import type {
+  HomeTopicInfo,
+  ICommentItem,
+  PaperItem,
+  PostTopicResult,
+} from '@/typings/home'
 
 export const reqGetHomePaperList = (page: number, size: number) =>
   get<{ code: number; body: PaperItem[] }>('/home/get/forum', {
@@ -45,3 +50,13 @@ export const reqSendReply = (data: {
   comment_id: string
   to_reply_id?: string
 }) => post<{ code: number; body: ICommentItem }>('/home/send/forum/reply', data)
+
+export const reqPostTopic = (data: {
+  title: string
+  content: string
+  pic_count?: number
+}) =>
+  post<{ code: number; message: string; body: PostTopicResult }>(
+    '/home/send/forum/topic',
+    data
+  )
