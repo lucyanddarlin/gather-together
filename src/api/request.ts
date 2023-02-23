@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import BaseRequestConfig from '@/config/config'
 import { showLoading } from '@/utils/common'
+import { TOKEN_KEY } from '@/utils/constant'
 type RequestData<T> = {
   /** 请求方式 */
   methodType?: 'GET' | 'POST'
@@ -65,8 +66,9 @@ const RequestMethod: request = (
     //开启加载动画
     loadingBox = showLoading()
   }
-  const token =
-    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzMDQzMTI5MTUzMzMyMjI0MDAiLCJpYXQiOjE2NzY1NTU4MTQsInJvbGUiOiJbe1wiYXV0aG9yaXR5XCI6XCJST0xFX1VTRVJcIn0se1wiYXV0aG9yaXR5XCI6XCJST0xFX0FETUlOXCJ9XSIsImV4cCI6MTY3NzE2MDYxNH0.aTHxAcRpQnTgubN9CdvVwZCvHwpx5CrN47d3AwDqFeBaBbrdqVkuLvYGGnXmfUEHWm4t_VEaUYTq-8KmeafX7Q'
+  const token = uni.getStorageSync(TOKEN_KEY)
+  // const token =
+  //   'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzMDQzMTI5MTUzMzMyMjI0MDAiLCJpYXQiOjE2NzY1NTU4MTQsInJvbGUiOiJbe1wiYXV0aG9yaXR5XCI6XCJST0xFX1VTRVJcIn0se1wiYXV0aG9yaXR5XCI6XCJST0xFX0FETUlOXCJ9XSIsImV4cCI6MTY3NzE2MDYxNH0.aTHxAcRpQnTgubN9CdvVwZCvHwpx5CrN47d3AwDqFeBaBbrdqVkuLvYGGnXmfUEHWm4t_VEaUYTq-8KmeafX7Q'
   if (token) {
     header.Authorization = token
   }
