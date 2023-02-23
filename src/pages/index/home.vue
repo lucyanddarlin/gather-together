@@ -24,8 +24,11 @@
         v-for="item in homePaperListMap.dataList"
         :key="item.topic_id"
         :paper-item="item"
+        :type="HOME"
+        @more-options="handleShowMoreOptions"
       />
     </view>
+    <LoadMore :status="homePaperListMap.status" />
   </view>
 </template>
 
@@ -33,8 +36,11 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useHomeStore } from '@/store/modules/home'
-import type { TopSection } from '@/typings/home'
+import { HOME } from '@/utils/constant'
 
+import type { IPaperItem, TopSection } from '@/typings/home'
+
+const emit = defineEmits(['more'])
 const NORMAL = 0
 const MY_ZONE = 1
 const homeIndex = ref<number>(NORMAL)
@@ -45,6 +51,9 @@ const homeSectionList: TopSection[] = [
 const { homePaperListMap } = storeToRefs(useHomeStore())
 const handleHomeSection = (index: number) => {
   homeIndex.value = index
+}
+const handleShowMoreOptions = (value: IPaperItem) => {
+  emit('more', value)
 }
 </script>
 

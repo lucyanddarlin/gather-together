@@ -2,11 +2,11 @@ import { reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { reqGetHomePaperList } from '@/api'
 import { isNull } from '@/utils/common'
-import type { ListMap, PaperItem } from '@/typings/home'
+import type { IPaperItem, ListMap } from '@/typings/home'
 
 export const useHomeStore = defineStore('home', () => {
   const commentH = ref<number>(0)
-  const homePaperListMap = reactive<ListMap<PaperItem>>({
+  const homePaperListMap = reactive<ListMap<IPaperItem>>({
     dataList: [],
     dataMap: {},
     page: 0,
@@ -14,7 +14,7 @@ export const useHomeStore = defineStore('home', () => {
     status: 'loading',
     key: 'topic_id',
   })
-  // const homePaperListMap: ListMap<PaperItem> = {
+  // const homePaperListMap: ListMap<IPaperItem> = {
   //   dataList: [],
   //   dataMap: {},
   //   page: 0,
@@ -23,7 +23,7 @@ export const useHomeStore = defineStore('home', () => {
   //   key: 'topic_id',
   // }
 
-  const homePaperList = ref<PaperItem[]>([])
+  const homePaperList = ref<IPaperItem[]>([])
   const getHomePaperList = async (isClear?: boolean) => {
     if (isClear) {
       homePaperListMap.status = 'more'

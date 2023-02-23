@@ -57,25 +57,23 @@ export const useScrollHeight = (el: string): any => {
 }
 
 const maxImageSize = 10485760
-type Images = UniApp.ChooseImageSuccessCallbackResultFile
 export const chooseImages = (count: number): Promise<string[]> => {
   const images: string[] = []
   return new Promise((resolve) =>
-    uni.chooseImage({
+    uni.chooseMedia({
       count,
-      extension: ['heic'],
+      mediaType: ['image'],
       sizeType: ['original', 'compressed'],
       sourceType: ['album', 'camera'],
       success: (result) => {
         // const reg = /\.(heic)$/
         if (!result.tempFiles) return
-        ;(result.tempFiles as Images[]).forEach((file) => {
+        result.tempFiles.forEach((file) => {
           console.log('file', file)
-          // if (reg.test(file.path)) return showMsg('暂不支持 heic 格式的文件')
           if (file.size > maxImageSize) return showMsg('图片大小不能超过 10 MB')
           if (count === 0) return
           count--
-          images.push(file.path)
+          images.push(file.tempFilePath)
         })
         resolve(images)
       },

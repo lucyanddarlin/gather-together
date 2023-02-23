@@ -23,7 +23,7 @@
             </span>
           </view>
         </view>
-        <view class="iconfont icon-sousuo" />
+        <view class="iconfont icon-sousuo" @click="handleShowMoreOptions" />
       </view>
       <view class="mt-26rpx text-28rpx text-#575757 leading-40rpx text-justify">
         <span>{{ homeTopicInfo.content }}</span>
@@ -90,7 +90,6 @@
           :index="index"
           :comment-item="comment"
           @show-reply="handleShowReply"
-          @send-height="handleSendHeight"
         />
       </view>
       <LoadMore :status="commentStatus" @load-more="getComment()" />
@@ -179,6 +178,7 @@
         </view>
       </view>
     </u-popup>
+    <Popup ref="popup" :select-item="homeTopicInfo" />
   </view>
 </template>
 
@@ -234,6 +234,7 @@ const placeholder = computed(() =>
     ? `回复${replyTarget?.value?.to_reply_username}`
     : '发表你都想法吧'
 )
+const popup = ref<any>()
 
 watch(
   replyList,
@@ -340,8 +341,9 @@ const handleLoad = (e: any) => {
   }
 }
 const handleClickImage = (url: string) => {
-  // TODO: preview image
-  console.log(url)
+  uni.previewImage({
+    urls: [url],
+  })
 }
 const handleBlur = (type: number) => {
   if (type === 0) {
@@ -369,7 +371,7 @@ const handlePopupClose = () => {
   currentComment.value = {} as ICommentItem
 }
 const inputH = ref<number>(0)
-const commentH = ref<number>(0)
+// const commentH = ref<number>(0)
 onReady(() => {
   let inputHeight: Ref<number>
   // eslint-disable-next-line prefer-const
@@ -378,8 +380,11 @@ onReady(() => {
     inputH.value = inputHeight.value
   })
 })
-const handleSendHeight = (height: any) => {
-  commentH.value = height
+// const handleSendHeight = (height: any) => {
+//   commentH.value = height
+// }
+const handleShowMoreOptions = () => {
+  popup.value.show()
 }
 </script>
 
