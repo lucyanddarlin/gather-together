@@ -8,8 +8,30 @@
     relative
     @click="handleClickItem"
   >
-    <view text-32rpx font-bold class="text-#534E4E">{{ paperItem.title }}</view>
-    <span absolute right-24rpx top-24rpx class="iconfont icon-sousuo"></span>
+    <view text-32rpx font-bold class="text-#534E4E">
+      {{ paperItem.title || paperItem.project_name }}
+    </view>
+    <span
+      absolute
+      w-50rpx
+      h-50rpx
+      right-24rpx
+      top-24rpx
+      class="iconfont icon-sousuo"
+      @click.stop="handleShowOptions"
+    ></span>
+    <view v-if="type === GATHER" flex my-20rpx>
+      <view
+        px-12rpx
+        py-8rpx
+        mr-12rpx
+        rounded-8rpx
+        text-24rpx
+        class="bg-#F5F5F5 text-#FFAF50"
+      >
+        #互联网+
+      </view>
+    </view>
     <view
       my-20rpx
       p-16rpx
@@ -17,9 +39,9 @@
       text-28rpx
       text-justify
       class="paper-desc bg-#F5F5F5 text-#A4A4A4"
-      >{{ content }}</view
+      >{{ commonObj.content }}</view
     >
-    <view flex items-center>
+    <view v-if="type === HOME" flex items-center>
       <view h-60rpx w-60rpx rounded-full bg-pink mr-12rpx overflow-hidden>
         <image h-60rpx w-60rpx rounded-full :src="paperItem.creator_head_url" />
       </view>
@@ -45,7 +67,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { reactive, watch } from 'vue'
+import { GATHER, HOME } from '@/utils/constant'
 
 interface PaperItem {
   topic_id: string
@@ -62,20 +85,49 @@ interface PaperItem {
   forward_count: number
   like: boolean
 }
-const props = defineProps<{ paperItem: PaperItem }>()
+interface IGatherItem {
+  project_id: string
+  project_name: string
+  introduce: string
+}
+const props = defineProps<{
+  type: number
+  paperItem: Partial<PaperItem & IGatherItem>
+}>()
+const emit = defineEmits(['moreOptions'])
 const overflowLength = 100
-
-const content = computed(() => {
-  return props.paperItem.content.length > overflowLength
-    ? `${props.paperItem.content.slice(0, overflowLength)}......`
-    : props.paperItem.content
+const commonObj = reactive<{ content: string; url: string }>({
+  content: '',
+  url: '',
 })
+watch(
+  () => props.paperItem,
+  () => {
+    let newContent = ''
+    let url = ''
+    if (props.type === HOME) {
+      newContent = props.paperItem.content!
+      url = `/pagesSub/paperDetail/index?topic_id=${props.paperItem.topic_id}`
+    } else if (props.type === GATHER) {
+      newContent = props.paperItem.introduce!
+      url = `test`
+    }
+    commonObj.content =
+      newContent.length > overflowLength
+        ? `${newContent.slice(0, overflowLength)}......`
+        : newContent
+    commonObj.url = url
+  },
+  { immediate: true, deep: true }
+)
 
 const handleClickItem = () => {
-  console.log('click', props.paperItem.topic_id)
   uni.navigateTo({
-    url: `/pagesSub/paperDetail/index?topic_id=${props.paperItem.topic_id}`,
+    url: commonObj.url,
   })
+}
+const handleShowOptions = () => {
+  emit('moreOptions', props.paperItem)
 }
 </script>
 

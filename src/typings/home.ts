@@ -12,7 +12,7 @@ export interface ListMap<T = any> {
   status: 'loading' | 'more' | 'noMore'
 }
 
-export interface PaperItem {
+export interface IPaperItem {
   topic_id: string
   creator_id: string
   title: string

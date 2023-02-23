@@ -2,12 +2,12 @@ import { get, post } from './request'
 import type {
   HomeTopicInfo,
   ICommentItem,
-  PaperItem,
+  IPaperItem,
   PostTopicResult,
 } from '@/typings/home'
 
 export const reqGetHomePaperList = (page: number, size: number) =>
-  get<{ code: number; body: PaperItem[] }>('/home/get/forum', {
+  get<{ code: number; body: IPaperItem[] }>('/home/get/forum', {
     page,
     size,
   })

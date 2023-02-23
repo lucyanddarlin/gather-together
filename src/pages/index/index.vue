@@ -24,7 +24,7 @@
           </TabItem>
         </TabSection>
         <view v-show="activeIndex === HOME">
-          <Home />
+          <Home @more="handleShowMoreOptions" />
         </view>
         <view v-show="activeIndex === RACE">race</view>
         <view v-show="activeIndex === LECTURE">lec</view>
@@ -34,19 +34,24 @@
     <Float
       :type="HOME"
       :scroll-value="oldScrollTop"
+      :is-show-popup="isShowPopup"
       @back-to-top="handleBackToTop"
     />
+    <Popup ref="popup" :select-item="selectItem" @popup="handlePopup" />
   </view>
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { nextTick, reactive, ref } from 'vue'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { ACTIVITY, HOME, LECTURE, RACE } from '@/utils/constant'
 import { useHomeStore } from '@/store/modules/home'
 import Home from './home.vue'
-import type { TopSection } from '@/typings/home'
+import type { IPaperItem, TopSection } from '@/typings/home'
 
+type ISelectItem = Partial<IPaperItem>
+let selectItem = reactive<ISelectItem>({})
+const popup = ref<any>()
 const topSectionList: TopSection[] = [
   { index: HOME, title: '首页' },
   { index: RACE, title: '比赛' },
@@ -59,6 +64,7 @@ const { getHomePaperList } = useHomeStore()
 const scrollTop = ref<number>(0)
 const oldScrollTop = ref<number>(0)
 const isTriggered = ref<boolean>(false)
+const isShowPopup = ref<boolean>(false)
 // interface ListMap {
 //   [key: string]: {
 //     dataList: Array<any>
@@ -124,6 +130,13 @@ const handleBackToTop = () => {
   nextTick(() => {
     scrollTop.value = 0
   })
+}
+const handleShowMoreOptions = (value: ISelectItem) => {
+  selectItem = value
+  popup.value.show()
+}
+const handlePopup = (value: boolean) => {
+  isShowPopup.value = value
 }
 </script>
 

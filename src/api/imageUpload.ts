@@ -14,7 +14,6 @@ interface UploadQuery {
 }
 
 const dispatchUpload = (filePath: string, query: UploadQuery, host: string) => {
-  console.log('312312312321', filePath)
   console.log('query', query)
   console.log('host', host)
 

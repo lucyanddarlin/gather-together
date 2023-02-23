@@ -62,7 +62,6 @@ const RequestMethod: request = (
 ) => {
   //加载动画
   if (loading && loadingBox === null) {
-    console.log('开启加载')
     //开启加载动画
     loadingBox = showLoading()
   }
