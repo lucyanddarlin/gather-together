@@ -24,7 +24,8 @@
     {
       "path": "pages/profile/profile",
       "style": {
-        "navigationBarTitleText": "uni-app"
+        "navigationStyle": "custom",
+        "navigationBarTextStyle": "white"
       }
     }
   ],
@@ -36,6 +37,12 @@
           "path": "testSub/index",
           "style": {
             "navigationBarTitleText": "test"
+          }
+        },
+        {
+          "path": "profileSetting/index",
+          "style": {
+            "navigationBarTitleText": "设置"
           }
         },
         {

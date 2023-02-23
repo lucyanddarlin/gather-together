@@ -15,6 +15,17 @@ export default {
       'flex-center': 'flex justify-center items-center',
     },
   ],
+
+  theme: {
+    colors: {
+      main: '#4380FF',
+      follow: '#FF6969',
+      favour: '#56C28E',
+      setting: '#FFAF50',
+      page: 'var(--page-color)',
+      test: 'var(--test)',
+    },
+  },
   transformers: [
     // https://github.com/MellowCo/unocss-preset-weapp/tree/main/src/transformer/transformerAttributify
     transformerAttributify(),
