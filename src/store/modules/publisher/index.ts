@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import {
   type IDescription,
   type IPublish,
@@ -29,16 +29,16 @@ export const usePublisherStore = defineStore('publisher', () => {
   // GET请求得到的信息
   // const descriptions: Record<string, Array<IDescription>> = {}
   // 根据GET请求处理成发布页面的具体信息
-  const publish: Record<Type, Array<IPublish>> = {
+  const publish: Record<Type, Array<IPublish>> = reactive({
     0: [],
     1: [],
     2: [],
-  }
-  const descriptions: Record<Type, Array<IDescription>> = {
+  })
+  const descriptions: Record<Type, Array<IDescription>> = reactive({
     0: [],
     1: [],
     2: [],
-  }
+  })
 
   // type PostType = keyof typeof Type
   // 测试部分
