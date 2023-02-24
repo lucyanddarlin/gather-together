@@ -13,6 +13,7 @@
           value.type !== 'text_option' &&
           (key !== 'race_level' || post_type === '比赛')
         "
+        fw-600
         text-28rpx
         text-dark
       >
@@ -118,12 +119,12 @@
         ></u-upload>
       </view>
     </view>
-    <view ml-28rpx>
+    <view ml-10rpx pb-30rpx>
       <view v-if="isPublish">
         <PublishButton
           title="发布"
-          w-698rpx
-          height="100rpx"
+          width="694rpx"
+          height="96rpx"
           text-32rpx
           :bg-color="isAllFilled ? '#578DF7' : '#DFDFDF'"
           color="#fff"
@@ -135,8 +136,8 @@
         <view mt-60rpx>
           <PublishButton
             title="保存"
-            w-698rpx
-            height="100rpx"
+            width="694rpx"
+            height="96rpx"
             text-32rpx
             bg-color="#578DF7"
             color="#fff"
@@ -147,8 +148,8 @@
         <view mt-24rpx>
           <PublishButton
             title="删除"
-            w-698rpx
-            height="100rpx"
+            width="694rpx"
+            height="96rpx"
             text-32rpx
             bg-color="#FF6969"
             color="#fff"
@@ -164,8 +165,6 @@
 import { computed, onBeforeMount, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { addMonths, format } from 'date-fns'
-
-// import { useRoute, useRouter } from 'vue-router'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
   HostType,

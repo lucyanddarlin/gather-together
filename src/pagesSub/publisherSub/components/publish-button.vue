@@ -7,6 +7,7 @@
       backgroundColor: isReversed ? props.color : props.bgColor,
       border: '2rpx solid ' + (isReversed ? props.bgColor : 'transparent'),
       boxShadow: `0rpx ${props.boxShadow} 4rpx rgba(0, 0, 0, 0.2)`,
+      width: Width,
     }"
   >
     <u-icon v-if="props.icon" :name="props.icon" size="32rpx" />
@@ -20,15 +21,17 @@ import { isNull } from '@/utils/common'
 const props = defineProps<{
   title?: string
   rounded?: string
-  reverse?: Boolean
+  reverse?: boolean
   color?: string
   bgColor?: string
   boxShadow?: string
   icon?: string
   height?: string
+  width?: string
 }>()
 const isReversed = computed(() => (isNull(props.reverse) ? false : true))
 const borderRadius = computed(() => (isNull(props.rounded) ? 0 : props.rounded))
+const Width = computed(() => (isNull(props.width) ? 'auto' : props.width))
 </script>
 
 <style lang="scss" scoped>
