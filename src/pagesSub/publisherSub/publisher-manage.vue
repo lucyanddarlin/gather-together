@@ -8,8 +8,8 @@
     cursor-pointer
     @tap="handleClick(item.post_id)"
   />
-  <div class="publish" center @click="handleCreate()">
-    <u-icon name="plus" size="40rpx"></u-icon>
+  <div class="publish" flex-center @click="handleCreate()">
+    <div class="iconfont icon-fasong" text-40rpx></div>
   </div>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">

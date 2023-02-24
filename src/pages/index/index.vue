@@ -29,6 +29,8 @@
         <view v-show="activeIndex === RACE">race</view>
         <view v-show="activeIndex === LECTURE">lec</view>
         <view v-show="activeIndex === ACTIVITY">act</view>
+
+        <view w-100rpx h-100rpx bg-yellow @tap="navi">入口</view>
       </view>
     </scroll-view>
     <Float
@@ -101,6 +103,10 @@ const handleShowMoreOptions = (value: ISelectItem) => {
 }
 const handlePopup = (value: boolean) => {
   isShowPopup.value = value
+}
+
+const navi = () => {
+  uni.navigateTo({ url: '../../pagesSub/publisherSub/publisher-type' })
 }
 </script>
 
