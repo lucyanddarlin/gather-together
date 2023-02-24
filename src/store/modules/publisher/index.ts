@@ -157,13 +157,13 @@ export const usePublisherStore = defineStore('publisher', () => {
       descriptions[description.post_type].push(description)
       publish[description.post_type].push(p)
       console.log('新添')
-      console.log('publish', publish)
+      console.log('publish', publish[description.post_type])
       console.log('description', descriptions[description.post_type])
     } else {
-      descriptions[description.post_type][index] = description
-      publish[description.post_type][index] = p
+      descriptions[description.post_type].splice(index, 1, description)
+      publish[description.post_type].splice(index, 1, p)
       console.log('旧有')
-      console.log('publish', publish)
+      console.log('publish', publish[description.post_type])
       console.log('description', descriptions[description.post_type])
     }
 
