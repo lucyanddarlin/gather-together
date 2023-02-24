@@ -70,6 +70,10 @@ import PublishFilter from './components/publish-filter.vue'
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8ec5a70 (refactor: filter options style renew & tag to class & '=' to array.methods)
 type PostType = keyof typeof Type
 const publisherStore = usePublisherStore()
 const post_type = publisherStore.cur_type as PostType
