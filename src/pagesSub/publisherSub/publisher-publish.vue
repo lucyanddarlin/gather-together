@@ -28,6 +28,7 @@
         bottom-200rpx
         w-210rpx
         h-54rpx
+        fw-500
         :style="{
           backgroundColor: '#598DF9',
           color: '#fff',
@@ -55,6 +56,7 @@
           h-86rpx
           mt-30rpx
           text-28rpx
+          fw-500
           pl-26rpx
           :maxlength="value.limit"
           @input="change($event, key)"
@@ -68,6 +70,7 @@
           rows="5"
           mt-30rpx
           text-28rpx
+          fw-500
           px-26rpx
           :maxlength="value.limit"
           @input="change($event, key)"
@@ -83,6 +86,7 @@
             @confirm="setDate($event, key)"
           ></u-picker>
           <u-cell-item
+            fw-500
             :title="picker[key as keyof Picker].value"
             @click="picker[key as keyof Picker].isShow = true"
           ></u-cell-item>
@@ -103,6 +107,7 @@
             @confirm="setOptions($event, key)"
           ></u-picker>
           <u-cell-item
+            fw-500
             :title="options[key as keyof Options].value"
             @click="options[key as keyof Options].isShow = true"
           ></u-cell-item>
