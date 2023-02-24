@@ -1,5 +1,6 @@
 <template>
   <button
+    class="publish-button"
     :style="{
       lineHeight: props.height ? props.height : 'inherit',
       borderRadius: borderRadius,
@@ -35,7 +36,7 @@ const Width = computed(() => (isNull(props.width) ? 'auto' : props.width))
 </script>
 
 <style lang="scss" scoped>
-button {
+.publish-button {
   z-index: 10;
   vertical-align: middle;
   text-align: center;

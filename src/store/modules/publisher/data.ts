@@ -78,7 +78,7 @@ export const activities = [
     host_type: HostType.学校,
     location: '广州大学文科教学楼',
     post_type: Type.活动,
-    score_type: ScoreType.科技学术,
+    score_type: ScoreType.综合类,
     access: '报名链接',
     description:
       '我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人',
@@ -94,7 +94,7 @@ export const activities = [
     location: '广州大学文科教学楼',
     race_level: Level.国家级,
     post_type: Type.活动,
-    score_type: ScoreType.科技学术,
+    score_type: ScoreType.科技类,
     access: '报名链接',
     description:
       '我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人',
