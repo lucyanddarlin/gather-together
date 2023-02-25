@@ -41,8 +41,9 @@
         <view class="bg-#F5F5F5 text-#A4A4A4 p-16rpx rounded-12rpx">
           {{ item.introduce }}
         </view>
-      </view></view
-    >
+      </view>
+      <PaperItem :type="GATHER" />
+    </view>
     <!-- 人才库 -->
     <view v-show="navActiveIndex == PEOPLE_LIBRARY">
       <GatherPeople
@@ -93,6 +94,7 @@ import { storeToRefs } from 'pinia'
 import { currentUserVitaStore } from '@/store/UserVitaStore'
 // 切换页面
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
+import { GATHER } from '@/utils/constant'
 // 导入 gatherIndex 的 pinia
 import { gatherIndexStore } from '@/store/gatherIndex'
 // 引入组件
@@ -105,8 +107,11 @@ import GatherProjectTypeFilter from '@/pages/gather/components/gather-projectTyp
 import GatherPublishButton from '@/pages/gather/components/gather-publishButton.vue'
 import GatherBackTopButton from '@/pages/gather/components/gather-backTopButton.vue'
 import { gatherProjectStore } from '@/store/UserProjectStore'
+// 引入项目库组件
+import PaperItem from '@/components/paper-item.vue'
 import GatherPeople from './components/gather-people.vue'
 import GatherProjectModeFilter from './components/gather-projectModeFilter.vue'
+
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()
 // 实例化 当前页面的 数据
@@ -128,6 +133,8 @@ const toPeopleDetail = (id: number) => {
 const toProjectDetail = () => {
   uni.navigateTo({ url: '/pagesSub/gatherSub/gatherSub-project' })
 }
+
+console.log()
 </script>
 
 <style lang="scss">

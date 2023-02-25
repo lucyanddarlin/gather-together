@@ -36,52 +36,17 @@
   </view>
 </template>
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, ref } from 'vue'
 import GatherSubPublishInput from '@/pagesSub/gatherSub/components/gatherSub-publishInput.vue'
 import GatherSubUpload from '@/pagesSub/gatherSub/components/gatherSub-upload.vue'
 import MannerButton from '@/components/manner-button.vue'
+// 导入 静态渲染资源
+import { publishProjectList } from '@/utils/gatherConstant'
 
 const textAreaValue = ref('')
 const wordCount = computed(() => {
   return textAreaValue.value.length
 })
-const publishProjectList = reactive([
-  {
-    id: 0,
-    title: '标题',
-    placeholder: '请输入项目标题',
-    value: '',
-    isSelect: false,
-  },
-  {
-    id: 1,
-    title: '项目模式',
-    placeholder: '请选择项目模式',
-    value: '',
-    isSelect: true,
-  },
-  {
-    id: 2,
-    title: '项目类型',
-    placeholder: '请选择项目类型',
-    value: '',
-    isSelect: true,
-  },
-  {
-    id: 3,
-    title: '联系方式',
-    placeholder: '请输入联系方式，如微信等...',
-    value: '',
-    isSelect: false,
-  },
-  {
-    id: 4,
-    title: '项目需求',
-    placeholder: '请输入项目需求',
-    value: '',
-    isSelect: false,
-  },
-])
 </script>
 
 <style scoped>
