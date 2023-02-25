@@ -1,3 +1,5 @@
+import { format } from 'date-fns'
+
 export enum State {
   Create = '0',
   Uncensore = '1',
@@ -198,7 +200,7 @@ export interface IDescription {
   start_time: Date
   end_time: Date
   state: State
-  post_id: string
+  post_id: number
   location: string
   host: string
   host_type: HostType
@@ -211,14 +213,13 @@ export interface IDescription {
   tags?: Array<ITag>
   imgs?: Array<string>
 }
-
 export interface IPublish {
   // 全部信息
   title: IField
   start_time: IField
   end_time: IField
   state: State
-  post_id: string
+  post_id: number
   location: IField
   host: IField
   host_type: IField
@@ -235,7 +236,7 @@ export class Publish implements IPublish {
   start_time: IField
   end_time: IField
   state: State
-  post_id: string
+  post_id: number
   location: IField
   host: IField
   host_type: IField
@@ -265,7 +266,7 @@ export class Publish implements IPublish {
       placeholder: `请输入${type === '比赛' ? '报名结束' : type}时间`,
     }
     this.state = State.Create
-    this.post_id = ''
+    this.post_id = 0
     this.location = {
       title: `${type}地点`,
       value: '',
@@ -314,6 +315,7 @@ export class Publish implements IPublish {
       value: [],
       type: 'img',
     }
+    this.state = State.Create
   }
 
   public static createPublish(ipublish: IPublish, post_type: string) {
@@ -321,7 +323,6 @@ export class Publish implements IPublish {
     publish.title = ipublish.title
     publish.start_time = ipublish.start_time
     publish.end_time = ipublish.end_time
-    publish.state = ipublish.state
     publish.post_id = ipublish.post_id
     publish.location = ipublish.location
     publish.score_type = ipublish.score_type
@@ -369,4 +370,151 @@ export function PubToDesc(publish: Publish, post_type: string): IDescription {
     imgs: publish.imgs?.value as Array<string>,
   }
   return description
+}
+
+// 为对接后端产生的临时类型，后面和IPublish融合一下
+export interface PostPublish {
+  zone_id: string
+  event_type: number
+  lecture_type: number
+  start_time: string
+  post_type: number
+  sponsor_name: string
+  score_type: number
+  detail: string
+  location: string
+  race_level: number
+  end_time: string
+  sponsor_type: number
+  pic_count: number
+  title: string
+  race_type: number
+  regist_info: string
+}
+
+export interface GetPublish {
+  detail: string
+  location: string
+  state: number
+  title: string
+  post_id: number
+  create_time: string
+  last_change_time: string
+  start_time: string
+  end_time: string
+  zone_id: string
+  creator_id: string
+  sponsor_type: number
+  sponsor_name: string
+  post_type: number
+  second_type: number
+  picture_urls: Array<string>
+  regist_info: string
+  race_level: null
+  creator_name: null
+  is_fav: null
+  time_state: null
+}
+
+export interface ChangePublish {
+  zone_id: string
+  sponsor_type: number
+  sponsor_name: string
+  detail: string
+  end_time: string
+  regist_info: string
+  location: string
+  pic_count: number
+  race_level: number
+  start_time: string
+  title: string
+  race_type: number
+  lecture_type: number
+  event_type: number
+  post_type: number
+}
+
+export interface OSSPostPolicyResult {
+  accessKeyId: string
+  callback: string
+  dir: string
+  host: string
+  policy: string
+  postId: number
+  signature: string
+}
+
+// 后续封装到utils
+function toDate(s: string) {
+  const toNumber = (str: string) => Number.parseInt(str)
+  const y = toNumber(s.slice(0, 4))
+  const d = toNumber(s.slice(5, 7))
+  const m = toNumber(s.slice(8, 10))
+  const h = toNumber(s.slice(11, 13))
+  const min = toNumber(s.slice(14, 16))
+  const sec = toNumber(s.slice(17, 19))
+  return new Date(y, d, m, h, min, sec)
+}
+
+export function GetPublishToDesc(p: GetPublish) {
+  const desc: IDescription = {
+    title: p.title,
+    start_time: toDate(p.start_time),
+    end_time: toDate(p.end_time),
+    state: State[`${p.state}` as keyof typeof State],
+    post_id: p.post_id,
+    post_type: p.post_type,
+    location: p.location,
+    host: p.sponsor_name,
+    host_type: p.sponsor_type,
+    description: p.detail,
+    access: p.regist_info,
+    imgs: p.picture_urls,
+    score_type: p.second_type, // 注意这里是临时应用，希望后面能改成更规范的命名
+  }
+  return desc
+}
+
+export function DescToPostPublish(d: IDescription) {
+  const p: PostPublish = {
+    zone_id: '1',
+    post_type: d.post_type,
+    start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
+    end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
+    title: d.title,
+    detail: d.description,
+    location: d.location,
+    sponsor_name: d.host,
+    sponsor_type: d.host_type,
+    regist_info: d.access,
+    score_type: d.score_type,
+    pic_count: d.imgs ? d.imgs.length : 0,
+    event_type: 0,
+    lecture_type: 0,
+    race_level: d.race_level ? d.race_level : 0,
+    race_type: 0,
+  }
+  return p
+}
+
+export function DescToChangePublish(d: IDescription) {
+  const p: ChangePublish = {
+    zone_id: '1',
+    sponsor_type: d.host_type,
+    sponsor_name: d.host,
+    detail: d.description,
+    start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
+
+    end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
+    regist_info: d.access,
+    location: d.location,
+    pic_count: d.imgs ? d.imgs.length : 0,
+    race_level: d.race_level ? d.race_level : 0,
+    title: d.title,
+    race_type: 0,
+    lecture_type: 0,
+    event_type: 0,
+    post_type: d.post_type,
+  }
+  return p
 }

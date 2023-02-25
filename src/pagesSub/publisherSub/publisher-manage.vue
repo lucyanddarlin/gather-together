@@ -11,9 +11,6 @@
   <div class="publish" flex-center @click="handleCreate()">
     <div class="iconfont icon-fasong" text-40rpx></div>
   </div>
-  <div class="test" flex-center @click="testResponsive()">
-    <div class="iconfont icon-shezhi" text-40rpx></div>
-  </div>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
     <div mx-32rpx relative>
@@ -56,7 +53,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-// import uPopup from '@/uni_modules/vk-uview-ui/components/u-popup/u-popup.vue'
+import { onLoad } from '@dcloudio/uni-app'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
   HostType,
@@ -69,13 +66,10 @@ import {
   Type,
   TypeMap,
 } from '@/typings/publisher'
-// import router from '@/router'
-import { uuid } from '@/utils/common'
 import PublishFilter from './components/publish-filter.vue'
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
-
 type PostType = keyof typeof Type
 const publisherStore = usePublisherStore()
 const post_type = publisherStore.cur_type as PostType
@@ -84,15 +78,20 @@ const list = reactive({
 })
 console.log('description', publisherStore.descriptions[TypeMap[post_type]])
 console.log('list', list.value)
+console.log('publish', publisherStore.publish[TypeMap[post_type]])
+
+onLoad(() => {
+  publisherStore.loadPage(post_type)
+})
 
 const checked = ref(false)
-const handleClick = (id: string) => {
+const handleClick = (id: number) => {
   uni.navigateTo({ url: `./publisher-detail?id=${id}` })
 }
 
 const handleCreate = () => {
   const description: IDescription = {
-    post_id: uuid(),
+    post_id: 0,
     title: '',
     start_time: new Date(),
     end_time: new Date(),
@@ -107,7 +106,6 @@ const handleCreate = () => {
     description: '',
   }
   publisherStore.current_desc = description
-  publisherStore.descriptions[TypeMap[post_type]].push(description)
   uni.navigateTo({
     url: `./publisher-publish?id=${description.post_id}`,
   })
@@ -273,12 +271,6 @@ function resetFilter() {
   checked.value = false
   list.value = publisherStore.descriptions[TypeMap[post_type]]
   show.value = false
-}
-
-const testResponsive = () => {
-  const firstDesc = publisherStore.descriptions[TypeMap[post_type]][0]
-  firstDesc.title = '测试标题'
-  console.log(firstDesc)
 }
 </script>
 

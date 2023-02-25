@@ -157,7 +157,7 @@ onLoad((options) => {
   }
   id.value = options.id
   description.value = publisherStore.descriptions[TypeMap[post_type]]?.find(
-    (item) => item.post_id === id.value
+    (item) => `${item.post_id}` === id.value
   )
 })
 onBeforeMount(() => {
