@@ -1,0 +1,112 @@
+<template>
+  <view mb-30rpx class="form-item">
+    <view flex items-center justify-between>
+      <view text-28rpx font-bold class="text-#8C99A0">{{ title }}</view>
+      <slot></slot>
+    </view>
+    <view
+      w-full
+      flex
+      items-center
+      justify-between
+      bg-white
+      font-bold
+      rounded-12rpx
+      mt-20rpx
+      px-30rpx
+      py-20rpx
+    >
+      <view w-70%>
+        <template v-if="input">
+          <input
+            type="text"
+            :value="modelValue as string"
+            :placeholder="placeholder"
+            placeholder-class="placeholder"
+            @input="emit('update:modelValue', $event.detail?.value)"
+          />
+        </template>
+        <template v-else-if="gender">
+          <picker
+            mode="selector"
+            :range="genderList"
+            range-key="value"
+            @change="
+              emit('update:modelValue', Number.parseInt($event.detail.value))
+            "
+          >
+            <view
+              v-if="!genderList[modelValue as number]?.value"
+              class="placeholder"
+            >
+              {{ placeholder }}
+            </view>
+            <view v-else>{{ genderList[modelValue as number].value }}</view>
+          </picker>
+        </template>
+        <template v-else-if="date">
+          <picker
+            class="picker"
+            mode="date"
+            fields="year"
+            :start="startDate"
+            :end="endDate"
+            @change="emit('update:modelValue', $event.detail.value)"
+          >
+            <view v-if="!modelValue" class="placeholder">{{
+              placeholder
+            }}</view>
+            <view>{{ modelValue }} <text v-if="modelValue"> 年</text></view>
+          </picker>
+        </template>
+      </view>
+      <view v-if="arrow" class="iconfont icon-qianwang" />
+    </view>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { GENDER } from '@/utils/constant'
+
+const props = defineProps<{
+  modelValue: string | number
+  title: string
+  placeholder?: string
+  arrow?: boolean
+  input?: boolean
+  gender?: boolean
+  date?: boolean
+}>()
+const emit = defineEmits(['update:modelValue'])
+const startDate = computed(() => getDate('start'))
+const endDate = computed(() => getDate())
+
+const genderList = [
+  { index: GENDER.woman, value: '女' },
+  { index: GENDER.man, value: '男' },
+]
+
+const getDate = (type?: string) => {
+  if (!props.date) return false
+  const date = new Date()
+  let year = date.getFullYear()
+  let month: string | number = date.getMonth() + 1
+  let day: string | number = date.getDate()
+
+  if (type === 'start') {
+    year = year - 10
+  }
+  month = month > 9 ? month : `0${month}`
+  day = day > 9 ? day : `0${day}`
+  return `${year}-${month}-${day}`
+}
+</script>
+
+<style lang="scss">
+.form-item {
+  .placeholder {
+    color: #c8c9cc;
+  }
+}
+</style>

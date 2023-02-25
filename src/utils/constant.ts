@@ -27,3 +27,32 @@ export const enum SETTING {
   admin,
   publish,
 }
+
+export const enum GENDER {
+  woman,
+  man,
+  unknown,
+}
+
+export const enum PROFESSION_TYPE {
+  STEM = 1,
+  ECONOMY,
+  LAW,
+  ART,
+  EDU,
+  HISTORY,
+  AGRICULTURE,
+  MEDICINE,
+  SPECIAL,
+}
+export const PROFESSION_LIST = [
+  { index: PROFESSION_TYPE.STEM, value: '理工类', isSelected: false },
+  { index: PROFESSION_TYPE.ECONOMY, value: '经管类', isSelected: false },
+  { index: PROFESSION_TYPE.LAW, value: '法学类', isSelected: false },
+  { index: PROFESSION_TYPE.ART, value: '艺术/人文', isSelected: false },
+  { index: PROFESSION_TYPE.EDU, value: '教育类', isSelected: false },
+  { index: PROFESSION_TYPE.HISTORY, value: '历史/哲学', isSelected: false },
+  { index: PROFESSION_TYPE.AGRICULTURE, value: '农业类', isSelected: false },
+  { index: PROFESSION_TYPE.MEDICINE, value: '医学类', isSelected: false },
+  { index: PROFESSION_TYPE.SPECIAL, value: '特殊类', isSelected: false },
+]

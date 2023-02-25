@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { isNull } from '@/utils/common'
 import { reqGetUserProfile, reqUserLogin } from '@/api/user'
-import { PROFILE_KEY, TOKEN_KEY } from '@/utils/constant'
-import type { UserProfile } from '@/typings/user'
+import { GENDER, PROFILE_KEY, TOKEN_KEY } from '@/utils/constant'
+import type { RawUserCv, UserProfile } from '@/typings/user'
 
 const getUserCode = () => {
   return new Promise((resolve) => {
@@ -47,12 +47,32 @@ const getProfile = (): Promise<UniApp.GetUserProfileRes> => {
   })
 }
 
+const blankCV: RawUserCv = {
+  user_id: '',
+  name: '',
+  sex: GENDER.unknown,
+  school: '',
+  college_id: 0,
+  college: '',
+  profession: '',
+  grade: 0,
+  good_at: '',
+  profile: '',
+  contact: '',
+  skills: [],
+  races: [],
+  certs: [],
+  head_url: '',
+}
+
 export const useUserStore = defineStore('user', () => {
   const token = ref<string>(uni.getStorageSync(TOKEN_KEY) || '')
   const userProfile = ref<UserProfile>(
     JSON.parse(uni.getStorageSync(PROFILE_KEY) || '{}')
   )
   const isLogin = computed(() => !isNull(token.value))
+  const userCV = ref<RawUserCv>(blankCV)
+  const ttt = ref('3243')
 
   const userLogin = async () => {
     const code = (await getUserCode()) as string
@@ -89,9 +109,16 @@ export const useUserStore = defineStore('user', () => {
     }
     return false
   }
+  const test = () => {
+    userCV.value.name = 'hhdsfhks'
+    ttt.value = 'jfshfskdfhksfjhskfh'
+  }
   return {
     isLogin,
     userProfile,
+    userCV,
+    ttt,
+    test,
     getUserProfile,
     userLogin,
   }
