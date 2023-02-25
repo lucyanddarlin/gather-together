@@ -23,4 +23,7 @@ view,
 input {
   box-sizing: border-box;
 }
+uni-modal .uni-modal__bd {
+  white-space: pre-wrap;
+}
 </style>

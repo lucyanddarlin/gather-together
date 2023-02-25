@@ -40,6 +40,18 @@
           }
         },
         {
+          "path": "cv/index",
+          "style": {
+            "navigationBarTitleText": "个人简历"
+          }
+        },
+        {
+          "path": "cv/editing-cv",
+          "style": {
+            "navigationBarTitleText": "编辑个人简历"
+          }
+        },
+        {
           "path": "profileSetting/index",
           "style": {
             "navigationBarTitleText": "设置"
@@ -108,8 +120,8 @@
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarBackgroundColor": "#fff",
+    "backgroundColor": "#fff"
   },
   "tabBar": {
     "color": "#979797",

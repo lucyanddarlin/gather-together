@@ -48,7 +48,7 @@ interface IButton {
 const buttonList: IButton[] = [
   {
     index: PROFILE.CV,
-    url: '',
+    url: '/pagesSub/cv/index',
     title: '个人简历',
     icon: 'icon-sousuo',
     class: 'bg-main',

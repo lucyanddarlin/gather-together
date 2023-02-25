@@ -24,3 +24,21 @@ export interface UserProfile {
   has_avatar_modify: boolean
   has_nick_modify: boolean
 }
+
+export interface RawUserCv {
+  user_id: string
+  name: string
+  sex: number
+  school: string
+  college_id: number
+  college: string
+  profession: string
+  grade: number
+  good_at: string
+  profile: string
+  contact: string
+  skills: any[]
+  races: any[]
+  certs: any[]
+  head_url: any
+}

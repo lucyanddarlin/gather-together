@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { getCurrentInstance, ref } from 'vue'
 
 type Icon = UniNamespace.ShowToastOptions['icon']
@@ -30,6 +31,26 @@ export const isNull = (obj: any): boolean => {
   if (!obj) return true
   if (['{}', '[]'].includes(JSON.stringify(obj))) return true
   return false
+}
+
+export const deepClone = (obj: any = {}, map = new WeakMap()) => {
+  if (typeof obj !== 'object') return obj
+  if (map.get(obj)) return map.get(obj)
+  let cloneTarget: any = {}
+  if (
+    Array.isArray(obj) ||
+    Object.prototype.toString.call(obj) === '[object Array]'
+  ) {
+    cloneTarget = []
+  }
+  map.set(obj, cloneTarget)
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      cloneTarget[key] = deepClone(obj[key], map)
+    }
+  }
+
+  return cloneTarget
 }
 
 export const uuid = () => {
