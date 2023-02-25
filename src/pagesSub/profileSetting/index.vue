@@ -15,7 +15,12 @@
       </view>
     </settingItem>
     <view w-full h-20rpx class="bg-#C3C3C3/17" />
-    <settingItem v-for="item in settingListB" :key="item.type" :item="item" />
+    <settingItem
+      v-for="item in settingListB"
+      :key="item.type"
+      :item="item"
+      @tap="item.url && navigate(item.url)"
+    />
   </view>
 </template>
 
@@ -67,7 +72,7 @@ const settingListA: SettingItem[] = [
 const settingListB: SettingItem[] = [
   {
     type: SETTING.publish,
-    url: '',
+    url: '/pagesSub/publisherSub/publisher-type',
     title: '发布者模式',
   },
   {
@@ -76,6 +81,12 @@ const settingListB: SettingItem[] = [
     title: '管理员模式',
   },
 ]
+
+const navigate = (url: string) => {
+  uni.navigateTo({
+    url,
+  })
+}
 </script>
 
 <style lang="scss">
