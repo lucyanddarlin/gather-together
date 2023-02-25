@@ -210,11 +210,15 @@ onLoad((options) => {
     console.log('options 为空，请检查url参数')
     return
   }
+  console.log('options', options)
+
   id.value = options.id
   description.value = publisherStore.descriptions[TypeMap[post_type]]?.find(
-    (item) => item.post_id === id.value
+    (item) => `${item.post_id}` === id.value
   )
   publish.value = publisherStore.getPubFromDesc(description.value, post_type)
+  console.log('publish.value', publish.value)
+  console.log('description.value', description.value)
 })
 onBeforeMount(() => {
   if (!id.value || !post_type) {
@@ -260,7 +264,7 @@ const optionsObj = {
   score_type: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.score_type.value) return `请选择${post_type}类型`
+      if (!publish.value?.score_type) return `请选择${post_type}类型`
       return getEnum(post_type)[publish.value.score_type.value as ScoreType]
     }),
     range: Object.values(getScoreConstant(post_type)),
@@ -270,7 +274,7 @@ const optionsObj = {
   race_level: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.race_level?.value) return `请选择${post_type}级别`
+      if (!publish.value?.race_level) return `请选择${post_type}级别`
       return Level[publish.value.race_level.value as Level]
     }),
     range: Object.values(LevelMap),
@@ -283,7 +287,11 @@ const options = ref(optionsObj)
 
 // 判断是否是新的发布
 const isPublish = computed(() => {
-  return description.value && description.value.state === State.Create
+  return (
+    description.value &&
+    description.value.state === State.Create &&
+    description.value.post_id === 0
+  )
 })
 
 const isAllFilled = computed(() => {
@@ -313,6 +321,13 @@ function setDate(result: any, key: string) {
 function setOptions(result: any, key: string) {
   publish.value &&
     ((publish.value[key as keyof Options] as IField).value = result[0])
+  console.log('result', result)
+  console.log('key', key)
+  publish.value &&
+    console.log(
+      'publish.value',
+      (publish.value[key as keyof Options] as IField).value
+    )
 }
 
 function chooseImage(lists: Object, key: string) {

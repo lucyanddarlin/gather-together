@@ -2,7 +2,7 @@ import { HostType, Level, ScoreType, State, Type } from '@/typings/publisher'
 
 export const matches = [
   {
-    post_id: '114514',
+    post_id: 114514,
     title: '全国科技竞赛',
     start_time: new Date(2022, 11, 20, 10, 0),
     end_time: new Date(2023, 0, 6, 10, 0),
@@ -18,7 +18,7 @@ export const matches = [
       '我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人',
   },
   {
-    post_id: '114515',
+    post_id: 114515,
     title: '全国科技竞赛',
     start_time: new Date(2022, 11, 20, 10, 0),
     end_time: new Date(2023, 0, 6, 10, 0),
@@ -36,7 +36,7 @@ export const matches = [
 
 export const lectures = [
   {
-    post_id: '114516',
+    post_id: 114516,
     title: '考研讲座',
     start_time: new Date(2022, 11, 20, 10, 0),
     end_time: new Date(2023, 0, 6, 10, 0),
@@ -51,7 +51,7 @@ export const lectures = [
       '我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人',
   },
   {
-    post_id: '114517',
+    post_id: 114517,
     title: '考研讲座线上',
     start_time: new Date(2022, 11, 20, 10, 0),
     end_time: new Date(2023, 0, 6, 10, 0),
@@ -69,7 +69,7 @@ export const lectures = [
 
 export const activities = [
   {
-    post_id: '114518',
+    post_id: 114518,
     title: '月度阅读活动',
     start_time: new Date(2022, 11, 20, 10, 0),
     end_time: new Date(2023, 0, 6, 10, 0),
@@ -84,7 +84,7 @@ export const activities = [
       '我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人',
   },
   {
-    post_id: '114519',
+    post_id: 114519,
     title: '月度阅读活动',
     start_time: new Date(2022, 11, 20, 10, 0),
     end_time: new Date(2023, 0, 6, 10, 0),
