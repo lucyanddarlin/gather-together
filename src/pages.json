@@ -27,6 +27,12 @@
         "navigationStyle": "custom",
         "navigationBarTextStyle": "white"
       }
+    },
+    {
+      "path": "pages/test/testPage",
+      "style": {
+        "navigationBarTitleText": "详情"
+      }
     }
   ],
   "subPackages": [

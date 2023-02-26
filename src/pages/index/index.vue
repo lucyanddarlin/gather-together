@@ -1,6 +1,6 @@
 <template>
   <view class="discovery-page">
-    <div h-178rpx bg-pink>aa</div>
+    <div h-178rpx class="bg-#598DF9"></div>
     <scroll-view
       class="main-page"
       :scroll-y="true"
@@ -26,9 +26,21 @@
         <view v-show="activeIndex === HOME">
           <Home @more="handleShowMoreOptions" />
         </view>
-        <view v-show="activeIndex === RACE">race</view>
-        <view v-show="activeIndex === LECTURE">lec</view>
-        <view v-show="activeIndex === ACTIVITY">act</view>
+        <view v-show="activeIndex === RACE">
+          <TestItem
+            title="全国科技竞赛"
+            content="大家期待已久的全国大学生科技竞赛已经开始报名啦！"
+          />
+        </view>
+        <view v-show="activeIndex === LECTURE">
+          <TestItem
+            title="青年大学习"
+            content="青年大学习，青年人的大学习，快来青年大学习！"
+          />
+        </view>
+        <view v-show="activeIndex === ACTIVITY">
+          <TestItem title="爱心喂猫" content="爱心喂猫活动！欢迎大家参与" />
+        </view>
       </view>
     </scroll-view>
     <Float
@@ -46,6 +58,7 @@ import { nextTick, reactive, ref } from 'vue'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { ACTIVITY, HOME, LECTURE, RACE } from '@/utils/constant'
 import { useHomeStore } from '@/store/modules/home'
+import TestItem from '../test/testItem.vue'
 import Home from './home.vue'
 import type { IPaperItem, TopSection } from '@/typings/home'
 
@@ -113,9 +126,9 @@ const handlePopup = (value: boolean) => {
     .tab-section {
       position: sticky;
       display: flex;
-      padding: 12rpx 12rpx;
+      padding: 24rpx 12rpx;
       top: 0rpx;
-      height: 74rpx;
+      // height: 74rpx;
       z-index: 9;
       justify-content: space-around;
       background-color: #fff;

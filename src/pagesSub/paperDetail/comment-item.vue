@@ -36,7 +36,7 @@
         class="bg-#f5f5f5 text-#4380FF"
         @click="handleClickReply"
       >
-        <span v-if="!child">2</span>
+        <!-- <span v-if="!child">2</span> -->
         <span>回复</span>
         <view class="iconfont icon-sousuo" />
       </view>

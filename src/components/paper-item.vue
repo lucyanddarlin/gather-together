@@ -1,5 +1,6 @@
 <template>
   <view
+    class="paper-item"
     px-28rpx
     py-28rpx
     mt-20rpx
@@ -41,6 +42,24 @@
       class="paper-desc bg-#F5F5F5 text-#A4A4A4"
       >{{ commonObj.content }}</view
     >
+    <view
+      v-if="type === HOME && !isNull(paperItem.picture_urls)"
+      class="images-wrap"
+    >
+      <view
+        v-for="item in paperItem.picture_urls"
+        :key="item"
+        class="image-wrap wrap-3"
+      >
+        <image
+          class="image"
+          :src="item"
+          mode="aspectFill"
+          @click.stop="handleClickImage(item)"
+          @load="handleLoad"
+        />
+      </view>
+    </view>
     <view v-if="type === HOME" flex items-center>
       <view h-60rpx w-60rpx rounded-full bg-pink mr-12rpx overflow-hidden>
         <image h-60rpx w-60rpx rounded-full :src="paperItem.creator_head_url" />
@@ -67,8 +86,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { GATHER, HOME } from '@/utils/constant'
+import { isNull } from '@/utils/common'
 
 interface PaperItem {
   topic_id: string
@@ -110,6 +130,8 @@ const commonObj = reactive<{ content: string; url: string }>({
   content: '',
   url: '',
 })
+const imageCount = computed(() => props.paperItem.picture_urls?.length)
+const imageFigure = ref<boolean>(false)
 watch(
   () => props.paperItem,
   () => {
@@ -139,6 +161,57 @@ const handleClickItem = () => {
 const handleShowOptions = () => {
   emit('moreOptions', props.paperItem)
 }
+const handleLoad = (e: any) => {
+  if (imageCount.value === 1) {
+    const { width, height } = e.detail
+    if (width > height) {
+      imageFigure.value = true
+    }
+  }
+}
+const handleClickImage = (url: string) => {
+  uni.previewImage({
+    urls: [url],
+  })
+}
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.paper-item {
+  .images-wrap {
+    margin: 16rpx 0;
+    display: flex;
+    flex-wrap: wrap;
+    .image-wrap {
+      position: relative;
+      height: 0rpx;
+      border: 4rpx solid transparent;
+      box-sizing: border-box;
+      border-radius: 10rpx;
+      overflow: hidden;
+      .image {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      &.wrap-0 {
+        width: 57%;
+        padding-bottom: calc(47% - 8rpx);
+      }
+      &.wrap-1 {
+        width: 47%;
+        padding-bottom: calc(57% - 8rpx);
+      }
+      &.wrap-2 {
+        width: 50%;
+        padding-bottom: calc(50% - 8rpx);
+      }
+      &.wrap-3 {
+        width: 33.3%;
+        padding-bottom: calc(33.3% - 8rpx);
+      }
+    }
+  }
+}
+</style>

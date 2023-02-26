@@ -319,6 +319,7 @@ const handleSendReply = async () => {
       content: content.value,
     })
     if (!isNull(data)) {
+      homeTopicInfo.value.reply_count++
       commentList.value.unshift(data.body)
     }
   } else {
@@ -327,7 +328,7 @@ const handleSendReply = async () => {
       content: content.value,
       to_reply_id: replyTarget.value?.reply_id,
     })
-    console.log(data.body)
+    homeTopicInfo.value.reply_count++
     replyList.value.unshift(data.body)
   }
   content.value = ''
