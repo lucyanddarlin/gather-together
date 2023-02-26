@@ -26,19 +26,35 @@ export interface UserProfile {
 }
 
 export interface RawUserCv {
-  user_id: string
+  user_id?: string
+  name: string
+  sex: string
+  school: string
+  college_id?: number
+  college?: string
+  profession: string
+  grade?: number
+  profile: string
+  contact: string
+  direction: any
+  skill_id: any
+  skill_des: any
+  zone_id?: any
+  year: any
+  certs?: any[]
+  projects?: any[]
+}
+
+export interface CreateCV {
   name: string
   sex: number
   school: string
-  college_id: number
-  college: string
   profession: string
-  grade: number
-  good_at: string
   profile: string
   contact: string
-  skills: any[]
-  races: any[]
-  certs: any[]
-  head_url: any
+  direction: any
+  skill_id: any
+  skill_des: any
+  zone_id: any
+  year: any
 }
