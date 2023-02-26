@@ -1,6 +1,6 @@
 <template>
   <div>
-    <u-navbar :title="publisherStore.cur_type + '管理'" />
+    <u-navbar :back-text="publisherStore.cur_type + '管理'" />
     <div v-if="!description">该{{ post_type }}不存在</div>
     <div v-else relative>
       <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
