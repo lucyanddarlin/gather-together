@@ -86,9 +86,19 @@ interface PaperItem {
   like: boolean
 }
 interface IGatherItem {
+  college_id: Number
+  college_name: string
+  create_time: string
+  creator_id: string
+  introduce: string
+  member_num: Number
+  members: any
+  needs: string
   project_id: string
   project_name: string
-  introduce: string
+  race_id: Number
+  race_name: any
+  state: Number
 }
 const props = defineProps<{
   type: number
@@ -110,7 +120,7 @@ watch(
       url = `/pagesSub/paperDetail/index?topic_id=${props.paperItem.topic_id}`
     } else if (props.type === GATHER) {
       newContent = props.paperItem.introduce!
-      url = `test`
+      url = `/pagesSub/gatherSub/gatherSub-project?project_id=${props.paperItem.project_id}`
     }
     commonObj.content =
       newContent.length > overflowLength

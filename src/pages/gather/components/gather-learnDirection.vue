@@ -19,10 +19,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { gatherFilterStore } from '@/store/gatherFilter'
-const useGatherFilterStore = gatherFilterStore()
-const { directionFilterList } = storeToRefs(useGatherFilterStore)
+import { directionFilterList } from '@/utils/gatherConstant'
 
 const activeFilterOption = ref(0)
 const selectOption = (id: number) => {

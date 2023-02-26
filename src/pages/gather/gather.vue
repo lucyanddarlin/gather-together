@@ -2,47 +2,24 @@
 <template>
   <NavBar></NavBar>
   <GatherSelectPage />
-  <view class="bg-#f7f7f7 w-full pt-196rpx min-h-1400rpx">
+  <view class="bg-#f7f7f7 w-full mt-186rpx min-h-1400rpx">
     <!-- 项目库 -->
     <view v-show="navActiveIndex == PROJECT_LIBRARY">
-      <view
-        v-for="item in gatherProject"
-        :key="item.project_id"
-        w-full
-        p-28rpx
-        mb-16rpx
-        text-24rpx
-        min-h-200rpx
-        bg-white
-        @click="toProjectDetail"
+      <scroll-view
+        class="main-page"
+        :scroll-y="true"
+        :scroll-with-animation="true"
+        :refresher-enabled="true"
+        :refresher-triggered="isTriggered"
+        @scrolltolower="handleScrollToLower"
       >
-        <!-- 项目名 -->
-        <view
-          text-32rpx
-          mb-20rpx
-          font-bold
-          flex
-          items-center
-          justify-between
-          class="text-#534E4E"
-          ><view font-bold>{{ item.project_name }}</view
-          ><i class="iconfont icon-gengduo"></i
-        ></view>
-        <!-- 标签tag todo 后期要更换新的数据 -->
-        <view flex mb-20rpx>
-          <view
-            v-for="(tag, index) in item.tagList"
-            :key="index"
-            class="p-12rpx mr-12rpx rounded-8rpx text-#FFAF50 bg-#F5F5F5"
-          >
-            # {{ tag }}
-          </view>
-        </view>
-        <view class="bg-#F5F5F5 text-#A4A4A4 p-16rpx rounded-12rpx">
-          {{ item.introduce }}
-        </view>
-      </view></view
-    >
+        <PaperItem
+          v-for="project in GatherProjectList"
+          :key="project.project_id"
+          :type="GATHER"
+          :paper-item="project"
+      /></scroll-view>
+    </view>
     <!-- 人才库 -->
     <view v-show="navActiveIndex == PEOPLE_LIBRARY">
       <GatherPeople
@@ -90,9 +67,12 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
+import { reactive, ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 import { currentUserVitaStore } from '@/store/UserVitaStore'
 // 切换页面
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
+import { GATHER } from '@/utils/constant'
 // 导入 gatherIndex 的 pinia
 import { gatherIndexStore } from '@/store/gatherIndex'
 // 引入组件
@@ -105,8 +85,14 @@ import GatherProjectTypeFilter from '@/pages/gather/components/gather-projectTyp
 import GatherPublishButton from '@/pages/gather/components/gather-publishButton.vue'
 import GatherBackTopButton from '@/pages/gather/components/gather-backTopButton.vue'
 import { gatherProjectStore } from '@/store/UserProjectStore'
+// 引入项目库组件
+import PaperItem from '@/components/paper-item.vue'
+// 引入 获取项目数据的 请求
+import { reqGatherProjectList } from '@/api/gather'
+
 import GatherPeople from './components/gather-people.vue'
 import GatherProjectModeFilter from './components/gather-projectModeFilter.vue'
+
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()
 // 实例化 当前页面的 数据
@@ -118,16 +104,26 @@ const { navActiveIndex, showPeopleLibraryPopup, showProjectLibraryPopup } =
 const { currentUserVitaId, UserVita } = storeToRefs(userStore)
 const userGatherProjectStore = gatherProjectStore()
 // todo 后续接口接入，需要换接口的id请求数据
-const { gatherProject } = storeToRefs(userGatherProjectStore)
+const { GatherProjectList } = storeToRefs(userGatherProjectStore)
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: number) => {
   currentUserVitaId.value = id
   uni.navigateTo({ url: '/pagesSub/gatherSub/gatherSub-person' })
 }
-// 跳转到 项目库 详情页
-const toProjectDetail = () => {
-  uni.navigateTo({ url: '/pagesSub/gatherSub/gatherSub-project' })
+
+const isTriggered = ref<boolean>(false)
+// 获取主页板块信息
+const startPage = 0
+const getProject = async () => {
+  const { data } = await reqGatherProjectList(startPage, 8)
+  GatherProjectList.value = data.body
 }
+const handleScrollToLower = () => {
+  getProject()
+}
+onLoad(() => {
+  getProject()
+})
 </script>
 
 <style lang="scss">
