@@ -84,11 +84,11 @@ const publishProject: ProjectType = reactive({
   contact: '',
   introduce: '',
   needs: '',
-  pic_count: 1,
+  pic_count: '1221',
   project_mode: '',
   project_name: '',
   project_type: '',
-  zone_id: 1,
+  zone_id: '1321',
 })
 </script>
 
