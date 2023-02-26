@@ -33,6 +33,19 @@ export const enum GENDER {
   man,
   unknown,
 }
+export const enum PROJECT_MODE {
+  IT,
+  ELEC,
+  NET,
+  UNDERLINE,
+  RESULT,
+  DISCOVER,
+}
+export const enum PROJECT_TYPE {
+  CREATE,
+  TECH,
+  SOCIAL,
+}
 
 export const enum PROFESSION_TYPE {
   STEM = 1,
@@ -78,3 +91,16 @@ export const enum ADD {
   PROJECTS,
   CERTS,
 }
+export const PROJECTMODE_LIST = [
+  { index: PROJECT_MODE.IT, value: 'IT/软件' },
+  { index: PROJECT_MODE.ELEC, value: '硬件/电子' },
+  { index: PROJECT_MODE.NET, value: '互联网+' },
+  { index: PROJECT_MODE.UNDERLINE, value: '线下运营' },
+  { index: PROJECT_MODE.RESULT, value: '成果转化' },
+  { index: PROJECT_MODE.DISCOVER, value: '调研/探究' },
+]
+export const PROJECTTYPE_LIST = [
+  { index: PROJECT_TYPE.CREATE, value: '创新创业' },
+  { index: PROJECT_TYPE.TECH, value: '科技学术' },
+  { index: PROJECT_TYPE.SOCIAL, value: '人文社科' },
+]
