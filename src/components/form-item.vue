@@ -113,47 +113,6 @@
             }}</view>
           </picker>
         </template>
-
-        <template v-else-if="projectMode">
-          <picker
-            mode="selector"
-            :range="PROJECTMODE_LIST"
-            range-key="value"
-            @change="
-              emit('update:modelValue', Number.parseInt($event.detail.value))
-            "
-          >
-            <view
-              v-if="!PROJECTMODE_LIST[modelValue as number]?.value"
-              class="placeholder"
-            >
-              {{ placeholder }}
-            </view>
-            <view v-else>{{
-              PROJECTMODE_LIST[modelValue as number].value
-            }}</view>
-          </picker>
-        </template>
-        <template v-else-if="projectType">
-          <picker
-            mode="selector"
-            :range="PROJECTTYPE_LIST"
-            range-key="value"
-            @change="
-              emit('update:modelValue', Number.parseInt($event.detail.value))
-            "
-          >
-            <view
-              v-if="!PROJECTTYPE_LIST[modelValue as number]?.value"
-              class="placeholder"
-            >
-              {{ placeholder }}
-            </view>
-            <view v-else>{{
-              PROJECTTYPE_LIST[modelValue as number].value
-            }}</view>
-          </picker>
-        </template>
       </view>
       <view v-if="arrow" class="iconfont icon-qianwang" />
     </view>
@@ -162,7 +121,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { GENDER, PROJECTMODE_LIST, PROJECTTYPE_LIST, PROJECTMODE_LIST, PROJECTTYPE_LIST } from '@/utils/constant'
+import { GENDER, PROJECTMODE_LIST, PROJECTTYPE_LIST } from '@/utils/constant'
 
 const props = defineProps<{
   modelValue?: string | number
@@ -178,8 +137,6 @@ const props = defineProps<{
   intro?: boolean
   add?: boolean
   addType?: number
-  projectMode?: boolean
-  projectType?: boolean
 }>()
 const emit = defineEmits(['update:modelValue'])
 const startDate = computed(() => getDate('start'))

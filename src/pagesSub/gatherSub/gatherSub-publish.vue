@@ -63,7 +63,6 @@
 </template>
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
-import FormItem from '@/pagesSub/cv/form-item.vue'
 import GatherSubUpload from '@/pagesSub/gatherSub/components/gatherSub-upload.vue'
 import MannerButton from '@/components/manner-button.vue'
 
