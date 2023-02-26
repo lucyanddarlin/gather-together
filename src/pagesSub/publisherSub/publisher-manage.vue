@@ -1,16 +1,44 @@
 <template>
   <u-navbar :title="publisherStore.cur_type + '管理'" />
-  <PublishFilter mt-12rpx @tap="handleFilter" />
-  <PublishManageCardItem
-    v-for="item in list.value"
-    :key="item.post_id"
-    :description="item"
-    cursor-pointer
-    @tap="handleClick(item.post_id)"
-  />
-  <div class="publish" flex-center @click="handleCreate()">
-    <div class="iconfont icon-fasong" text-40rpx></div>
-  </div>
+  <view class="bg" pt-12rpx>
+    <view flex items-center justify-between>
+      <view h-72rpx w-584rpx flex items-center pl-28rpx class="bar">
+        <u-icon name="map" size="36rpx" color="#598DF9" />
+
+        <span ml-24rpx>{{ cur_area }}</span>
+      </view>
+      <view
+        h-72rpx
+        w-158rpx
+        flex
+        items-center
+        justify-end
+        pr-20rpx
+        class="bar"
+        @tap="handleFilter"
+      >
+        <span>筛选</span>
+        <span
+          class="iconfont icon-shaixuan"
+          :style="{ fontSize: '36rpx' }"
+          color="#598DF9"
+        ></span>
+      </view>
+    </view>
+
+    <!-- <PublishFilter @tap="handleFilter" /> -->
+    <PublishManageCardItem
+      v-for="item in list.value"
+      :key="item.post_id"
+      :description="item"
+      cursor-pointer
+      @tap="handleClick(item.post_id)" />
+    <div class="publish" flex-center @click="handleCreate()">
+      <div
+        class="iconfont icon-fabuanniu1"
+        :style="{ fontSize: '60rpx' }"
+      ></div></div
+  ></view>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
     <div mx-32rpx relative>
@@ -66,7 +94,6 @@ import {
   Type,
   TypeMap,
 } from '@/typings/publisher'
-import PublishFilter from './components/publish-filter.vue'
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
@@ -83,6 +110,7 @@ console.log('publish', publisherStore.publish[TypeMap[post_type]])
 onLoad(() => {
   publisherStore.loadPage(post_type)
 })
+const cur_area = ref('广州大学分区')
 
 const checked = ref(false)
 const handleClick = (id: number) => {
@@ -287,7 +315,7 @@ function resetFilter() {
 
 .publish {
   position: fixed;
-  background-color: #f5f5f5;
+  background-color: white;
   bottom: 428rpx;
   right: 66rpx;
   width: 80rpx;
@@ -307,5 +335,14 @@ function resetFilter() {
   border-radius: 50%;
   border: 2rpx solid #e5e5e5;
   box-shadow: 0rpx 0rpx 10rpx 0rpx rgba(0, 0, 0, 0.25);
+}
+
+.bg {
+  background-color: #f7f7f7;
+}
+.bar {
+  background-color: white;
+  color: #598df9;
+  font-size: 32rpx;
 }
 </style>
