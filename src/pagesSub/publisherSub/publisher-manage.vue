@@ -8,33 +8,18 @@
     cursor-pointer
     @tap="handleClick(item.post_id)"
   />
-  <div class="publish" center @click="handleCreate()">
-    <u-icon name="plus" size="40rpx"></u-icon>
+  <div class="publish" flex-center @click="handleCreate()">
+    <div class="iconfont icon-fasong" text-40rpx></div>
   </div>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
     <div mx-32rpx relative>
       <div v-for="option in getFilter()" :key="option.name">
-        <div mt-38rpx text-32rpx :style="{ color: `#4F82F3` }">
-          {{ option.name }}
-          <span text-32rpx :style="{ color: `#A4A4A4` }"> 单选 </span>
-        </div>
-        <div grid grid-cols-3 mt-24rpx>
-          <radio-group @change="handleRadioChange($event, option.name)">
-            <div
-              v-for="item in option.options"
-              ref="radios"
-              :key="option.name + item.name"
-            >
-              <radio
-                :id="item.name"
-                :value="Number(item.value) + ''"
-                :checked="checked"
-                class="radio"
-              /><label class="label" :for="item.name">{{ item.name }}</label>
-            </div>
-          </radio-group>
-        </div>
+        <PublishRadioGroup
+          :title="option.name"
+          :options="option.options"
+          :func="handleRadioChange"
+        ></PublishRadioGroup>
       </div>
     </div>
     <!-- 占位 -->
@@ -68,7 +53,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-// import uPopup from '@/uni_modules/vk-uview-ui/components/u-popup/u-popup.vue'
+import { onLoad } from '@dcloudio/uni-app'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
   HostType,
@@ -81,12 +66,10 @@ import {
   Type,
   TypeMap,
 } from '@/typings/publisher'
-// import router from '@/router'
-import { uuid } from '@/utils/common'
 import PublishFilter from './components/publish-filter.vue'
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
-
+import PublishRadioGroup from './components/publish-radio-group.vue'
 type PostType = keyof typeof Type
 const publisherStore = usePublisherStore()
 const post_type = publisherStore.cur_type as PostType
@@ -95,15 +78,20 @@ const list = reactive({
 })
 console.log('description', publisherStore.descriptions[TypeMap[post_type]])
 console.log('list', list.value)
+console.log('publish', publisherStore.publish[TypeMap[post_type]])
+
+onLoad(() => {
+  publisherStore.loadPage(post_type)
+})
 
 const checked = ref(false)
-const handleClick = (id: string) => {
+const handleClick = (id: number) => {
   uni.navigateTo({ url: `./publisher-detail?id=${id}` })
 }
 
 const handleCreate = () => {
   const description: IDescription = {
-    post_id: uuid(),
+    post_id: 0,
     title: '',
     start_time: new Date(),
     end_time: new Date(),
@@ -118,7 +106,6 @@ const handleCreate = () => {
     description: '',
   }
   publisherStore.current_desc = description
-  publisherStore.descriptions[TypeMap[post_type]].push(description)
   uni.navigateTo({
     url: `./publisher-publish?id=${description.post_id}`,
   })
@@ -126,23 +113,23 @@ const handleCreate = () => {
 const show = ref(false)
 
 const selections = {
-  host_type: undefined,
-  race_level: undefined,
-  score_type: undefined,
+  host_type: '',
+  race_level: '',
+  score_type: '',
 }
 const handleFilter = () => {
   show.value = true
 }
 
-function handleRadioChange(e: any, name: string) {
-  if (name === '主办方类型') {
-    selections.host_type = e.detail.value
+function handleRadioChange(title: string, value: number) {
+  if (title === '主办方类型') {
+    selections.host_type = `${value}`
   }
-  if (name === '比赛级别') {
-    selections.race_level = e.detail.value
+  if (title === '比赛级别') {
+    selections.race_level = `${value}`
   }
-  if (name.slice(2, 4) === '类型') {
-    selections.score_type = e.detail.value
+  if (title.slice(2, 4) === '类型') {
+    selections.score_type = `${value}`
   }
 }
 
@@ -270,7 +257,7 @@ function filt() {
       const map = getFilter().find((item) => item.varname === key)?.map
       if (map) {
         list.value = list.value.filter((item) => {
-          return item[key as keyof typeof map] === value * 1
+          return item[key as keyof typeof map] === Number.parseInt(value)
         })
       } else {
         console.log('类型映射map 未定义')
@@ -302,6 +289,18 @@ function resetFilter() {
   position: fixed;
   background-color: #f5f5f5;
   bottom: 428rpx;
+  right: 66rpx;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  border: 2rpx solid #e5e5e5;
+  box-shadow: 0rpx 0rpx 10rpx 0rpx rgba(0, 0, 0, 0.25);
+}
+
+.test {
+  position: fixed;
+  background-color: #f5f5f5;
+  bottom: 380rpx;
   right: 66rpx;
   width: 80rpx;
   height: 80rpx;

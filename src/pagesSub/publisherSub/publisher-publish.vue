@@ -13,6 +13,7 @@
           value.type !== 'text_option' &&
           (key !== 'race_level' || post_type === '比赛')
         "
+        fw-600
         text-28rpx
         text-dark
       >
@@ -27,6 +28,7 @@
         bottom-200rpx
         w-210rpx
         h-54rpx
+        fw-500
         :style="{
           backgroundColor: '#598DF9',
           color: '#fff',
@@ -54,6 +56,7 @@
           h-86rpx
           mt-30rpx
           text-28rpx
+          fw-500
           pl-26rpx
           :maxlength="value.limit"
           @input="change($event, key)"
@@ -67,6 +70,7 @@
           rows="5"
           mt-30rpx
           text-28rpx
+          fw-500
           px-26rpx
           :maxlength="value.limit"
           @input="change($event, key)"
@@ -82,6 +86,7 @@
             @confirm="setDate($event, key)"
           ></u-picker>
           <u-cell-item
+            fw-500
             :title="picker[key as keyof Picker].value"
             @click="picker[key as keyof Picker].isShow = true"
           ></u-cell-item>
@@ -102,6 +107,7 @@
             @confirm="setOptions($event, key)"
           ></u-picker>
           <u-cell-item
+            fw-500
             :title="options[key as keyof Options].value"
             @click="options[key as keyof Options].isShow = true"
           ></u-cell-item>
@@ -118,12 +124,12 @@
         ></u-upload>
       </view>
     </view>
-    <view ml-28rpx>
+    <view ml-10rpx pb-30rpx>
       <view v-if="isPublish">
         <PublishButton
           title="发布"
-          w-698rpx
-          height="100rpx"
+          width="694rpx"
+          height="96rpx"
           text-32rpx
           :bg-color="isAllFilled ? '#578DF7' : '#DFDFDF'"
           color="#fff"
@@ -135,8 +141,8 @@
         <view mt-60rpx>
           <PublishButton
             title="保存"
-            w-698rpx
-            height="100rpx"
+            width="694rpx"
+            height="96rpx"
             text-32rpx
             bg-color="#578DF7"
             color="#fff"
@@ -147,8 +153,8 @@
         <view mt-24rpx>
           <PublishButton
             title="删除"
-            w-698rpx
-            height="100rpx"
+            width="694rpx"
+            height="96rpx"
             text-32rpx
             bg-color="#FF6969"
             color="#fff"
@@ -164,8 +170,6 @@
 import { computed, onBeforeMount, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { addMonths, format } from 'date-fns'
-
-// import { useRoute, useRouter } from 'vue-router'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
   HostType,
@@ -206,11 +210,15 @@ onLoad((options) => {
     console.log('options 为空，请检查url参数')
     return
   }
+  console.log('options', options)
+
   id.value = options.id
   description.value = publisherStore.descriptions[TypeMap[post_type]]?.find(
-    (item) => item.post_id === id.value
+    (item) => `${item.post_id}` === id.value
   )
   publish.value = publisherStore.getPubFromDesc(description.value, post_type)
+  console.log('publish.value', publish.value)
+  console.log('description.value', description.value)
 })
 onBeforeMount(() => {
   if (!id.value || !post_type) {
@@ -256,7 +264,7 @@ const optionsObj = {
   score_type: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.score_type.value) return `请选择${post_type}类型`
+      if (!publish.value?.score_type) return `请选择${post_type}类型`
       return getEnum(post_type)[publish.value.score_type.value as ScoreType]
     }),
     range: Object.values(getScoreConstant(post_type)),
@@ -266,7 +274,7 @@ const optionsObj = {
   race_level: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.race_level?.value) return `请选择${post_type}级别`
+      if (!publish.value?.race_level) return `请选择${post_type}级别`
       return Level[publish.value.race_level.value as Level]
     }),
     range: Object.values(LevelMap),
@@ -279,7 +287,11 @@ const options = ref(optionsObj)
 
 // 判断是否是新的发布
 const isPublish = computed(() => {
-  return description.value && description.value.state === State.Create
+  return (
+    description.value &&
+    description.value.state === State.Create &&
+    description.value.post_id === 0
+  )
 })
 
 const isAllFilled = computed(() => {
@@ -309,6 +321,13 @@ function setDate(result: any, key: string) {
 function setOptions(result: any, key: string) {
   publish.value &&
     ((publish.value[key as keyof Options] as IField).value = result[0])
+  console.log('result', result)
+  console.log('key', key)
+  publish.value &&
+    console.log(
+      'publish.value',
+      (publish.value[key as keyof Options] as IField).value
+    )
 }
 
 function chooseImage(lists: Object, key: string) {

@@ -1,51 +1,95 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import {
+  DescToChangePublish,
+  DescToPostPublish,
+  GetPublishToDesc,
   type IDescription,
   type IPublish,
   PubToDesc,
   Publish,
   Type,
+  TypeMap,
 } from '@/typings/publisher'
-import { activities, lectures, matches } from './data'
+import { reqGetPublish, reqPostChange, reqPostPublish } from '@/api/publisher'
+import { showMsg } from '@/utils/common'
+// import { activities, lectures, matches } from './data'
 export const usePublisherStore = defineStore('publisher', () => {
+  const LOAD_PAGES_SIZE = 8
   const current_desc = ref<IDescription>()
   const cur_type = ref<'' | keyof typeof Type>('')
   const types = [
     {
       id: '0',
       type: '比赛',
+      pages: 0,
     },
     {
       id: '1',
       type: '讲座',
+      pages: 0,
     },
     {
       id: '2',
       type: '活动',
+      pages: 0,
     },
   ]
 
   // GET请求得到的信息
   // const descriptions: Record<string, Array<IDescription>> = {}
   // 根据GET请求处理成发布页面的具体信息
-  const publish: Record<Type, Array<IPublish>> = {
+  const publish: Record<Type, Array<IPublish>> = reactive({
     0: [],
     1: [],
     2: [],
-  }
-  const descriptions: Record<Type, Array<IDescription>> = {
+  })
+  const descriptions: Record<Type, Array<IDescription>> = reactive({
     0: [],
     1: [],
     2: [],
+  })
+
+  // 加载页面
+  async function loadPage(post_type: string) {
+    const t = types.find((item) => item.type === post_type)
+    if (!t) return
+    const nextPage = t.pages
+    const id = Number.parseInt(t.id)
+    const page = await reqGetPublish(nextPage, LOAD_PAGES_SIZE, id)
+    console.log('page', page)
+    if (page.data.body.length === 0) return
+    t.pages++
+    console.log('types', types)
+    descriptions[TypeMap[post_type as keyof typeof Type]].push(
+      ...page.data.body.map((item) => GetPublishToDesc(item))
+    )
+    publish[TypeMap[post_type as keyof typeof Type]] = descriptions[
+      TypeMap[post_type as keyof typeof Type]
+    ].map((item) => getPubFromDesc(item, post_type))
   }
 
-  // type PostType = keyof typeof Type
-  // 测试部分
+  // 创建发布
+  async function reqCreatePublish(p: Publish) {
+    const desc = PubToDesc(p, cur_type.value)
+    const response = await reqPostPublish(DescToPostPublish(desc))
+    console.log('response', response)
+    if (response.code === 200) return response.data.body.postId
+    return 0
+  }
 
-  loadDesc(matches)
-  loadDesc(lectures)
-  loadDesc(activities)
+  // 修改发布
+  async function reqUpdatePublish(p: Publish) {
+    const desc = PubToDesc(p, cur_type.value)
+    const response = await reqPostChange(
+      DescToChangePublish(desc),
+      p.post_id,
+      1
+    )
+    console.log('response', response)
+    if (response.code === 200) return true
+    return false
+  }
 
   function getPubFromDesc(
     description: IDescription | undefined,
@@ -154,24 +198,43 @@ export const usePublisherStore = defineStore('publisher', () => {
     console.log(index)
     // 不存在
     if (index === -1) {
-      descriptions[description.post_type].push(description)
-      publish[description.post_type].push(p)
-      console.log('新添')
-      console.log('publish', publish)
-      console.log('description', descriptions[description.post_type])
+      reqCreatePublish(p)
+        .then((post_id) => {
+          if (post_id === 0) {
+            showMsg('发布失败', 'error')
+            uni.navigateBack()
+            return
+          }
+          description.post_id = post_id
+          descriptions[description.post_type].push(description)
+          publish[description.post_type].push(p)
+          console.log('新发布')
+          console.log('publish', publish[description.post_type])
+          console.log('description', descriptions[description.post_type])
+          uni.navigateBack()
+          showMsg('发布成功', 'success')
+        })
+        .catch((e) => {
+          console.log(e)
+          showMsg('发布失败', 'error')
+          uni.navigateBack()
+        })
     } else {
-      descriptions[description.post_type][index] = description
-      publish[description.post_type][index] = p
-      console.log('旧有')
-      console.log('publish', publish)
-      console.log('description', descriptions[description.post_type])
+      reqUpdatePublish(p).then((success) => {
+        if (!success) {
+          showMsg('修改失败', 'error')
+          uni.navigateBack()
+          return
+        }
+        descriptions[description.post_type].splice(index, 1, description)
+        publish[description.post_type].splice(index, 1, p)
+        console.log('修改')
+        console.log('publish', publish[description.post_type])
+        console.log('description', descriptions[description.post_type])
+        uni.navigateBack()
+        showMsg('发布成功', 'success')
+      })
     }
-
-    uni.navigateBack()
-    uni.showToast({
-      title: '保存成功',
-      icon: 'success',
-    })
   }
 
   return {
@@ -183,5 +246,7 @@ export const usePublisherStore = defineStore('publisher', () => {
     getPubFromDesc,
     loadDesc,
     update,
+    loadPage,
+    reqCreatePublish,
   }
 })
