@@ -26,7 +26,7 @@
         :key="btn.index"
         :class="btn.class"
         class="button-wrap"
-        @click="handleClickBtn(btn.url)"
+        @click="handleClickBtn(btn.url, btn.index)"
       >
         <view mb-10rpx class="iconfont !text-50rpx" :class="btn.icon" />
         <view>{{ btn.title }}</view>
@@ -36,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+import { showMsg } from '@/utils/common'
 import { PROFILE } from '@/utils/constant'
 
 interface IButton {
@@ -75,7 +76,12 @@ const buttonList: IButton[] = [
     class: 'bg-setting',
   },
 ]
-const handleClickBtn = (url: string) => {
+const handleClickBtn = (url: string, index: number) => {
+  const blackList = [PROFILE.FOLLOW, PROFILE.FAVOUR]
+  if (blackList.includes(index)) {
+    showMsg('即将开放')
+    return
+  }
   uni.navigateTo({
     url,
   })

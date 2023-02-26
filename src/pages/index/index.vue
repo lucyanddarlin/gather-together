@@ -59,32 +59,12 @@ const topSectionList: TopSection[] = [
   { index: ACTIVITY, title: '活动' },
 ]
 const activeIndex = ref<number>(HOME)
-// const tabMap: any = [['home', reqGetHomePaperList]]
 const { getHomePaperList } = useHomeStore()
 const scrollTop = ref<number>(0)
 const oldScrollTop = ref<number>(0)
 const isTriggered = ref<boolean>(false)
 const isShowPopup = ref<boolean>(false)
-// interface ListMap {
-//   [key: string]: {
-//     dataList: Array<any>
-//     dataMap: object
-//     key: string
-//     page: number
-//     size: number
-//     status: 'loading' | 'more' | 'noMore'
-//   }
-// }
-// const listMap = reactive<ListMap>({
-//   home: {
-//     dataList: [],
-//     dataMap: {},
-//     key: 'topic_id',
-//     page: 0,
-//     size: 10,
-//     status: 'loading',
-//   },
-// })
+
 onLoad(() => {
   getHomePaperList()
   uni.$on('postNewTopic', handleRefresh)
@@ -106,22 +86,6 @@ const handleRefresherAbort = () => {
 const handleScrollToLower = () => {
   getHomePaperList()
 }
-// const getDataList = async (
-//   isClear?: boolean,
-//   index: number = activeIndex.value
-// ) => {
-//   const type = tabMap[index][0] as string
-//   const requestApi = tabMap[index][1]
-//   if (isClear) {
-//     listMap[type].status = 'more'
-//     listMap[type].page = 0
-//   }
-//   if (listMap[type].status === 'noMore') return
-//   if (listMap[type].status === 'loading' && listMap[type].page) return
-//   listMap[type].status = 'loading'
-//   const { data } = await requestApi(listMap[type].page++, listMap[type].size)
-//   listMap[type].dataList = data.body
-// }
 const handleScroll = (options: any) => {
   oldScrollTop.value = options.target.scrollTop as number
 }

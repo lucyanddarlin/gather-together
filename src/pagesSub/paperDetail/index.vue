@@ -296,7 +296,6 @@ const getReply = async () => {
     currentComment.value.comment_id
   )
   if (!isNull(data)) {
-    console.log('获取评论成功')
     replyStatus.value = data.body.length < size ? 'noMore' : 'more'
     data.body.forEach((reply) => {
       if (!replyListMap[reply.reply_id!]) {
@@ -309,6 +308,7 @@ const getReply = async () => {
   }
 }
 const handleSendReply = async () => {
+  console.log(content.value)
   if (isNull(content.value)) {
     console.log('no content')
     return

@@ -1,7 +1,14 @@
+/* eslint-disable no-restricted-syntax */
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { isNull } from '@/utils/common'
-import { reqGetUserProfile, reqUserLogin } from '@/api/user'
+import { isNull, showMsg } from '@/utils/common'
+import {
+  reqCreateUserCV,
+  reqGetUserCV,
+  reqGetUserProfile,
+  reqRemoveUserCV,
+  reqUserLogin,
+} from '@/api/user'
 import { GENDER, PROFILE_KEY, TOKEN_KEY } from '@/utils/constant'
 import type { RawUserCv, UserProfile } from '@/typings/user'
 
@@ -48,21 +55,16 @@ const getProfile = (): Promise<UniApp.GetUserProfileRes> => {
 }
 
 const blankCV: RawUserCv = {
-  user_id: '',
   name: '',
-  sex: GENDER.unknown,
+  sex: String(GENDER.unknown),
   school: '',
-  college_id: 0,
-  college: '',
   profession: '',
-  grade: 0,
-  good_at: '',
   profile: '',
   contact: '',
-  skills: [],
-  races: [],
-  certs: [],
-  head_url: '',
+  direction: undefined,
+  skill_id: undefined,
+  skill_des: undefined,
+  year: undefined,
 }
 
 export const useUserStore = defineStore('user', () => {
@@ -72,7 +74,7 @@ export const useUserStore = defineStore('user', () => {
   )
   const isLogin = computed(() => !isNull(token.value))
   const userCV = ref<RawUserCv>(blankCV)
-  const ttt = ref('3243')
+  const hasCV = ref<boolean>(false)
 
   const userLogin = async () => {
     const code = (await getUserCode()) as string
@@ -109,17 +111,46 @@ export const useUserStore = defineStore('user', () => {
     }
     return false
   }
-  const test = () => {
-    userCV.value.name = 'hhdsfhks'
-    ttt.value = 'jfshfskdfhksfjhskfh'
+  const getUserCV = async () => {
+    const { data } = await reqGetUserCV()
+    if (!isNull(data)) {
+      userCV.value = data.body
+      hasCV.value = true
+      return
+    }
+    return
+  }
+  const removeUserCV = async () => {
+    const { data } = await reqRemoveUserCV()
+    if (!isNull(data)) {
+      userCV.value = blankCV
+      hasCV.value = false
+      showMsg('清除成功')
+      setTimeout(() => {
+        uni.navigateBack()
+      }, 500)
+    }
+    return false
+  }
+  const createUserCV = async () => {
+    const { data } = await reqCreateUserCV(userCV.value)
+    if (!isNull(data)) {
+      showMsg('创建成功')
+      hasCV.value = true
+      setTimeout(() => {
+        uni.navigateBack()
+      }, 500)
+    }
   }
   return {
     isLogin,
     userProfile,
     userCV,
-    ttt,
-    test,
+    hasCV,
     getUserProfile,
     userLogin,
+    getUserCV,
+    removeUserCV,
+    createUserCV,
   }
 })

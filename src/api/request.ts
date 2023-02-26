@@ -92,7 +92,7 @@ const RequestMethod: request = (
         const resultData: any = res.data
         console.log('response', { resultData, url })
         const resultCode = Number.parseInt(resultData!.code)
-        if (resultCode > 400) {
+        if (resultCode > 300) {
           resolve({ code: resultCode, data: null as any })
         }
         resolve({

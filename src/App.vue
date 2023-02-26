@@ -3,11 +3,12 @@ import { onHide, onLaunch, onShow } from '@dcloudio/uni-app'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from './store/modules/user'
 const { isLogin } = storeToRefs(useUserStore())
-const { getUserProfile } = useUserStore()
+const { getUserProfile, getUserCV } = useUserStore()
 onLaunch(() => {
   console.log('App Launch')
   if (isLogin.value) {
     getUserProfile()
+    getUserCV()
   }
 })
 onShow(() => {

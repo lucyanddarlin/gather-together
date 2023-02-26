@@ -10,6 +10,7 @@ import TabItem from './components/tab-item.vue'
 import PaperItem from './components/paper-item.vue'
 import LoadMore from './components/load-more.vue'
 import Float from './components/float.vue'
+import FormItem from './components/form-item.vue'
 import App from './App.vue'
 import 'uno.css'
 import '@/styles/index.scss'
@@ -26,6 +27,7 @@ export function createApp() {
   app.component('LoadMore', LoadMore)
   app.component('Float', Float)
   app.component('Popup', Popup)
+  app.component('FormItem', FormItem)
   return {
     app,
   }

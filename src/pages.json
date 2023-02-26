@@ -40,6 +40,12 @@
           }
         },
         {
+          "path": "cv/add-page",
+          "style": {
+            "navigationBarTitleText": "添加/编辑"
+          }
+        },
+        {
           "path": "cv/index",
           "style": {
             "navigationBarTitleText": "个人简历"

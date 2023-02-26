@@ -56,3 +56,25 @@ export const PROFESSION_LIST = [
   { index: PROFESSION_TYPE.MEDICINE, value: '医学类', isSelected: false },
   { index: PROFESSION_TYPE.SPECIAL, value: '特殊类', isSelected: false },
 ]
+
+export const enum ABILITY_TYPE {
+  BUSINESS = 1,
+  TECHNOLOGY,
+  LAW,
+  DESIGN,
+  AD,
+  LEARNING,
+}
+export const ABILITY_LIST = [
+  { index: ABILITY_TYPE.BUSINESS, value: '运营/规划', isSelected: false },
+  { index: ABILITY_TYPE.TECHNOLOGY, value: '软件/硬件', isSelected: false },
+  { index: ABILITY_TYPE.LAW, value: '财务/法律', isSelected: false },
+  { index: ABILITY_TYPE.DESIGN, value: '美工/设计', isSelected: false },
+  { index: ABILITY_TYPE.AD, value: '宣传/推广', isSelected: false },
+  { index: ABILITY_TYPE.LEARNING, value: '科研/学术', isSelected: false },
+]
+
+export const enum ADD {
+  PROJECTS,
+  CERTS,
+}
