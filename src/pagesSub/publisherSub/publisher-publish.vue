@@ -16,12 +16,12 @@
           >报名日期</view
         >
         <view
-          pt-48rpx
           v-if="
             value.type !== 'text_option' &&
             (key !== 'race_level' || post_type === '比赛') &&
             value.type !== 'time'
           "
+          pt-48rpx
           class="title"
         >
           {{ value.title }}
@@ -39,7 +39,7 @@
           w-210rpx
           h-54rpx
           right-46rpx
-          top-780rpx
+          top-790rpx
           fw-500
           :style="{
             backgroundColor: '#598DF9',
@@ -49,7 +49,7 @@
           }"
           @tap="options[key as keyof Options].isShow = true"
         >
-          <view> {{ options[key as keyof Options].value }} </view>
+          <view pr-10rpx> {{ options[key as keyof Options].value }} </view>
           <view absolute right-10rpx class="iconfont icon-qianwang" />
           <u-picker
             v-model="options[key as keyof Options].isShow"
@@ -125,7 +125,7 @@
               width="674rpx"
               height="88rpx"
               font-size="28rpx"
-              :color="'#FEA651'"
+              :color="value.value !== undefined ? '#FEA651' : '#C8C9CC'"
               bg-color="#ffffff"
               border-radius="12rpx"
               :title="options[key as keyof Options].value"
@@ -219,6 +219,7 @@ import {
   getEnum,
   getMap,
   getScoreConstant,
+  PubToDesc,
 } from '@/typings/publisher'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
@@ -252,6 +253,9 @@ onLoad((options) => {
     (item) => `${item.post_id}` === id.value
   )
   publish.value = publisherStore.getPubFromDesc(description.value, post_type)
+  if (description.value === undefined) {
+    description.value = PubToDesc(publish.value, post_type)
+  }
   console.log('publish.value', publish.value)
   console.log('description.value', description.value)
 })
