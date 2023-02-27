@@ -461,7 +461,7 @@ export function GetPublishToDesc(p: GetPublish) {
     title: p.title,
     start_time: toDate(p.start_time),
     end_time: toDate(p.end_time),
-    state: State[`${p.state}` as keyof typeof State],
+    state: p.state,
     post_id: p.post_id,
     post_type: p.post_type,
     location: p.location,

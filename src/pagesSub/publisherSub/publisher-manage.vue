@@ -2,10 +2,13 @@
   <u-navbar :title="publisherStore.cur_type + '管理'" />
   <view class="bg" pt-12rpx>
     <view flex items-center justify-between>
-      <view h-72rpx w-584rpx flex items-center pl-28rpx class="bar">
-        <u-icon name="map" size="36rpx" color="#598DF9" />
-
-        <span ml-24rpx>{{ cur_area }}</span>
+      <view flex justify-start h-72rpx w-584rpx pl-28rpx class="bar">
+        <view h-72rpx>
+          <u-icon mt-16rpx name="map" size="46rpx" color="#598DF9" />
+        </view>
+        <view h-72rpx>
+          <div mt-16rpx ml-24rpx>{{ cur_area }}</div>
+        </view>
       </view>
       <view
         h-72rpx
@@ -20,7 +23,7 @@
         <span>筛选</span>
         <span
           class="iconfont icon-shaixuan"
-          :style="{ fontSize: '36rpx' }"
+          :style="{ fontSize: '40rpx' }"
           color="#598DF9"
         ></span>
       </view>
@@ -344,5 +347,6 @@ function resetFilter() {
   background-color: white;
   color: #598df9;
   font-size: 32rpx;
+  border-radius: 12rpx;
 }
 </style>

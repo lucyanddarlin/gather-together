@@ -28,15 +28,18 @@ export const reqPostPublish = (data: PostPublish) =>
 export const reqPostChange = (
   data: ChangePublish,
   post_id: number,
-  state?: number
 ) => {
-  let reqUrl = `/publish/change?post_id=${post_id}`
-  if (state) {
-    reqUrl += `&state=${state}`
-  }
   return post<{
     code: number
     body: OSSPostPolicyResult
     message: string
-  }>(reqUrl, data)
+  }>(`/publish/change?post_id=${post_id}`, data)
+}
+
+export const reqDeletePublish = (post_id: number) => {
+  return post<{
+    code: number
+    body: OSSPostPolicyResult
+    message: string
+  }>(`/publish/delete?post_id=${post_id}`)
 }
