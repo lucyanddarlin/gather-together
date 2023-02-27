@@ -42,7 +42,7 @@
         filter
         inline
         :title="
-          props.description.race_level
+          props.description.race_level !== undefined
             ? LevelMap[props.description.race_level]
             : '未分级'
         "

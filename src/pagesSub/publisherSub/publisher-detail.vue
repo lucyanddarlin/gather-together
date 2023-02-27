@@ -28,7 +28,9 @@
           filter
           inline
           :title="
-            description.race_level ? LevelMap[description.race_level] : '未分级'
+            description.race_level !== undefined
+              ? LevelMap[description.race_level]
+              : '未分级'
           "
           color="#FFAF50"
         ></PublishTag>

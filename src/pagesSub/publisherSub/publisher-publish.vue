@@ -12,7 +12,9 @@
       pl-38rpx
     >
       <view v-if="value.type">
-        <view pt-48rpx v-if="key === 'start_time'" class="title">报名日期</view>
+        <view pt-48rpx pb-32rpx v-if="key === 'start_time'" class="title"
+          >报名日期</view
+        >
         <view
           pt-48rpx
           v-if="
@@ -90,11 +92,11 @@
             :params="params"
             @confirm="setDate($event, key)"
           ></u-picker>
-          <view mt-32rpx>
+          <view>
             <PublishItem
               font-weight="500"
               width="674rpx"
-              height="88rpx"
+              height="112rpx"
               font-size="28rpx"
               color="#4C89FF"
               bg-color="#ffffff"
@@ -123,7 +125,7 @@
               width="674rpx"
               height="88rpx"
               font-size="28rpx"
-              color="#FEA651"
+              :color="'#FEA651'"
               bg-color="#ffffff"
               border-radius="12rpx"
               :title="options[key as keyof Options].value"
@@ -177,10 +179,18 @@
             width="694rpx"
             height="96rpx"
             text-32rpx
-            bg-color="#FF6969"
+            :bg-color="
+              description && description.state !== State.Delete
+                ? '#FF6969'
+                : '#DFDFDF'
+            "
             color="#fff"
             rounded="24rpx"
-            @tap="description && publisherStore.deletePost(description)"
+            @tap="
+              description &&
+                description.state !== State.Delete &&
+                publisherStore.deletePost(description)
+            "
           ></PublishButton>
         </view>
       </view>
@@ -195,6 +205,7 @@ import { addMonths, format } from 'date-fns'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
   HostType,
+  HostTypeList,
   HostTypeMap,
   type IDescription,
   type IField,
@@ -278,8 +289,10 @@ const optionsObj = {
   host_type: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.host_type) return `主办方类型`
-      return HostType[publish.value.host_type.value as HostType]
+      if (publish.value?.host_type.value === undefined) return `主办方类型`
+      const host_type: HostType = publish.value.host_type.value as HostType
+      console.log('host_type', host_type)
+      return HostTypeList[host_type]
     }),
     range: Object.values(HostTypeMap),
     enummer: HostTypeMap,
@@ -288,7 +301,8 @@ const optionsObj = {
   score_type: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.score_type) return `请选择${post_type}类型`
+      if (publish.value?.score_type.value === undefined)
+        return `请选择${post_type}类型`
       return getEnum(post_type)[publish.value.score_type.value as ScoreType]
     }),
     range: Object.values(getScoreConstant(post_type)),
@@ -298,8 +312,10 @@ const optionsObj = {
   race_level: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.race_level) return `请选择${post_type}级别`
-      return Level[publish.value.race_level.value as Level]
+      const race_level = publish.value?.race_level
+      if (!race_level || (race_level && race_level.value === undefined))
+        return `请选择${post_type}级别`
+      return Level[race_level.value as Level]
     }),
     range: Object.values(LevelMap),
     enummer: Level,
@@ -382,7 +398,6 @@ function getList(urls: Array<string> | undefined) {
   }
   return list
 }
-
 </script>
 
 <style scoped>
