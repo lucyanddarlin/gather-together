@@ -9,7 +9,7 @@
     relative
     @click="handleClickItem"
   >
-    <view text-32rpx font-bold class="text-#534E4E">
+    <view text-40rpx font-bold class="text-#534E4E">
       {{ paperItem.title || paperItem.project_name }}
     </view>
     <span
@@ -17,8 +17,8 @@
       w-50rpx
       h-50rpx
       right-24rpx
-      top-24rpx
-      class="iconfont icon-sousuo"
+      top-36rpx
+      class="iconfont icon-gengduo"
       @click.stop="handleShowOptions"
     ></span>
     <view v-if="type === GATHER" flex my-20rpx>

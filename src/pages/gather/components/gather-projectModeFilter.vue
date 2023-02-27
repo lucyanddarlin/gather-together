@@ -21,7 +21,7 @@
 import { ref } from 'vue'
 import { projectModeFilterList } from '@/utils/gatherConstant'
 
-const activeFilterOption = ref(0)
+const activeFilterOption = ref(99)
 const selectOption = (id: number) => {
   activeFilterOption.value = id
 }

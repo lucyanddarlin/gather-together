@@ -1,9 +1,17 @@
 <template>
   <!-- 顶部名字 和 学校信息 -->
-  <view pl-60rpx flex mb-24rpx>
-    <view w-124rpx h-124rpx bg-red rounded-50% mr-30rpx mt-12rpx></view>
+  <view flex mb-24rpx pl-40rpx>
+    <view
+      v-show="navActiveIndex === 1"
+      w-124rpx
+      h-124rpx
+      bg-red
+      rounded-50%
+      mr-30rpx
+      mt-12rpx
+    ></view>
     <view>
-      <view class="text-#534E4E text-40rpx mb-12rpx font-bold">{{
+      <view class="text-#534E4E text-52rpx mb-12rpx font-bold">{{
         props.name
       }}</view>
       <view v-show="navActiveIndex == 1" flex mb-12rpx

@@ -139,7 +139,7 @@ const handlePopup = (value: boolean) => {
         padding-bottom: 8rpx;
         &.active {
           color: #000000;
-          border-bottom: 2px solid #361d1e;
+          border-bottom: 4rpx solid #361d1e;
         }
       }
     }

@@ -1,5 +1,5 @@
 <template>
-  <view fixed z-9 w-full bg-white>
+  <view w-full bg-white>
     <view class="area-1 relative">
       <TabSection
         :default-active="navActiveIndex"
@@ -16,6 +16,7 @@
     </view>
     <view class="area-2 relative">
       <TabSection
+        v-show="navActiveIndex === 0"
         :default-active="filterActiveIndex"
         @tab-switch="handleFilterSwitch"
       >
@@ -27,6 +28,7 @@
           <text>{{ item.title }}</text>
         </TabItem>
       </TabSection>
+      <view v-show="navActiveIndex === 1" text-black pl-26rpx>综合</view>
       <view class="text-#598DF9 font-400 flex items-center" @click="handlePopup"
         ><view mr-8rpx>筛选</view><span class="iconfont icon-shaixuan"></span>
       </view>

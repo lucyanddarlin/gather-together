@@ -1,38 +1,55 @@
 <template>
   <!-- 功能按钮，用在页面最后，确认 、 删除用 -->
   <view
-    class="w-700rpx h-100rpx flex items-center justify-center bg-#4380FF text-white font-bold text-32rpx rounded-24rpx"
+    class="w-700rpx h-100rpx flex items-center justify-center text-white font-bold text-32rpx rounded-24rpx"
+    :class="props.formStatus ? 'buttonSel' : 'buttonUnSel'"
     @click="toPublishApi"
   >
     {{ props.value }}
   </view>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
 import { reqPublishProject } from '@/api/gather'
 
 const props = defineProps<{
   value: String | Number
   url?: String
   publishData?: any
+  formStatus?: boolean
 }>()
-const publistList = computed(() => {
-  return props.publishData
-})
-const toPublishApi = () => {
-  console.log(publistList.value)
 
-  reqPublishProject(
-    publistList.value.contact,
-    publistList.value.project_introduce,
-    publistList.value.needs,
-    publistList.value.pic_count,
-    publistList.value.project_mode,
-    publistList.value.project_name,
-    publistList.value.project_type,
-    publistList.value.zone_id
-  )
+const toPublishApi = () => {
+  if (props.formStatus) {
+    reqPublishProject({
+      contact: props.publishData.contact,
+      introduce: props.publishData.introduce,
+      needs: props.publishData.needs,
+      pic_count: '99',
+      project_mode: props.publishData.project_mode,
+      project_name: props.publishData.project_name,
+      project_type: props.publishData.project_type,
+    })
+    uni.showToast({
+      title: '发布成功！',
+      icon: 'success',
+      duration: 2000,
+    })
+  } else {
+    uni.showToast({
+      title: '您还未填写完整',
+      icon: 'error',
+      duration: 2000,
+    })
+    return
+  }
 }
 </script>
 
-<style lang="less" scoped></style>
+<style scoped>
+.buttonSel {
+  background-color: #4380ff;
+}
+.buttonUnSel {
+  background-color: #dfdfdf;
+}
+</style>
