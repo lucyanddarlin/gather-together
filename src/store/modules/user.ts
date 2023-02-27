@@ -1,12 +1,13 @@
 /* eslint-disable no-restricted-syntax */
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { isNull, showMsg } from '@/utils/common'
+import { deepClone, isNull, showMsg } from '@/utils/common'
 import {
   reqCreateUserCV,
   reqGetUserCV,
   reqGetUserProfile,
   reqRemoveUserCV,
+  reqUpdateUserCV,
   reqUserLogin,
 } from '@/api/user'
 import { GENDER, PROFILE_KEY, TOKEN_KEY } from '@/utils/constant'
@@ -56,15 +57,17 @@ const getProfile = (): Promise<UniApp.GetUserProfileRes> => {
 
 const blankCV: RawUserCv = {
   name: '',
-  sex: String(GENDER.unknown),
+  sex: GENDER.unknown,
   school: '',
   profession: '',
   profile: '',
   contact: '',
-  direction: undefined,
-  skill_id: undefined,
-  skill_des: undefined,
-  year: undefined,
+  direction: '',
+  skill_id: '',
+  skill_des: '',
+  year: '',
+  projects: [],
+  certs: [],
 }
 
 export const useUserStore = defineStore('user', () => {
@@ -73,7 +76,7 @@ export const useUserStore = defineStore('user', () => {
     JSON.parse(uni.getStorageSync(PROFILE_KEY) || '{}')
   )
   const isLogin = computed(() => !isNull(token.value))
-  const userCV = ref<RawUserCv>(blankCV)
+  const userCV = ref<RawUserCv>(deepClone(blankCV))
   const hasCV = ref<boolean>(false)
 
   const userLogin = async () => {
@@ -115,6 +118,7 @@ export const useUserStore = defineStore('user', () => {
     const { data } = await reqGetUserCV()
     if (!isNull(data)) {
       userCV.value = data.body
+      console.log('获取用户简历', userCV.value)
       hasCV.value = true
       return
     }
@@ -123,12 +127,11 @@ export const useUserStore = defineStore('user', () => {
   const removeUserCV = async () => {
     const { data } = await reqRemoveUserCV()
     if (!isNull(data)) {
-      userCV.value = blankCV
+      userCV.value = deepClone(blankCV)
+      console.log(userCV.value)
+
       hasCV.value = false
       showMsg('清除成功')
-      setTimeout(() => {
-        uni.navigateBack()
-      }, 500)
     }
     return false
   }
@@ -137,9 +140,13 @@ export const useUserStore = defineStore('user', () => {
     if (!isNull(data)) {
       showMsg('创建成功')
       hasCV.value = true
-      setTimeout(() => {
-        uni.navigateBack()
-      }, 500)
+    }
+  }
+  const updateUserCV = async (query: Partial<RawUserCv>) => {
+    const { data } = await reqUpdateUserCV(query)
+    if (!isNull(data)) {
+      await getUserCV()
+      showMsg('修改成功')
     }
   }
   return {
@@ -152,5 +159,6 @@ export const useUserStore = defineStore('user', () => {
     getUserCV,
     removeUserCV,
     createUserCV,
+    updateUserCV,
   }
 })

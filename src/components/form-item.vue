@@ -1,7 +1,9 @@
 <template>
   <view mb-30rpx class="form-item">
     <view flex items-center justify-between>
-      <view text-28rpx font-bold class="text-#8C99A0">{{ title }}</view>
+      <view v-if="title" text-28rpx font-bold class="text-#8C99A0">
+        {{ title }}
+      </view>
       <slot></slot>
     </view>
     <view
@@ -125,7 +127,7 @@ import { GENDER, PROJECTMODE_LIST, PROJECTTYPE_LIST } from '@/utils/constant'
 
 const props = defineProps<{
   modelValue?: string | number
-  title: string
+  title?: string
   placeholder?: string
   arrow?: boolean
   input?: boolean

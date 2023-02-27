@@ -48,8 +48,26 @@
         <view class="iconfont icon-qianwang" />
       </view>
     </FormItem>
-    <FormItem title="项目/实践 (可添加)" add :add-type="ADD.PROJECTS" />
-    <FormItem title="证书/荣誉 (可添加)" add :add-type="ADD.CERTS" />
+    <view text-28rpx font-bold class="text-#8C99A0"> 项目/实践 (可添加) </view>
+    <view v-if="!isNull(userCV.projects)">
+      <ProjectCertsItem
+        v-for="project in userCV.projects"
+        :key="project.project_id"
+        :item="project"
+        :type="ADD.PROJECTS"
+      />
+    </view>
+    <FormItem add :add-type="ADD.PROJECTS" />
+    <view text-28rpx font-bold class="text-#8C99A0">证书/荣誉 (可添加)</view>
+    <view v-if="!isNull(userCV.certs)">
+      <ProjectCertsItem
+        v-for="cert in userCV.certs"
+        :key="cert.cert_id"
+        :item="cert"
+        :type="ADD.CERTS"
+      />
+    </view>
+    <FormItem add :add-type="ADD.CERTS" />
     <FormItem
       v-model="userCV.contact"
       title="联系方式"
@@ -73,9 +91,10 @@
     <view
       class="confirm-button-wrap transition"
       :class="{ '!bg-#FF6969': checkCV }"
-      @click="removeUserCV"
-      >删除该简历</view
+      @click="handleRemoveCV"
     >
+      删除该简历
+    </view>
     <u-popup v-model="showPopup" mode="bottom" height="70%" border-radius="30">
       <view p-30rpx>
         <view>
@@ -109,9 +128,12 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/modules/user'
-import { deepClone, showMsg } from '@/utils/common'
-import { ABILITY_LIST, ADD, PROFESSION_LIST } from '@/utils/constant'
+import { deepClone, isNull, showMsg } from '@/utils/common'
+import { ABILITY_LIST, ADD, GENDER, PROFESSION_LIST } from '@/utils/constant'
+import ProjectCertsItem from './project-cert-item.vue'
 
 interface PopupData {
   [key: string]: {
@@ -126,8 +148,21 @@ const popupData = reactive<PopupData>({
   ability: { title: '能力类型', list: deepClone(ABILITY_LIST) },
 })
 
-const { userCV, removeUserCV, createUserCV } = useUserStore()
+const { userCV, hasCV } = storeToRefs(useUserStore())
+const { removeUserCV, createUserCV, getUserCV, updateUserCV } = useUserStore()
 const showPopup = ref<boolean>(false)
+const checkCVKey = [
+  'name',
+  'sex',
+  'school',
+  'profession',
+  'profile',
+  'contact',
+  'direction',
+  'skill_id',
+  'skill_des',
+  'year',
+]
 const currentProfession = computed(() => {
   return popupData['profession']?.list.find((item) => item.isSelected)
 })
@@ -135,26 +170,64 @@ const currentAbility = computed(() => {
   return popupData['ability']?.list.find((item) => item.isSelected)
 })
 const checkCV = computed(() => {
-  // eslint-disable-next-line no-restricted-syntax
-  for (const key in userCV) {
-    if (!userCV[key as keyof typeof userCV]) return false
+  if (
+    userCV.value.name &&
+    userCV.value.school &&
+    userCV.value.profession &&
+    userCV.value.profile &&
+    userCV.value.contact &&
+    userCV.value.skill_des &&
+    userCV.value.direction &&
+    userCV.value.skill_id &&
+    userCV.value.year &&
+    userCV.value.sex !== GENDER.unknown
+  ) {
+    return true
   }
-  return true
+  return false
 })
 watch(
   currentProfession,
   () => {
-    userCV.direction = currentProfession.value?.index
+    userCV.value.direction = currentProfession.value?.index
   },
   { deep: true }
 )
 watch(
   currentAbility,
   () => {
-    userCV.skill_id = currentAbility.value?.index
+    userCV.value.skill_id = currentAbility.value?.index
   },
   { deep: true }
 )
+
+onLoad(() => {
+  if (userCV.value.skill_id && userCV.value.direction) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const index in popupData['profession'].list) {
+      if (
+        popupData['profession'].list[index].index === userCV.value.direction
+      ) {
+        popupData['profession'].list[index].isSelected = true
+        break
+      }
+    }
+    // eslint-disable-next-line no-restricted-syntax
+    for (const index in popupData['ability'].list) {
+      if (popupData['ability'].list[index].index === userCV.value.skill_id) {
+        popupData['ability'].list[index].isSelected = true
+        break
+      }
+    }
+  }
+  uni.$on('refreshCV', getUserCV)
+})
+onUnload(() => {
+  if (!checkCV.value) {
+    removeUserCV()
+  }
+  uni.$off('refreshCV')
+})
 
 const handleOpenPopup = (key: PopupDataKey) => {
   popupDataKey.value = key
@@ -171,7 +244,23 @@ const handleClickConfirm = () => {
     showMsg('请填写完整表单')
     return
   }
+  if (hasCV.value) {
+    const query: any = {}
+    // eslint-disable-next-line no-restricted-syntax
+    for (const index in checkCVKey) {
+      query[checkCVKey[index]] =
+        userCV.value[checkCVKey[index] as keyof typeof userCV.value]
+    }
+    console.log(query)
+    updateUserCV(query)
+    return
+  }
   createUserCV()
+}
+const handleRemoveCV = async () => {
+  await removeUserCV()
+  popupData['profession'].list.forEach((item) => (item.isSelected = false))
+  popupData['ability'].list.forEach((item) => (item.isSelected = false))
 }
 </script>
 

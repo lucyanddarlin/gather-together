@@ -5,9 +5,22 @@
       :current-profession="currentProfession?.value!"
     />
     <view class="common-wrap">
-      <view class="title">技能</view>
+      <view class="title">技能/能力</view>
       <text class="common-label blue">{{ currentAbility?.value }}</text>
       <view class="desc">{{ userCV.skill_des }}</view>
+    </view>
+    <view class="common-wrap">
+      <view class="title">项目/实践</view>
+      <view v-for="project in userCV.projects" :key="project.project_id">
+        <text class="common-label blue">{{ project.project_name }}</text>
+        <view class="desc">{{ project.project_exp }}</view>
+      </view>
+    </view>
+    <view class="common-wrap">
+      <view class="title">证书/荣誉</view>
+      <view v-for="cert in userCV.certs" :key="cert.cert_id">
+        <text class="common-label blue">{{ cert.cert_name }}</text>
+      </view>
     </view>
     <view class="common-wrap">
       <view class="title">个人介绍</view>
@@ -26,18 +39,19 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/modules/user'
 import { ABILITY_LIST, PROFESSION_LIST } from '@/utils/constant'
 import { showMsg } from '@/utils/common'
 import CVHeader from './cv-header.vue'
 
-const { userCV } = useUserStore()
+const { userCV } = storeToRefs(useUserStore())
 
 const currentProfession = computed(() => {
-  return PROFESSION_LIST.find((item) => item.index === userCV.direction)
+  return PROFESSION_LIST.find((item) => item.index === userCV.value.direction)
 })
 const currentAbility = computed(() => {
-  return ABILITY_LIST.find((item) => item.index === userCV.skill_id)
+  return ABILITY_LIST.find((item) => item.index === userCV.value.skill_id)
 })
 const handleLinkToEditCV = () => {
   uni.navigateTo({
@@ -48,6 +62,7 @@ const handleLinkToEditCV = () => {
 
 <style lang="scss">
 .cv-detail {
+  padding-bottom: 40rpx;
   .common-label {
     padding: 8rpx 12rpx;
     font-size: 24rpx;

@@ -15,11 +15,12 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/modules/user'
 
 defineProps<{ currentProfession: string; currentAbility: string }>()
 
-const { userCV } = useUserStore()
+const { userCV } = storeToRefs(useUserStore())
 </script>
 
 <style lang="scss">

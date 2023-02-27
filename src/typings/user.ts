@@ -25,10 +25,24 @@ export interface UserProfile {
   has_nick_modify: boolean
 }
 
+export interface CVProject {
+  user_id?: string
+  project_id?: string
+  project_name: string
+  project_exp: string
+}
+
+export interface CVCert {
+  user_id?: string
+  cert_id?: string
+  cert_name: string
+  date: Date
+}
+
 export interface RawUserCv {
   user_id?: string
   name: string
-  sex: string
+  sex: number
   school: string
   college_id?: number
   college?: string
@@ -41,8 +55,8 @@ export interface RawUserCv {
   skill_des: any
   zone_id?: any
   year: any
-  certs?: any[]
-  projects?: any[]
+  certs?: Array<CVCert>
+  projects?: Array<CVProject>
 }
 
 export interface CreateCV {
