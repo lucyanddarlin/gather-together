@@ -36,7 +36,7 @@
     <div class="publish" flex-center @click="handleCreate()">
       <div
         class="iconfont icon-fabuanniu1"
-        :style="{ fontSize: '60rpx' }"
+        :style="{ fontSize: '47rpx' }"
       ></div></div
   ></view>
 

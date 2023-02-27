@@ -1,12 +1,12 @@
 import { format } from 'date-fns'
 
 export enum State {
-  Create = '0',
-  Uncensore = '1',
-  Publish = '2',
-  Repulse = '3',
-  Delete = '4',
-  Banned = '5',
+  Create = 0,
+  Uncensore = 1,
+  Publish = 2,
+  Repulse = 3,
+  Delete = 4,
+  Banned = 5,
 }
 
 export const StateMap = {
@@ -504,7 +504,6 @@ export function DescToChangePublish(d: IDescription) {
     sponsor_name: d.host,
     detail: d.description,
     start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
-
     end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
     regist_info: d.access,
     location: d.location,
