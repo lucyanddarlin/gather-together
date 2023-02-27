@@ -35,7 +35,12 @@
     </view>
 
     <!-- 发布 和 返回顶部的按钮 -->
-    <GatherPublishButton fixed top-1000rpx right-40rpx />
+    <GatherPublishButton
+      v-show="navActiveIndex === 0"
+      fixed
+      top-1000rpx
+      right-40rpx
+    />
     <GatherBackTopButton fixed top-1130rpx right-40rpx />
   </view>
 

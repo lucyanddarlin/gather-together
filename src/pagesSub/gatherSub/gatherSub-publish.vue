@@ -32,7 +32,7 @@
     <FormItem
       v-model="publishProject.needs"
       title="项目需求"
-      placeholder="请输入项目需求"
+      placeholder="请输入您的需求(没有可填无)"
       input
     />
 
@@ -43,7 +43,7 @@
         <textarea
           v-model="publishProject.introduce"
           auto-height
-          placeholder="'请输入项目介绍内容'"
+          placeholder="请输入项目介绍内容"
           w-700rpx
           min-h-200rpx
           rounded-12rpx
@@ -52,20 +52,26 @@
           placeholder-style="color:#BDBDBD"
           :maxlength="3000"
         />
-        <view absolute right-24rpx>{{ wordCount }} / 3000</view></view
+        <view absolute right-24rpx top-220rpx
+          >{{ wordCount }} / 3000</view
+        ></view
       ></view
     >
     <!-- 上传图片 -->
     <GatherSubUpload />
 
-    <MannerButton :value="'发布'" :publish-data="publishProject" />
+    <MannerButton
+      :value="'发布'"
+      :publish-data="publishProject"
+      :form-status="formDataFulled"
+    />
   </view>
 </template>
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import GatherSubUpload from '@/pagesSub/gatherSub/components/gatherSub-upload.vue'
 import MannerButton from '@/components/manner-button.vue'
-
+const formDataFulled = ref(false)
 const wordCount = computed(() => {
   return publishProject.introduce.length
 })
@@ -79,6 +85,21 @@ const publishProject = reactive({
   project_name: '',
   project_type: '',
   zone_id: '1',
+})
+
+watch(publishProject, (newValue) => {
+  if (
+    newValue.project_name &&
+    newValue.contact &&
+    newValue.project_mode !== '' &&
+    newValue.project_type !== '' &&
+    newValue.needs &&
+    newValue.introduce
+  ) {
+    formDataFulled.value = true
+  } else {
+    formDataFulled.value = false
+  }
 })
 </script>
 
