@@ -1,7 +1,7 @@
 <template>
   <u-navbar :is-back="true" :border-bottom="true" :title="'发布项目'">
   </u-navbar>
-  <view class="bg-#F7F8FA min-h-1600rpx pt-40rpx px-26rpx">
+  <view class="bg-#F7F8FA min-h-1600rpx pt-40rpx px-26rpx pb-100rpx">
     <FormItem
       v-model="publishProject.project_name"
       title="标题"
@@ -38,7 +38,7 @@
 
     <!-- 留言 -->
     <view mb-48rpx relative
-      ><view class="text-#8C99A0 mb-28rpx">项目详情</view>
+      ><view class="text-#8C99A0 mb-28rpx font-bold">项目详情</view>
       <view class="text-#BDBDBD">
         <textarea
           v-model="publishProject.introduce"
@@ -58,7 +58,7 @@
     <!-- 上传图片 -->
     <GatherSubUpload />
 
-    <MannerButton :value="'发布'" :publish-data="publishProject" mb-200rpx />
+    <MannerButton :value="'发布'" :publish-data="publishProject" />
   </view>
 </template>
 <script setup lang="ts">
@@ -69,25 +69,16 @@ import MannerButton from '@/components/manner-button.vue'
 const wordCount = computed(() => {
   return publishProject.introduce.length
 })
-interface ProjectType {
-  contact: string
-  introduce: string
-  needs: string
-  pic_count: string | number
-  project_mode: string
-  project_name: string
-  project_type: string
-  zone_id: string | number
-}
-const publishProject: ProjectType = reactive({
+
+const publishProject = reactive({
   contact: '',
   introduce: '',
   needs: '',
-  pic_count: '1221',
+  pic_count: '1',
   project_mode: '',
   project_name: '',
   project_type: '',
-  zone_id: '1321',
+  zone_id: '1',
 })
 </script>
 

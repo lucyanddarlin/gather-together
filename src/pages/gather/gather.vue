@@ -2,7 +2,7 @@
 <template>
   <NavBar></NavBar>
   <GatherSelectPage />
-  <view class="bg-#f7f7f7 w-full mt-186rpx min-h-1400rpx">
+  <view class="bg-#f7f7f7 w-full mt-196rpx min-h-1400rpx">
     <!-- 项目库 -->
     <view v-show="navActiveIndex == PROJECT_LIBRARY">
       <scroll-view
@@ -21,7 +21,7 @@
       /></scroll-view>
     </view>
     <!-- 人才库 -->
-    <view v-show="navActiveIndex == PEOPLE_LIBRARY">
+    <view v-show="navActiveIndex === PEOPLE_LIBRARY" pt-20rpx>
       <GatherPeople
         v-for="item in UserVita"
         :key="item.user_id"
@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { currentUserVitaStore } from '@/store/UserVitaStore'
 // 切换页面
@@ -90,7 +90,7 @@ import PaperItem from '@/components/paper-item.vue'
 // 引入 获取项目数据的 请求
 import { reqGatherProjectList } from '@/api/gather'
 
-import GatherPeople from './components/gather-people.vue'
+import GatherPeople from '@/pages/gather/components/gather-people.vue'
 import GatherProjectModeFilter from './components/gather-projectModeFilter.vue'
 
 // 实例化 gatherIndex pinia
@@ -181,9 +181,9 @@ onLoad(() => {
 }
 .icon-fasong,
 .icon-shouqi {
-  font-size: 28px;
+  font-size: 56rpx;
 }
 .buttonShadow {
-  box-shadow: 0px 2px 7px 2px rgba(67, 128, 255, 0.14);
+  box-shadow: 0rpx 4rpx 14rpx 4rpx rgba(67, 128, 255, 0.14);
 }
 </style>
