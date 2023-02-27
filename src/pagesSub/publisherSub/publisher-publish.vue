@@ -180,6 +180,7 @@
             bg-color="#FF6969"
             color="#fff"
             rounded="24rpx"
+            @tap="description && publisherStore.deletePost(description)"
           ></PublishButton>
         </view>
       </view>
@@ -381,6 +382,7 @@ function getList(urls: Array<string> | undefined) {
   }
   return list
 }
+
 </script>
 
 <style scoped>

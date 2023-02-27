@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 import {
+  type ChangePublish,
   DescToChangePublish,
   DescToPostPublish,
   GetPublishToDesc,
@@ -10,6 +11,7 @@ import {
   Publish,
   Type,
   TypeMap,
+  State,
 } from '@/typings/publisher'
 import { reqGetPublish, reqPostChange, reqPostPublish } from '@/api/publisher'
 import { showMsg } from '@/utils/common'
@@ -89,6 +91,24 @@ export const usePublisherStore = defineStore('publisher', () => {
     console.log('response', response)
     if (response.code === 200) return true
     return false
+  }
+
+  // 删除帖子
+  async function deletePost(d: IDescription) {
+    const p: ChangePublish = DescToChangePublish(d)
+    const response = await reqPostChange(p, d.post_id, State.Delete)
+    if (response.code !== 200) {
+      showMsg('删除失败', 'error')
+      return
+    }
+    showMsg('删除成功', 'success')
+    // const index = descriptions[d.post_type].findIndex(
+    //   (item) => item.post_id === d.post_id
+    // )
+    d.state = State.Delete
+    uni.navigateBack()
+    // descriptions[d.post_type].splice(index, 1)
+    // publish[d.post_type].splice(index, 1)
   }
 
   function getPubFromDesc(
@@ -248,5 +268,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     update,
     loadPage,
     reqCreatePublish,
+    deletePost,
   }
 })
