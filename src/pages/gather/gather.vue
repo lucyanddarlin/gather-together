@@ -1,48 +1,49 @@
 <!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
   <NavBar></NavBar>
-  <GatherSelectPage />
-  <view class="bg-#f7f7f7 w-full mt-196rpx min-h-1400rpx">
-    <!-- 项目库 -->
-    <view v-show="navActiveIndex == PROJECT_LIBRARY">
-      <scroll-view
-        class="main-page"
-        :scroll-y="true"
-        :scroll-with-animation="true"
-        :refresher-enabled="true"
-        :refresher-triggered="isTriggered"
-        @scrolltolower="handleScrollToLower"
-      >
+  <GatherSelectPage fixed z-10 w-full />
+  <view class="discover-page bg-#f7f7f7"
+    ><!-- 项目库 -->
+    <scroll-view
+      class="main-page"
+      :scroll-y="true"
+      :scroll-with-animation="true"
+      :scroll-top="scrollTop"
+      :refresher-enabled="true"
+      :refresher-triggered="isTriggered"
+      @scroll="handleScroll"
+      @scrolltolower="handleScrollToLower"
+    >
+      <view v-show="navActiveIndex == PROJECT_LIBRARY">
         <PaperItem
           v-for="project in GatherProjectList"
           :key="project.project_id"
           :type="GATHER"
           :paper-item="project"
-      /></scroll-view>
-    </view>
-    <!-- 人才库 -->
-    <view v-show="navActiveIndex === PEOPLE_LIBRARY" pt-20rpx>
-      <GatherPeople
-        v-for="item in UserVita"
-        :key="item.user_id"
-        :name="item.name"
-        :tags="item.tags"
-        :school="item.school"
-        :profession="item.profession"
-        :content="item.profile"
-        @toPeopleDetail="toPeopleDetail(item.user_id)"
-      />
-    </view>
+      /></view>
+      <!-- 人才库 -->
+      <view v-show="navActiveIndex == PEOPLE_LIBRARY" pt-20rpx>
+        <GatherPeople
+          v-for="item in UserVita"
+          :key="item.user_id"
+          :name="item.name"
+          :tags="item.tags"
+          :school="item.school"
+          :profession="item.profession"
+          :content="item.profile"
+          @toPeopleDetail="toPeopleDetail(item.user_id)"
+        />
+      </view> </scroll-view
+  ></view>
 
-    <!-- 发布 和 返回顶部的按钮 -->
-    <GatherPublishButton
-      v-show="navActiveIndex === 0"
-      fixed
-      top-1000rpx
-      right-40rpx
-    />
-    <GatherBackTopButton fixed top-1130rpx right-40rpx />
-  </view>
+  <!-- 发布 和 返回顶部的按钮 -->
+  <GatherPublishButton
+    v-show="navActiveIndex === 0"
+    fixed
+    top-1000rpx
+    right-40rpx
+  />
+  <GatherBackTopButton fixed top-1130rpx right-40rpx />
 
   <!-- 项目库筛选 -->
   <u-popup
@@ -103,8 +104,13 @@ const useGatherIndexStore = gatherIndexStore()
 // 实例化 当前页面的 数据
 const userStore = currentUserVitaStore()
 // 导入 nav 栏 活动的值 ； 导入是否展示 筛选
-const { navActiveIndex, showPeopleLibraryPopup, showProjectLibraryPopup } =
-  storeToRefs(useGatherIndexStore)
+const {
+  navActiveIndex,
+  showPeopleLibraryPopup,
+  showProjectLibraryPopup,
+  scrollTop,
+  oldScrollTop,
+} = storeToRefs(useGatherIndexStore)
 // 导入选中的 人才库 id；人才库数据
 const { currentUserVitaId, UserVita } = storeToRefs(userStore)
 const userGatherProjectStore = gatherProjectStore()
@@ -129,6 +135,10 @@ const handleScrollToLower = () => {
 onLoad(() => {
   getProject()
 })
+// 检测滚动
+const handleScroll = (options: any) => {
+  oldScrollTop.value = options.target.scrollTop as number
+}
 </script>
 
 <style lang="scss">
@@ -190,5 +200,13 @@ onLoad(() => {
 }
 .buttonShadow {
   box-shadow: 0rpx 4rpx 14rpx 4rpx rgba(67, 128, 255, 0.14);
+}
+.discovery-page {
+  height: 100vh;
+}
+.main-page {
+  padding-top: 186rpx;
+  height: 1080rpx;
+  background-color: #f7f7f7;
 }
 </style>

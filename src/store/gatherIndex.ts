@@ -20,6 +20,8 @@ export const gatherIndexStore = defineStore('gather', () => {
   const showPeopleLibraryPopup = ref<boolean>(false)
   const showProjectLibraryPopup = ref<boolean>(false)
 
+  const scrollTop = ref(0)
+  const oldScrollTop = ref(0)
   return {
     showPeopleLibraryPopup,
     showProjectLibraryPopup,
@@ -27,5 +29,7 @@ export const gatherIndexStore = defineStore('gather', () => {
     filterActiveIndex,
     topNavList,
     filterNavList,
+    scrollTop,
+    oldScrollTop,
   }
 })

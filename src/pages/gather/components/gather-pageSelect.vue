@@ -1,5 +1,5 @@
 <template>
-  <view fixed z-9 w-full bg-white>
+  <view w-full bg-white>
     <view class="area-1 relative">
       <TabSection
         :default-active="navActiveIndex"

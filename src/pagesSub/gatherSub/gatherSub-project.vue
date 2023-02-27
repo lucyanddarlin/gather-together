@@ -19,7 +19,7 @@
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 联系方式 -->
-    <GatherSubContentSection :type="'联系方式'" :title="'19300231123'" />
+    <GatherSubContact :type="'联系方式'" :title="currentProject.contact" />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
@@ -35,6 +35,7 @@ import GatherSubContentSection from '@/pagesSub/gatherSub/components/gatherSub-C
 import GatherSubAvaterSection from '@/pagesSub/gatherSub/components/gatherSub-AvaterSection.vue'
 import GatherSubFucntionButton from '@/pagesSub/gatherSub/components/gatherSub-fucntionButton.vue'
 import { reqGatherProjectSingle } from '@/api/gather'
+import GatherSubContact from '@/pagesSub/gatherSub/components/gatherSub-Contact.vue'
 
 const currentProject: any = ref([])
 onLoad((option: any) => {
