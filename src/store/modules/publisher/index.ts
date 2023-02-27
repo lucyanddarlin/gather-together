@@ -9,11 +9,16 @@ import {
   type IPublish,
   PubToDesc,
   Publish,
+  State,
   Type,
   TypeMap,
-  State,
 } from '@/typings/publisher'
-import { reqGetPublish, reqPostChange, reqPostPublish } from '@/api/publisher'
+import {
+  reqDeletePublish,
+  reqGetPublish,
+  reqPostChange,
+  reqPostPublish,
+} from '@/api/publisher'
 import { showMsg } from '@/utils/common'
 // import { activities, lectures, matches } from './data'
 export const usePublisherStore = defineStore('publisher', () => {
@@ -83,11 +88,7 @@ export const usePublisherStore = defineStore('publisher', () => {
   // 修改发布
   async function reqUpdatePublish(p: Publish) {
     const desc = PubToDesc(p, cur_type.value)
-    const response = await reqPostChange(
-      DescToChangePublish(desc),
-      p.post_id,
-      1
-    )
+    const response = await reqPostChange(DescToChangePublish(desc), p.post_id)
     console.log('response', response)
     if (response.code === 200) return true
     return false
@@ -96,19 +97,15 @@ export const usePublisherStore = defineStore('publisher', () => {
   // 删除帖子
   async function deletePost(d: IDescription) {
     const p: ChangePublish = DescToChangePublish(d)
-    const response = await reqPostChange(p, d.post_id, State.Delete)
+    const response = await reqDeletePublish(d.post_id)
     if (response.code !== 200) {
       showMsg('删除失败', 'error')
       return
     }
     showMsg('删除成功', 'success')
-    // const index = descriptions[d.post_type].findIndex(
-    //   (item) => item.post_id === d.post_id
-    // )
+    console.log('delete response', response)
     d.state = State.Delete
     uni.navigateBack()
-    // descriptions[d.post_type].splice(index, 1)
-    // publish[d.post_type].splice(index, 1)
   }
 
   function getPubFromDesc(

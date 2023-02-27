@@ -20,7 +20,7 @@
       <PublishTag
         inline
         :title="StateMap[props.description.state]"
-        color="#56C28E"
+        :color="getColor(props.description.state)"
       ></PublishTag>
       <!-- 活动类型 -->
       <PublishTag
@@ -66,6 +66,7 @@ import {
   type IDescription,
   LevelMap,
   ScoreTypeMap,
+  type State,
   StateMap,
   Type,
 } from '@/typings/publisher'
@@ -73,6 +74,19 @@ import PublishTag from './publish-tag.vue'
 const props = defineProps<{
   description: IDescription
 }>()
+
+const getColor = (state: State) => {
+  const colorMap = [
+    '#FFAF50',
+    '#FFAF50',
+    '#56C28E',
+    '#FF6969',
+    '#FF6969',
+    '#FF6969',
+  ]
+
+  return colorMap[state]
+}
 </script>
 
 <style scoped></style>
