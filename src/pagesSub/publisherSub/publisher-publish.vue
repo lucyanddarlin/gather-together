@@ -295,7 +295,6 @@ const optionsObj = {
     value: computed(() => {
       if (publish.value?.host_type.value === undefined) return `主办方类型`
       const host_type: HostType = publish.value.host_type.value as HostType
-      console.log('host_type', host_type)
       return HostTypeList[host_type]
     }),
     range: Object.values(HostTypeMap),
@@ -365,13 +364,6 @@ function setDate(result: any, key: string) {
 function setOptions(result: any, key: string) {
   publish.value &&
     ((publish.value[key as keyof Options] as IField).value = result[0])
-  console.log('result', result)
-  console.log('key', key)
-  publish.value &&
-    console.log(
-      'publish.value',
-      (publish.value[key as keyof Options] as IField).value
-    )
 }
 
 function chooseImage(lists: Object, key: string) {

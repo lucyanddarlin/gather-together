@@ -67,7 +67,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     console.log('page', page)
     if (page.data.body.length === 0) return
     t.pages++
-    console.log('types', types)
     descriptions[TypeMap[post_type as keyof typeof Type]].push(
       ...page.data.body.map((item) => GetPublishToDesc(item))
     )
@@ -111,7 +110,6 @@ export const usePublisherStore = defineStore('publisher', () => {
             return
           }
           showMsg('删除成功', 'success')
-          console.log('delete response', response)
           d.state = State.Delete
           uni.navigateBack()
         }
@@ -236,7 +234,6 @@ export const usePublisherStore = defineStore('publisher', () => {
           description.post_id = post_id
           descriptions[description.post_type].push(description)
           publish[description.post_type].push(p)
-          console.log('新发布')
           console.log('publish', publish[description.post_type])
           console.log('description', descriptions[description.post_type])
           uni.navigateBack()
@@ -256,7 +253,6 @@ export const usePublisherStore = defineStore('publisher', () => {
         }
         descriptions[description.post_type].splice(index, 1, description)
         publish[description.post_type].splice(index, 1, p)
-        console.log('修改')
         console.log('publish', publish[description.post_type])
         console.log('description', descriptions[description.post_type])
         uni.navigateBack()
