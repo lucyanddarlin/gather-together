@@ -30,8 +30,16 @@
     </view>
 
     <!-- <PublishFilter @tap="handleFilter" /> -->
+    <!-- 删除状态的放在最后展示，其他状态如何安排有待进一步明细 -->
     <PublishManageCardItem
-      v-for="item in list.value"
+      v-for="item in list.value.filter((item) => item.state !== State.Delete)"
+      :key="item.post_id"
+      :description="item"
+      cursor-pointer
+      @tap="handleClick(item.post_id)" />
+    <!-- 删除状态的帖子 -->
+    <PublishManageCardItem
+      v-for="item in list.value.filter((item) => item.state === State.Delete)"
       :key="item.post_id"
       :description="item"
       cursor-pointer

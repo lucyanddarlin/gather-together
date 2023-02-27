@@ -95,17 +95,28 @@ export const usePublisherStore = defineStore('publisher', () => {
   }
 
   // 删除帖子
-  async function deletePost(d: IDescription) {
-    const p: ChangePublish = DescToChangePublish(d)
-    const response = await reqDeletePublish(d.post_id)
-    if (response.code !== 200) {
-      showMsg('删除失败', 'error')
-      return
-    }
-    showMsg('删除成功', 'success')
-    console.log('delete response', response)
-    d.state = State.Delete
-    uni.navigateBack()
+  function deletePost(d: IDescription) {
+    // 询问
+
+    uni.showModal({
+      title: '删除',
+      content: '确认删除该帖子吗？',
+      confirmColor: '#FF6969',
+      success: async (result) => {
+        if (result.confirm) {
+          // const p: ChangePublish = DescToChangePublish(d)
+          const response = await reqDeletePublish(d.post_id)
+          if (response.code !== 200) {
+            showMsg('删除失败', 'error')
+            return
+          }
+          showMsg('删除成功', 'success')
+          console.log('delete response', response)
+          d.state = State.Delete
+          uni.navigateBack()
+        }
+      },
+    })
   }
 
   function getPubFromDesc(
