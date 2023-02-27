@@ -1,17 +1,17 @@
 <template>
-  <u-cell-group>
-    <u-cell-item
-      v-for="item in types"
-      :key="item.id"
+  <view v-for="item in types" :key="item.id" class="wrapper">
+    <PublishItem
       :title="`${item.type}管理`"
-      is-link
-      @click="handleClick(item)"
+      height="82rpx"
+      color="#000"
+      font-size="28rpx"
+      @tap="handleClick(item)"
     />
-  </u-cell-group>
+  </view>
 </template>
-
 <script setup lang="ts">
 import { usePublisherStore } from '@/store/modules/publisher'
+import PublishItem from './components/publish-item.vue'
 const publisherStore = usePublisherStore()
 const types = publisherStore.types
 
@@ -21,4 +21,10 @@ const handleClick = (item: any) => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.wrapper {
+  padding-left: 12rpx;
+  border-bottom: 2rpx solid rgba(195, 195, 195, 0.17);
+  border-top: 2rpx solid rgba(195, 195, 195, 0.17);
+}
+</style>

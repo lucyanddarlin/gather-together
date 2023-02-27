@@ -28,23 +28,20 @@
         ></span>
       </view>
     </view>
-
-    <!-- <PublishFilter @tap="handleFilter" /> -->
-    <!-- 删除状态的放在最后展示，其他状态如何安排有待进一步明细 -->
     <PublishManageCardItem
       v-for="item in list.value.filter((item) => item.state !== State.Delete)"
       :key="item.post_id"
       :description="item"
       cursor-pointer
       @tap="handleClick(item.post_id)" />
-    <!-- 删除状态的帖子 -->
-    <PublishManageCardItem
+    <!-- TODO: 删除状态的帖子，经沟通确认已删除的帖子不显示，后续可以删掉这段代码 -->
+    <!-- <PublishManageCardItem
       v-for="item in list.value.filter((item) => item.state === State.Delete)"
       :key="item.post_id"
       :description="item"
       cursor-pointer
-      @tap="handleClick(item.post_id)" />
-    <div class="publish" flex-center @click="handleCreate()">
+      @tap="handleClick(item.post_id)" /> -->
+    <div class="publish" flex-center @click="handleCreate">
       <div
         class="iconfont icon-fabuanniu1"
         :style="{ fontSize: '47rpx' }"
