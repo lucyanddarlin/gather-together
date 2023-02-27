@@ -1,12 +1,12 @@
 import { format } from 'date-fns'
 
 export enum State {
-  Create = '0',
-  Uncensore = '1',
-  Publish = '2',
-  Repulse = '3',
-  Delete = '4',
-  Banned = '5',
+  Create = 0,
+  Uncensore = 1,
+  Publish = 2,
+  Repulse = 3,
+  Delete = 4,
+  Banned = 5,
 }
 
 export const StateMap = {
@@ -172,6 +172,7 @@ export const HostTypeMap = {
   [HostType.组织机构]: '组织机构',
   [HostType.学校]: '学校',
 }
+export const HostTypeList = ['政府', '组织机构', '学校']
 export interface ITag {
   title: string
   color: string
@@ -283,12 +284,12 @@ export class Publish implements IPublish {
     }
     this.host_type = {
       title: `主办方类型`,
-      value: HostType.学校,
+      value: undefined,
       type: 'text_option',
     }
     this.race_level = {
       title: `${type}级别`,
-      value: Level.地方级,
+      value: undefined,
       type: 'option',
     }
     this.score_type = {
@@ -410,7 +411,7 @@ export interface GetPublish {
   second_type: number
   picture_urls: Array<string>
   regist_info: string
-  race_level: null
+  race_level: number
   creator_name: null
   is_fav: null
   time_state: null
@@ -461,7 +462,7 @@ export function GetPublishToDesc(p: GetPublish) {
     title: p.title,
     start_time: toDate(p.start_time),
     end_time: toDate(p.end_time),
-    state: State[`${p.state}` as keyof typeof State],
+    state: p.state,
     post_id: p.post_id,
     post_type: p.post_type,
     location: p.location,
@@ -472,6 +473,7 @@ export function GetPublishToDesc(p: GetPublish) {
     imgs: p.picture_urls,
     score_type: p.second_type, // 注意这里是临时应用，希望后面能改成更规范的命名
   }
+  if (p.race_level !== undefined) desc.race_level = p.race_level
   return desc
 }
 
@@ -504,7 +506,6 @@ export function DescToChangePublish(d: IDescription) {
     sponsor_name: d.host,
     detail: d.description,
     start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
-
     end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
     regist_info: d.access,
     location: d.location,

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 import {
+  type ChangePublish,
   DescToChangePublish,
   DescToPostPublish,
   GetPublishToDesc,
@@ -8,10 +9,16 @@ import {
   type IPublish,
   PubToDesc,
   Publish,
+  State,
   Type,
   TypeMap,
 } from '@/typings/publisher'
-import { reqGetPublish, reqPostChange, reqPostPublish } from '@/api/publisher'
+import {
+  reqDeletePublish,
+  reqGetPublish,
+  reqPostChange,
+  reqPostPublish,
+} from '@/api/publisher'
 import { showMsg } from '@/utils/common'
 // import { activities, lectures, matches } from './data'
 export const usePublisherStore = defineStore('publisher', () => {
@@ -60,7 +67,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     console.log('page', page)
     if (page.data.body.length === 0) return
     t.pages++
-    console.log('types', types)
     descriptions[TypeMap[post_type as keyof typeof Type]].push(
       ...page.data.body.map((item) => GetPublishToDesc(item))
     )
@@ -81,14 +87,34 @@ export const usePublisherStore = defineStore('publisher', () => {
   // 修改发布
   async function reqUpdatePublish(p: Publish) {
     const desc = PubToDesc(p, cur_type.value)
-    const response = await reqPostChange(
-      DescToChangePublish(desc),
-      p.post_id,
-      1
-    )
+    const response = await reqPostChange(DescToChangePublish(desc), p.post_id)
     console.log('response', response)
     if (response.code === 200) return true
     return false
+  }
+
+  // 删除帖子
+  function deletePost(d: IDescription) {
+    // 询问
+
+    uni.showModal({
+      title: '删除',
+      content: '确认删除该帖子吗？',
+      confirmColor: '#FF6969',
+      success: async (result) => {
+        if (result.confirm) {
+          // const p: ChangePublish = DescToChangePublish(d)
+          const response = await reqDeletePublish(d.post_id)
+          if (response.code !== 200) {
+            showMsg('删除失败', 'error')
+            return
+          }
+          showMsg('删除成功', 'success')
+          d.state = State.Delete
+          uni.navigateBack()
+        }
+      },
+    })
   }
 
   function getPubFromDesc(
@@ -208,7 +234,6 @@ export const usePublisherStore = defineStore('publisher', () => {
           description.post_id = post_id
           descriptions[description.post_type].push(description)
           publish[description.post_type].push(p)
-          console.log('新发布')
           console.log('publish', publish[description.post_type])
           console.log('description', descriptions[description.post_type])
           uni.navigateBack()
@@ -228,7 +253,6 @@ export const usePublisherStore = defineStore('publisher', () => {
         }
         descriptions[description.post_type].splice(index, 1, description)
         publish[description.post_type].splice(index, 1, p)
-        console.log('修改')
         console.log('publish', publish[description.post_type])
         console.log('description', descriptions[description.post_type])
         uni.navigateBack()
@@ -248,5 +272,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     update,
     loadPage,
     reqCreatePublish,
+    deletePost,
   }
 })

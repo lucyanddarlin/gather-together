@@ -1,7 +1,5 @@
 <template>
   <div bg-white relative mt-12rpx min-h-346rpx>
-    <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
-
     <div>
       <div ml-24rpx mb-20rpx pt-28rpx text-32rpx fw-600>
         {{ props.description.title }}
@@ -22,7 +20,7 @@
       <PublishTag
         inline
         :title="StateMap[props.description.state]"
-        color="#56C28E"
+        :color="getColor(props.description.state)"
       ></PublishTag>
       <!-- 活动类型 -->
       <PublishTag
@@ -44,7 +42,7 @@
         filter
         inline
         :title="
-          props.description.race_level
+          props.description.race_level !== undefined
             ? LevelMap[props.description.race_level]
             : '未分级'
         "
@@ -68,6 +66,7 @@ import {
   type IDescription,
   LevelMap,
   ScoreTypeMap,
+  type State,
   StateMap,
   Type,
 } from '@/typings/publisher'
@@ -75,6 +74,19 @@ import PublishTag from './publish-tag.vue'
 const props = defineProps<{
   description: IDescription
 }>()
+
+const getColor = (state: State) => {
+  const colorMap = [
+    '#FFAF50',
+    '#FFAF50',
+    '#56C28E',
+    '#FF6969',
+    '#FF6969',
+    '#FF6969',
+  ]
+
+  return colorMap[state]
+}
 </script>
 
 <style scoped></style>

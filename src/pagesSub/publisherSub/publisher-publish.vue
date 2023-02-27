@@ -1,44 +1,56 @@
 <template>
-  <u-navbar :title="'编辑' + publisherStore.cur_type" />
+  <u-navbar :back-text="'编辑' + publisherStore.cur_type">
+    <template #left>
+      <div>GG</div>
+    </template>
+  </u-navbar>
   <view v-if="!publish">该{{ post_type }}不存在</view>
-  <view v-else relative>
+  <view v-else relative class="bg">
     <view
       v-for="[key, value] in Object.entries(publish)"
       :key="key + value.title"
-      ml-32rpx
-      mt-44rpx
+      pl-38rpx
     >
-      <view
-        v-if="
-          value.type !== 'text_option' &&
-          (key !== 'race_level' || post_type === '比赛')
-        "
-        fw-600
-        text-28rpx
-        text-dark
-      >
-        {{ value.title }}
-      </view>
-      <view
-        v-else-if="key !== 'race_level'"
-        relative
-        flex-center
-        class="text-option"
-        left-500rpx
-        bottom-200rpx
-        w-210rpx
-        h-54rpx
-        fw-500
-        :style="{
-          backgroundColor: '#598DF9',
-          color: '#fff',
-          fontSize: '24rpx',
-          borderRadius: '9rpx',
-        }"
-        @tap="options[key as keyof Options].isShow = true"
-      >
-        <view>
-          {{ options[key as keyof Options].value }} >
+      <view v-if="value.type">
+        <view pt-48rpx pb-32rpx v-if="key === 'start_time'" class="title"
+          >报名日期</view
+        >
+        <view
+          v-if="
+            value.type !== 'text_option' &&
+            (key !== 'race_level' || post_type === '比赛') &&
+            value.type !== 'time'
+          "
+          pt-48rpx
+          class="title"
+        >
+          {{ value.title }}
+        </view>
+        <!-- 不渲染标题，且伴随文字的选项（主办方类型）-->
+        <view
+          v-else-if="
+            key !== 'race_level' && key !== 'start_time' && key !== 'end_time'
+          "
+          absolute
+          flex
+          justify-center
+          items-center
+          class="text-option"
+          w-210rpx
+          h-54rpx
+          right-46rpx
+          top-790rpx
+          fw-500
+          :style="{
+            backgroundColor: '#598DF9',
+            color: '#fff',
+            fontSize: '24rpx',
+            borderRadius: '9rpx',
+          }"
+          @tap="options[key as keyof Options].isShow = true"
+        >
+          <view pr-10rpx> {{ options[key as keyof Options].value }} </view>
+          <view absolute right-10rpx class="iconfont icon-qianwang" />
           <u-picker
             v-model="options[key as keyof Options].isShow"
             mode="selector"
@@ -46,82 +58,93 @@
             @confirm="setOptions($event, key)"
           ></u-picker>
         </view>
-      </view>
-      <view v-if="value.type === 'text'">
-        <input
-          :value="((publish[key as keyof Publish] as IField).value as string)"
-          type="text"
-          :placeholder="value.placeholder"
-          w-698rpx
-          h-86rpx
-          mt-30rpx
-          text-28rpx
-          fw-500
-          pl-26rpx
-          :maxlength="value.limit"
-          @input="change($event, key)"
-        />
-      </view>
-      <view v-if="value.type === 'textarea'">
-        <textarea
-          :value="((publish[key as keyof Publish] as IField).value as string)"
-          :placeholder="value.placeholder"
-          w-698rpx
-          rows="5"
-          mt-30rpx
-          text-28rpx
-          fw-500
-          px-26rpx
-          :maxlength="value.limit"
-          @input="change($event, key)"
-        ></textarea>
-        <!-- TODO: 字数显示 -->
-      </view>
-      <!-- 时间选择器 -->
-      <view v-if="value.type === 'time'">
-        <u-cell-group>
+        <view v-if="value.type === 'text'" mt-36rpx>
+          <input
+            :value="((publish[key as keyof Publish] as IField).value as string)"
+            type="text"
+            :placeholder="value.placeholder"
+            class="input-text"
+            :maxlength="value.limit"
+            @input="change($event, key)"
+          />
+        </view>
+        <view v-if="value.type === 'textarea'" relative>
+          <textarea
+            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :placeholder="value.placeholder"
+            class="input-textarea"
+            :maxlength="value.limit"
+            @input="change($event, key)"
+          ></textarea>
+          <PublishTextCounter
+            absolute
+            right-54rpx
+            bottom-12rpx
+            :cur="((publish[key as keyof Publish] as IField).value as string).length"
+            :max="2000"
+          />
+          <!-- TODO: 字数显示 -->
+        </view>
+        <!-- 时间选择器 -->
+        <view v-if="value.type === 'time'">
           <u-picker
             v-model="picker[key as keyof Picker].isShow"
             :params="params"
             @confirm="setDate($event, key)"
           ></u-picker>
-          <u-cell-item
-            fw-500
-            :title="picker[key as keyof Picker].value"
-            @click="picker[key as keyof Picker].isShow = true"
-          ></u-cell-item>
-        </u-cell-group>
-      </view>
-      <!-- 选项 -->
-      <view
-        v-if="
-          value.type === 'option' &&
-          (key != 'race_level' || post_type == '比赛')
-        "
-      >
-        <u-cell-group>
+          <view>
+            <PublishItem
+              font-weight="500"
+              width="674rpx"
+              height="112rpx"
+              font-size="28rpx"
+              color="#4C89FF"
+              bg-color="#ffffff"
+              border-radius="12rpx"
+              :title="picker[key as keyof Picker].value"
+              @tap="picker[key as keyof Picker].isShow = true"
+            ></PublishItem>
+          </view>
+        </view>
+        <!-- 选项 -->
+        <view
+          v-if="
+            value.type === 'option' &&
+            (key != 'race_level' || post_type == '比赛')
+          "
+        >
           <u-picker
             v-model="options[key as keyof Options].isShow"
             mode="selector"
             :range="options[key as keyof Options].range"
             @confirm="setOptions($event, key)"
           ></u-picker>
-          <u-cell-item
-            fw-500
-            :title="options[key as keyof Options].value"
-            @click="options[key as keyof Options].isShow = true"
-          ></u-cell-item>
-        </u-cell-group>
-      </view>
-      <!-- 图片 -->
-      <view v-if="value.type === 'img'">
-        <u-upload
-          :file-list="getList((publish[key as keyof Publish] as IField).value as string[]) || []"
-          width="162rpx"
-          height="162rpx"
-          max-count="9"
-          @on-choose-complete="chooseImage($event, key)"
-        ></u-upload>
+          <view mt-32rpx>
+            <PublishItem
+              font-weight="500"
+              width="674rpx"
+              height="88rpx"
+              font-size="28rpx"
+              :color="value.value !== undefined ? '#FEA651' : '#C8C9CC'"
+              bg-color="#ffffff"
+              border-radius="12rpx"
+              :title="options[key as keyof Options].value"
+              @tap="options[key as keyof Options].isShow = true"
+            ></PublishItem>
+          </view>
+        </view>
+        <!-- 图片 -->
+        <view v-if="value.type === 'img'">
+          <u-upload
+            :file-list="getList((publish[key as keyof Publish] as IField).value as string[]) || []"
+            width="162rpx"
+            height="162rpx"
+            max-count="9"
+            upload-text=""
+            @on-choose-complete="chooseImage($event, key)"
+          >
+          </u-upload>
+        </view>
       </view>
     </view>
     <view ml-10rpx pb-30rpx>
@@ -156,9 +179,18 @@
             width="694rpx"
             height="96rpx"
             text-32rpx
-            bg-color="#FF6969"
+            :bg-color="
+              description && description.state !== State.Delete
+                ? '#FF6969'
+                : '#DFDFDF'
+            "
             color="#fff"
             rounded="24rpx"
+            @tap="
+              description &&
+                description.state !== State.Delete &&
+                publisherStore.deletePost(description)
+            "
           ></PublishButton>
         </view>
       </view>
@@ -173,6 +205,7 @@ import { addMonths, format } from 'date-fns'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
   HostType,
+  HostTypeList,
   HostTypeMap,
   type IDescription,
   type IField,
@@ -186,8 +219,11 @@ import {
   getEnum,
   getMap,
   getScoreConstant,
+  PubToDesc,
 } from '@/typings/publisher'
 import PublishButton from './components/publish-button.vue'
+import PublishItem from './components/publish-item.vue'
+import PublishTextCounter from './components/publish-text-counter.vue'
 
 const id = ref('')
 const publisherStore = usePublisherStore()
@@ -217,6 +253,9 @@ onLoad((options) => {
     (item) => `${item.post_id}` === id.value
   )
   publish.value = publisherStore.getPubFromDesc(description.value, post_type)
+  if (description.value === undefined) {
+    description.value = PubToDesc(publish.value, post_type)
+  }
   console.log('publish.value', publish.value)
   console.log('description.value', description.value)
 })
@@ -254,8 +293,9 @@ const optionsObj = {
   host_type: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.host_type) return `主办方类型`
-      return HostType[publish.value.host_type.value as HostType]
+      if (publish.value?.host_type.value === undefined) return `主办方类型`
+      const host_type: HostType = publish.value.host_type.value as HostType
+      return HostTypeList[host_type]
     }),
     range: Object.values(HostTypeMap),
     enummer: HostTypeMap,
@@ -264,7 +304,8 @@ const optionsObj = {
   score_type: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.score_type) return `请选择${post_type}类型`
+      if (publish.value?.score_type.value === undefined)
+        return `请选择${post_type}类型`
       return getEnum(post_type)[publish.value.score_type.value as ScoreType]
     }),
     range: Object.values(getScoreConstant(post_type)),
@@ -274,8 +315,10 @@ const optionsObj = {
   race_level: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.race_level) return `请选择${post_type}级别`
-      return Level[publish.value.race_level.value as Level]
+      const race_level = publish.value?.race_level
+      if (!race_level || (race_level && race_level.value === undefined))
+        return `请选择${post_type}级别`
+      return Level[race_level.value as Level]
     }),
     range: Object.values(LevelMap),
     enummer: Level,
@@ -321,13 +364,6 @@ function setDate(result: any, key: string) {
 function setOptions(result: any, key: string) {
   publish.value &&
     ((publish.value[key as keyof Options] as IField).value = result[0])
-  console.log('result', result)
-  console.log('key', key)
-  publish.value &&
-    console.log(
-      'publish.value',
-      (publish.value[key as keyof Options] as IField).value
-    )
 }
 
 function chooseImage(lists: Object, key: string) {
@@ -360,4 +396,37 @@ function getList(urls: Array<string> | undefined) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.bg {
+  background-color: #f7f8fa;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 28rpx;
+  color: #8c99a0;
+}
+.input-text {
+  font-weight: 500;
+  width: 674rpx;
+  height: 86rpx;
+  font-size: 28rpx;
+  color: #000;
+  background-color: #ffffff;
+  padding-left: 26rpx;
+  margin-top: 30rpx;
+  border-radius: 12rpx;
+}
+.input-textarea {
+  width: 626rpx;
+  height: 170rpx;
+  border-radius: 12rpx;
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  background-color: white;
+  line-height: 28rpx;
+  padding: 24rpx;
+  padding-bottom: 44rpx;
+}
+</style>
