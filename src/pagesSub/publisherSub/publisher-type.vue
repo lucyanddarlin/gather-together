@@ -4,7 +4,7 @@
       :title="`${item.type}管理`"
       height="82rpx"
       color="#000"
-      font-size="28rpx"
+      font-size="32rpx"
       @tap="handleClick(item)"
     />
   </view>
