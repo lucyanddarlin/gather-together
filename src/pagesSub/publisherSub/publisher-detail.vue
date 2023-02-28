@@ -4,7 +4,7 @@
     <div v-if="!description">该{{ post_type }}不存在</div>
     <div v-else relative>
       <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
-      <div mt-4rpx ml-36rpx text-56rpx>
+      <div mt-4rpx ml-36rpx text-56rpx fw-600>
         {{ description.title }}
       </div>
       <div ml-36rpx>
@@ -41,21 +41,19 @@
           font-size="32rpx"
         ></PublishTag>
         <!-- 时间 -->
-        <div color="#598DF9" text-36rpx mt-32rpx>报名时间：</div>
+        <div class="title" text-36rpx mt-32rpx>报名时间：</div>
         <PublishTag
           :date="{ start: description.start_time, end: description.end_time }"
           color="#598DF9"
         ></PublishTag>
         <!-- 地点 -->
-        <div color="#598DF9" text-36rpx mt-32rpx>{{ post_type }}地点：</div>
+        <div class="title" text-36rpx mt-32rpx>{{ post_type }}地点：</div>
         <PublishTag color="#598DF9" :title="description.location"></PublishTag>
         <!-- 主办方 -->
-        <div color="#598DF9" text-36rpx mt-32rpx>主办方：</div>
+        <div class="title" text-36rpx mt-32rpx>主办方：</div>
         <PublishTag color="#598DF9" :title="description.host"></PublishTag>
         <!-- 详情描述 -->
-        <div color="#4D4D4D" text-36rpx mt-52rpx fw-600>
-          {{ post_type }}详情
-        </div>
+        <div text-36rpx mt-52rpx fw-600>{{ post_type }}详情</div>
         <!-- TODO: 插入图片 -->
         <div grid grid-cols-3 gap-x-20rpx color="#A4A4A4" pl-36rpx mt-36rpx>
           <div v-for="img in description.imgs" :key="img">
@@ -215,5 +213,9 @@ function previewImg(url: string) {
   display: -webkit-box;
   -webkit-line-clamp: 100;
   -webkit-box-orient: vertical;
+}
+
+.title {
+  color: #598df9;
 }
 </style>
