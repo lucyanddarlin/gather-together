@@ -203,7 +203,7 @@ export const usePublisherStore = defineStore('publisher', () => {
       imgs: {
         title: '上传图片（可选）',
         value: description.imgs,
-        type: 'img',
+        type: 'imgs',
       },
     }
     const p: Publish = Publish.createPublish(ipublish, post_type)
