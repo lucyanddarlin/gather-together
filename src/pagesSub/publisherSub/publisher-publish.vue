@@ -101,6 +101,7 @@
               color="#4C89FF"
               bg-color="#ffffff"
               border-radius="12rpx"
+              class="picker-date"
               :title="picker[key as keyof Picker].value"
               @tap="picker[key as keyof Picker].isShow = true"
             ></PublishItem>
