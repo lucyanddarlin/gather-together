@@ -135,7 +135,7 @@
           </view>
         </view>
         <!-- 图片 -->
-        <view v-if="value.type === 'img'">
+        <view v-if="value.type === 'imgs'">
           <u-upload
             :file-list="getList((publish[key as keyof Publish] as IField).value as string[]) || []"
             width="162rpx"
@@ -155,7 +155,7 @@
           width="694rpx"
           height="96rpx"
           text-32rpx
-          :bg-color="isAllFilled ? '#578DF7' : '#DFDFDF'"
+          :bg-color="publish.isAllFilled() ? '#578DF7' : '#DFDFDF'"
           color="#fff"
           rounded="24rpx"
           @tap="save"
@@ -338,9 +338,9 @@ const isPublish = computed(() => {
   )
 })
 
-const isAllFilled = computed(() => {
-  return publish.value?.isAllFilled() || false
-})
+// const isAllFilled = computed(() => {
+//   return publish.value?.isAllFilled() || false
+// })
 
 function change(event: any, key: string) {
   publish.value &&
@@ -377,7 +377,7 @@ function chooseImage(lists: Object, key: string) {
 }
 
 function save() {
-  if (!isAllFilled.value) {
+  if (publish.value && !publish.value.isAllFilled()) {
     uni.showToast({
       title: '请填写完整信息',
       icon: 'none',

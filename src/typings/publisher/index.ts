@@ -188,7 +188,7 @@ export interface IField {
   - time为时间选择
   - number为数字输入
   */
-  type: 'text' | 'textarea' | 'option' | 'text_option' | 'img' | 'time'
+  type: 'text' | 'textarea' | 'option' | 'text_option' | 'imgs' | 'time'
   placeholder?: string
   limit?: number
   monoline?: boolean
@@ -314,7 +314,7 @@ export class Publish implements IPublish {
     this.imgs = {
       title: `上传图片（可选）`,
       value: [],
-      type: 'img',
+      type: 'imgs',
     }
     this.state = State.Create
   }
@@ -337,15 +337,19 @@ export class Publish implements IPublish {
     return publish
   }
 
-  public isAllFilled() {
+  public isAllFilled(): boolean {
     // 判断是否所有字段都已填写
     const values = Object.values(this)
+    // 可选项
+    const optional = ['imgs']
     for (const value of values) {
-      if (value.type in ['text', 'textarea']) {
-        continue
-      }
-      if (value instanceof Object && value.value === '') {
-        return false
+      if (value instanceof Object) {
+        // 是对象类型，判断是否已填写
+        const isOptional = optional.includes(value.type) ? true : false
+        console.log(value.type, isOptional, value.value, this)
+        // 空字符串或者undefined为未填
+        const notFilled = value.value === '' || value.value === undefined
+        if (!isOptional && notFilled) return false
       }
     }
     return true
