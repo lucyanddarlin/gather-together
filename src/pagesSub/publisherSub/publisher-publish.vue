@@ -31,33 +31,39 @@
           v-else-if="
             key !== 'race_level' && key !== 'start_time' && key !== 'end_time'
           "
-          absolute
-          flex
-          justify-center
-          items-center
-          class="text-option"
-          w-210rpx
-          h-54rpx
-          right-46rpx
-          top-790rpx
-          fw-500
-          :style="{
-            backgroundColor: '#598DF9',
-            color: '#fff',
-            fontSize: '28rpx',
-            borderRadius: '9rpx',
-          }"
-          @tap="options[key as keyof Options].isShow = true"
         >
-          <view pr-10rpx> {{ options[key as keyof Options].value }} </view>
-          <view absolute right-10rpx class="iconfont icon-qianwang" />
+          <view
+            absolute
+            flex
+            justify-center
+            items-center
+            class="text-option"
+            w-210rpx
+            h-54rpx
+            right-46rpx
+            top-790rpx
+            fw-500
+            :style="{
+              backgroundColor: '#598DF9',
+              color: '#fff',
+              fontSize: '28rpx',
+              borderRadius: '9rpx',
+            }"
+            @tap="options[key as keyof Options].isShow = true"
+          >
+            <view pr-10rpx> {{ options[key as keyof Options].value }} </view>
+            <view absolute right-10rpx class="iconfont icon-qianwang" />
+          </view>
           <u-picker
             v-model="options[key as keyof Options].isShow"
             mode="selector"
             :range="options[key as keyof Options].range"
             @confirm="setOptions($event, key)"
+            @cancel="options[key as keyof Options].isShow = false"
+            @close="options[key as keyof Options].isShow = false"
           ></u-picker>
         </view>
+
         <view v-if="value.type === 'text'" mt-36rpx>
           <input
             :value="((publish[key as keyof Publish] as IField).value as string)"
@@ -92,6 +98,8 @@
             v-model="picker[key as keyof Picker].isShow"
             :params="params"
             @confirm="setDate($event, key)"
+            @cancel="picker[key as keyof Picker].isShow = false"
+            @close="picker[key as keyof Picker].isShow = false"
           ></u-picker>
           <view>
             <PublishItem
@@ -120,6 +128,8 @@
             mode="selector"
             :range="options[key as keyof Options].range"
             @confirm="setOptions($event, key)"
+            @cancel="options[key as keyof Options].isShow = false"
+            @close="options[key as keyof Options].isShow = false"
           ></u-picker>
           <view mt-32rpx>
             <PublishItem
@@ -201,7 +211,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { addMonths, format } from 'date-fns'
 import { usePublisherStore } from '@/store/modules/publisher'
@@ -226,6 +236,7 @@ import {
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
 import PublishTextCounter from './components/publish-text-counter.vue'
+import { showMsg } from '@/utils/common'
 
 const id = ref('')
 const publisherStore = usePublisherStore()
@@ -330,6 +341,13 @@ const optionsObj = {
 type Options = typeof optionsObj
 const options = ref(optionsObj)
 
+watch(
+  () => options.value.host_type.isShow,
+  (newVal) => {
+    console.log('watch host_type', newVal)
+  }
+)
+
 // 判断是否是新的发布
 const isPublish = computed(() => {
   return (
@@ -350,18 +368,25 @@ function change(event: any, key: string) {
 }
 
 function setDate(result: any, key: string) {
+  const newDate: Date = addMonths(
+    new Date(result.year, result.month, result.day, result.hour, result.minute),
+    -1
+  )
+  if (key === 'start_time') {
+    const end_time: Date = publish.value?.end_time.value as Date
+    if (end_time && end_time < newDate) {
+      showMsg('晚于结束时间', 'error', 2000)
+      return
+    }
+  } else if (key === 'end_time') {
+    const start_time: Date = publish.value?.start_time.value as Date
+    if (start_time && start_time > newDate) {
+      showMsg('早于开始时间', 'error', 2000)
+      return
+    }
+  }
   publish.value &&
-    ((publish.value[key as keyof Publish] as IField).value = addMonths(
-      new Date(
-        result.year,
-        result.month,
-        result.day,
-        result.hour,
-        result.minute
-      ),
-      -1
-    ))
-  // picker.value[key as keyof Picker].value = dateForm
+    ((publish.value[key as keyof Publish] as IField).value = newDate)
 }
 function setOptions(result: any, key: string) {
   publish.value &&
