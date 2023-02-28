@@ -38,7 +38,7 @@
         <PublishTag
           :title="StateMap[description.state]"
           color="#56C28E"
-          font-size="36rpx"
+          font-size="32rpx"
         ></PublishTag>
         <!-- 时间 -->
         <div color="#598DF9" text-36rpx mt-32rpx>报名时间：</div>
@@ -72,6 +72,7 @@
           color="#A4A4A4"
           px-36rpx
           mt-36rpx
+          text-32rpx
           :class="isOmitted ? 'ellipsis' : 'normal'"
         >
           {{ description.description }}
@@ -89,14 +90,16 @@
         <!-- 报名方式 -->
         <div relative>
           <div color="#4D4D4D" text-36rpx mt-52rpx fw-600>报名方式</div>
-          <div color="#A4A4A4" px-36rpx mt-36rpx>{{ description.access }}</div>
+          <div color="#A4A4A4" text-32rpx px-36rpx mt-36rpx>
+            {{ description.access }}
+          </div>
           <PublishTag
             absolute
             top-0
             right-32rpx
             title="复制"
             color="#598DF9"
-            text-28rpx
+            text-32rpx
             bg-color="#F5F5F5"
             @tap="copyAccess"
           ></PublishTag>
