@@ -25,10 +25,7 @@ export const reqPostPublish = (data: PostPublish) =>
     message: string
   }>(`/publish/create`, data)
 
-export const reqPostChange = (
-  data: ChangePublish,
-  post_id: number,
-) => {
+export const reqPostChange = (data: ChangePublish, post_id: number) => {
   return post<{
     code: number
     body: OSSPostPolicyResult

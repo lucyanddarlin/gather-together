@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 import {
-  type ChangePublish,
   DescToChangePublish,
   DescToPostPublish,
   GetPublishToDesc,
@@ -22,7 +21,7 @@ import {
 import { showMsg } from '@/utils/common'
 // import { activities, lectures, matches } from './data'
 export const usePublisherStore = defineStore('publisher', () => {
-  const LOAD_PAGES_SIZE = 8
+  const LOAD_PAGES_SIZE = 5
   const current_desc = ref<IDescription>()
   const cur_type = ref<'' | keyof typeof Type>('')
   const types = [
@@ -61,15 +60,32 @@ export const usePublisherStore = defineStore('publisher', () => {
   async function loadPage(post_type: string) {
     const t = types.find((item) => item.type === post_type)
     if (!t) return
-    const nextPage = t.pages
+    const nextPage = t.pages // 当前需要请求的页
     const id = Number.parseInt(t.id)
     const page = await reqGetPublish(nextPage, LOAD_PAGES_SIZE, id)
     console.log('page', page)
     if (page.data.body.length === 0) return
     t.pages++
-    descriptions[TypeMap[post_type as keyof typeof Type]].push(
-      ...page.data.body.map((item) => GetPublishToDesc(item))
-    )
+
+    const arr_desc: Array<IDescription> = page.data.body
+      .map((item) => GetPublishToDesc(item))
+      .filter((item) => item.state !== State.Delete)
+    // 因为State.Delete被过滤，能显示的不一定是LOAD_PAGES_SIZE个
+    // 这时，若下一页还有，且本页数量不够LOAD_PAGES_SIZE，则继续请求，保证onReachBottom能够正常触发
+    while (arr_desc.length < LOAD_PAGES_SIZE) {
+      // 请求下一页
+      const page = await reqGetPublish(t.pages, LOAD_PAGES_SIZE, id)
+      // 没有下一页了
+      if (page.data.body.length === 0) break
+      // 有下一页，把请求到的push到数组
+      arr_desc.push(
+        ...page.data.body
+          .map((item) => GetPublishToDesc(item))
+          .filter((item) => item.state !== State.Delete)
+      )
+      t.pages++
+    }
+    descriptions[TypeMap[post_type as keyof typeof Type]].push(...arr_desc)
     publish[TypeMap[post_type as keyof typeof Type]] = descriptions[
       TypeMap[post_type as keyof typeof Type]
     ].map((item) => getPubFromDesc(item, post_type))
@@ -261,6 +277,20 @@ export const usePublisherStore = defineStore('publisher', () => {
     }
   }
 
+  function resetPage(post_type: string) {
+    const t = types.find((item) => item.type === post_type)
+    if (!t) {
+      console.log('未知类型：', post_type)
+      return
+    }
+    // 重置页数
+    t.pages = 0
+    // 清空描述页面和发布页面
+    const type: Type = TypeMap[post_type as keyof typeof Type]
+    descriptions[type].splice(0)
+    publish[type].splice(0)
+  }
+
   return {
     types,
     cur_type,
@@ -273,5 +303,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     loadPage,
     reqCreatePublish,
     deletePost,
+    resetPage,
   }
 })
