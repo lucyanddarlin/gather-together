@@ -12,7 +12,7 @@
       pl-38rpx
     >
       <view v-if="value.type">
-        <view pt-48rpx pb-32rpx v-if="key === 'start_time'" class="title"
+        <view v-if="key === 'start_time'" pt-48rpx pb-32rpx class="title"
           >报名日期</view
         >
         <view
@@ -63,6 +63,7 @@
             :value="((publish[key as keyof Publish] as IField).value as string)"
             type="text"
             :placeholder="value.placeholder"
+            placeholder-style="font-weight: 500;font-size: 32rpx;color: #bdbdbd"
             class="input-text"
             :maxlength="value.limit"
             @input="change($event, key)"
@@ -72,6 +73,7 @@
           <textarea
             :value="((publish[key as keyof Publish] as IField).value as string)"
             :placeholder="value.placeholder"
+            placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
             class="input-textarea"
             :maxlength="value.limit"
             @input="change($event, key)"
@@ -83,7 +85,6 @@
             :cur="((publish[key as keyof Publish] as IField).value as string).length"
             :max="2000"
           />
-          <!-- TODO: 字数显示 -->
         </view>
         <!-- 时间选择器 -->
         <view v-if="value.type === 'time'">
@@ -212,6 +213,7 @@ import {
   type IField,
   Level,
   LevelMap,
+  PubToDesc,
   type Publish,
   type ScoreType,
   State,
@@ -220,7 +222,6 @@ import {
   getEnum,
   getMap,
   getScoreConstant,
-  PubToDesc,
 } from '@/typings/publisher'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
