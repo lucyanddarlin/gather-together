@@ -13,7 +13,7 @@
       width: tag.longTag ? 'auto' : 'fit-content',
       display: tag.inline ? 'inline-block' : 'block',
       borderRadius: '4px',
-      fontSize: tag.fontSize ? tag.fontSize : '12px',
+      fontSize: tag.fontSize ? tag.fontSize : '32rpx',
       overflow: 'hidden',
       whiteSpace: 'nowrap',
     }"

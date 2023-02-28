@@ -346,7 +346,6 @@ export class Publish implements IPublish {
       if (value instanceof Object) {
         // 是对象类型，判断是否已填写
         const isOptional = optional.includes(value.type) ? true : false
-        console.log(value.type, isOptional, value.value, this)
         // 空字符串或者undefined为未填
         const notFilled = value.value === '' || value.value === undefined
         if (!isOptional && notFilled) return false
