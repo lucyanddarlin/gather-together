@@ -88,7 +88,7 @@
             auto-height
             class="input-no-enter"
             :maxlength="value.limit"
-            @input="change($event, key, ['\n'])"
+            @input="change($event, key)"
           ></textarea>
         </view>
 
@@ -367,22 +367,10 @@ const isPublish = computed(() => {
   )
 })
 
-<<<<<<< HEAD
-function change(event: any, key: string, forbid?: Array<string>) {
-  let value: string = event.target.value
-  if (forbid) {
-    forbid.forEach((item) => {
-      value = value.replace(item, '')
-    })
-    console.log('禁止输入', value)
-    event.preventDefault()
-    return
-  }
-=======
 function change(event: any, key: string) {
->>>>>>> cab6deb (refactor: text_option in flow & isAllFilled renew)
   publish.value &&
-    ((publish.value[key as keyof Publish] as IField).value = value.trim())
+    ((publish.value[key as keyof Publish] as IField).value =
+      event.target.value.trim())
 }
 
 function setDate(result: any, key: string) {
