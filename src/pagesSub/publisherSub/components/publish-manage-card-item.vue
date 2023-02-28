@@ -1,7 +1,7 @@
 <template>
   <div bg-white relative mt-12rpx min-h-346rpx>
     <div>
-      <div ml-24rpx mb-20rpx pt-28rpx text-32rpx fw-600>
+      <div ml-24rpx mb-20rpx pt-28rpx text-36rpx fw-600>
         {{ props.description.title }}
       </div>
     </div>

@@ -44,7 +44,7 @@
           :style="{
             backgroundColor: '#598DF9',
             color: '#fff',
-            fontSize: '24rpx',
+            fontSize: '28rpx',
             borderRadius: '9rpx',
           }"
           @tap="options[key as keyof Options].isShow = true"
@@ -97,7 +97,7 @@
               font-weight="500"
               width="674rpx"
               height="112rpx"
-              font-size="28rpx"
+              font-size="32rpx"
               color="#4C89FF"
               bg-color="#ffffff"
               border-radius="12rpx"
@@ -125,7 +125,7 @@
               font-weight="500"
               width="674rpx"
               height="88rpx"
-              font-size="28rpx"
+              font-size="32rpx"
               :color="value.value !== undefined ? '#FEA651' : '#C8C9CC'"
               bg-color="#ffffff"
               border-radius="12rpx"
@@ -154,7 +154,7 @@
           title="发布"
           width="694rpx"
           height="96rpx"
-          text-32rpx
+          text-36rpx
           :bg-color="publish.isAllFilled() ? '#578DF7' : '#DFDFDF'"
           color="#fff"
           rounded="24rpx"
@@ -167,7 +167,7 @@
             title="保存"
             width="694rpx"
             height="96rpx"
-            text-32rpx
+            text-36rpx
             bg-color="#578DF7"
             color="#fff"
             rounded="24rpx"
@@ -179,7 +179,7 @@
             title="删除"
             width="694rpx"
             height="96rpx"
-            text-32rpx
+            text-36rpx
             :bg-color="
               description && description.state !== State.Delete
                 ? '#FF6969'
@@ -404,14 +404,14 @@ function getList(urls: Array<string> | undefined) {
 
 .title {
   font-weight: 600;
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #8c99a0;
 }
 .input-text {
   font-weight: 500;
   width: 674rpx;
   height: 86rpx;
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #000;
   background-color: #ffffff;
   padding-left: 26rpx;
@@ -423,7 +423,7 @@ function getList(urls: Array<string> | undefined) {
   height: 170rpx;
   border-radius: 12rpx;
   margin-top: 30rpx;
-  font-size: 28rpx;
+  font-size: 32rpx;
   font-weight: 500;
   background-color: white;
   line-height: 28rpx;

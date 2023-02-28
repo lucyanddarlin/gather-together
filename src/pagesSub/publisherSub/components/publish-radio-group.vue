@@ -1,15 +1,15 @@
 <template>
   <view>
-    <view mt-38rpx mb-24rpx text-32rpx :style="{ color: `#4F82F3` }"
+    <view mt-38rpx mb-24rpx text-36rpx :style="{ color: `#4F82F3` }"
       >{{ props.title }}
-      <span text-32rpx :style="{ color: `#A4A4A4` }"> 单选 </span>
+      <span text-36rpx :style="{ color: `#A4A4A4` }"> 单选 </span>
     </view>
     <view grid grid-cols-3 gap-x-40rpx gap-y-12rpx>
       <view v-for="option in options" :key="props.title + option.name" ml-20rpx>
         <view
           w-188rpx
           h-74rpx
-          text-24rpx
+          text-28rpx
           flex-center
           :class="option.value === selected ? 'selected' : 'unselected'"
           @tap="handleClick(props.title, option.value)"

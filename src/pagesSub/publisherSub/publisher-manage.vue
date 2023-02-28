@@ -65,7 +65,7 @@
         <PublishButton
           w-324rpx
           height="72rpx"
-          text-32rpx
+          text-36rpx
           title="确认筛选"
           color="#fff"
           bg-color="#73B297"
@@ -75,7 +75,7 @@
         <PublishButton
           w-324rpx
           height="72rpx"
-          text-32rpx
+          text-36rpx
           title="重置"
           color="#fff"
           bg-color="#FF6969"
@@ -325,7 +325,7 @@ function resetFilter() {
   + .label {
     background-color: #f5f5f5;
     color: #a4a4a4;
-    font-size: 24rpx;
+    font-size: 28rpx;
     width: 188.5rpx;
     height: 74rpx;
   }
@@ -361,7 +361,7 @@ function resetFilter() {
 .bar {
   background-color: white;
   color: #598df9;
-  font-size: 32rpx;
+  font-size: 36rpx;
   border-radius: 12rpx;
 }
 </style>

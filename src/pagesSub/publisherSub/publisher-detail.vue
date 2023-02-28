@@ -4,7 +4,7 @@
     <div v-if="!description">该{{ post_type }}不存在</div>
     <div v-else relative>
       <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
-      <div mt-4rpx ml-36rpx text-52rpx>
+      <div mt-4rpx ml-36rpx text-56rpx>
         {{ description.title }}
       </div>
       <div ml-36rpx>
@@ -38,22 +38,22 @@
         <PublishTag
           :title="StateMap[description.state]"
           color="#56C28E"
-          font-size="32rpx"
+          font-size="36rpx"
         ></PublishTag>
         <!-- 时间 -->
-        <div color="#598DF9" text-32rpx mt-32rpx>报名时间：</div>
+        <div color="#598DF9" text-36rpx mt-32rpx>报名时间：</div>
         <PublishTag
           :date="{ start: description.start_time, end: description.end_time }"
           color="#598DF9"
         ></PublishTag>
         <!-- 地点 -->
-        <div color="#598DF9" text-32rpx mt-32rpx>{{ post_type }}地点：</div>
+        <div color="#598DF9" text-36rpx mt-32rpx>{{ post_type }}地点：</div>
         <PublishTag color="#598DF9" :title="description.location"></PublishTag>
         <!-- 主办方 -->
-        <div color="#598DF9" text-32rpx mt-32rpx>主办方：</div>
+        <div color="#598DF9" text-36rpx mt-32rpx>主办方：</div>
         <PublishTag color="#598DF9" :title="description.host"></PublishTag>
         <!-- 详情描述 -->
-        <div color="#4D4D4D" text-32rpx mt-52rpx fw-600>
+        <div color="#4D4D4D" text-36rpx mt-52rpx fw-600>
           {{ post_type }}详情
         </div>
         <!-- TODO: 插入图片 -->
@@ -78,7 +78,7 @@
         </div>
         <div ml-18rpx>
           <PublishTag
-            text-24rpx
+            text-28rpx
             color="#598DF9"
             bg-color="#F5F5F5"
             :title="isOmitted ? '查看全部' : '收起'"
@@ -88,7 +88,7 @@
 
         <!-- 报名方式 -->
         <div relative>
-          <div color="#4D4D4D" text-32rpx mt-52rpx fw-600>报名方式</div>
+          <div color="#4D4D4D" text-36rpx mt-52rpx fw-600>报名方式</div>
           <div color="#A4A4A4" px-36rpx mt-36rpx>{{ description.access }}</div>
           <PublishTag
             absolute
@@ -96,7 +96,7 @@
             right-32rpx
             title="复制"
             color="#598DF9"
-            text-24rpx
+            text-28rpx
             bg-color="#F5F5F5"
             @tap="copyAccess"
           ></PublishTag>
@@ -111,7 +111,7 @@
       <PublishButton
         w-324rpx
         height="78rpx"
-        text-32rpx
+        text-36rpx
         :title="`编辑${post_type}`"
         color="#fff"
         bg-color="#73B297"
@@ -122,7 +122,7 @@
       <PublishButton
         w-324rpx
         height="78rpx"
-        text-32rpx
+        text-36rpx
         title="分享"
         color="#fff"
         bg-color="#FF6969"
