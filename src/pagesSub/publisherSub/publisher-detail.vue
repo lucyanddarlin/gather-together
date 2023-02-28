@@ -38,7 +38,7 @@
         <PublishTag
           :title="StateMap[description.state]"
           color="#56C28E"
-          font-size="36rpx"
+          font-size="32rpx"
         ></PublishTag>
         <!-- 时间 -->
         <div class="title" text-36rpx mt-32rpx>报名时间：</div>
