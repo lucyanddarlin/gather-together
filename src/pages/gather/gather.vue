@@ -1,9 +1,9 @@
 <!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
-  <NavBar></NavBar>
-  <GatherSelectPage fixed z-10 w-full />
-  <view class="discover-page bg-#f7f7f7"
-    ><!-- 项目库 -->
+  <!-- <NavBar></NavBar>  -->
+  <view class="discovery-page bg-#f7f7f7">
+    <div h-178rpx class="bg-#4380FF"></div>
+    <GatherSelectPage w-full />
     <scroll-view
       class="main-page"
       :scroll-y="true"
@@ -21,7 +21,6 @@
           :type="GATHER"
           :paper-item="project"
       /></view>
-      <!-- 人才库 -->
       <view v-show="navActiveIndex == PEOPLE_LIBRARY" pt-20rpx>
         <GatherPeople
           v-for="item in UserVita"
@@ -33,9 +32,9 @@
           :content="item.profile"
           @toPeopleDetail="toPeopleDetail(item.user_id)"
         />
-      </view> </scroll-view
-  ></view>
-
+      </view>
+    </scroll-view>
+  </view>
   <!-- 发布 和 返回顶部的按钮 -->
   <GatherPublishButton
     v-show="navActiveIndex === 0"
@@ -205,8 +204,7 @@ const handleScroll = (options: any) => {
   height: 100vh;
 }
 .main-page {
-  padding-top: 186rpx;
-  height: 1080rpx;
+  height: calc(100% - 350rpx);
   background-color: #f7f7f7;
 }
 </style>
