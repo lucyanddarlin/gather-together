@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { addMonths } from 'date-fns'
 
 export enum State {
   Create = 0,
@@ -19,65 +19,42 @@ export const StateMap = {
 }
 
 export enum Type {
-  比赛 = 0,
-  讲座 = 1,
-  活动 = 2,
-}
-
-export const TypeMap = {
-  比赛: Type.比赛,
-  讲座: Type.讲座,
-  活动: Type.活动,
+  比赛,
+  讲座,
+  活动,
 }
 
 export enum Level {
-  院校级 = 0,
-  地方级 = 1,
-  国家级 = 2,
-}
-
-export const LevelMap = {
-  [Level.院校级]: '院校级',
-  [Level.地方级]: '地方级',
-  [Level.国家级]: '国家级',
+  院校级,
+  地方级,
+  国家级,
 }
 
 export enum ScoreType {
   // TODO: 使用了api的得分类型作为代替，发送int32，接口升级后需要更改
-  创新创业 = 0,
-  人文社科 = 1,
-  科技学术 = 2,
-  艺术人文 = 3,
-  创新创业类 = 4,
-  公益类 = 5,
-  科技类 = 6,
+  创新创业,
+  人文社科,
+  科技学术,
+  艺术人文,
+  创新创业类,
+  公益类,
+  科技类,
   文体类 = 7,
   思政教育类 = 8,
   综合类 = 9,
 }
 export enum MatchType {
   创新创业 = 0,
-  人文社科 = 1,
-  科技学术 = 2,
-}
-
-export const MatchTypeMap = {
-  [MatchType.创新创业]: '创新创业',
-  [MatchType.人文社科]: '人文社科',
-  [MatchType.科技学术]: '科技学术',
+  科技学术 = 1,
+  人文社科 = 2,
 }
 
 export enum LectureType {
   创新创业 = 0,
-  科技学术 = 1,
-  艺术人文 = 2,
+  艺术人文 = 1,
+  科技学术 = 2,
 }
 
-export const LectureTypeMap = {
-  [LectureType.创新创业]: '创新创业',
-  [LectureType.科技学术]: '科技学术',
-  [LectureType.艺术人文]: '艺术人文',
-}
 export enum ActivityType {
   创新创业类 = 0,
   公益类 = 1,
@@ -87,92 +64,11 @@ export enum ActivityType {
   综合类 = 5,
 }
 
-export const ActivityTypeMap = {
-  [ActivityType.创新创业类]: '创新创业类',
-  [ActivityType.公益类]: '公益类',
-  [ActivityType.科技类]: '科技类',
-  [ActivityType.文体类]: '文体类',
-  [ActivityType.思政教育类]: '思政教育类',
-  [ActivityType.综合类]: '综合类',
-}
-
-export const ScoreTypeMap = {
-  [ScoreType.创新创业]: '创新创业',
-  [ScoreType.人文社科]: '人文社科',
-  [ScoreType.科技学术]: '科技学术',
-  [ScoreType.艺术人文]: '艺术人文',
-  [ScoreType.创新创业类]: '创新创业类',
-  [ScoreType.公益类]: '公益类',
-  [ScoreType.科技类]: '科技类',
-  [ScoreType.文体类]: '文体类',
-  [ScoreType.思政教育类]: '思政教育类',
-  [ScoreType.综合类]: '综合类',
-}
-
-export function getEnum(post_type: keyof typeof Type) {
-  switch (post_type) {
-    case '比赛':
-      return MatchType
-    case '讲座':
-      return LectureType
-    case '活动':
-      return ActivityType
-    default:
-      return MatchType
-  }
-}
-
-export function getMap(post_type: keyof typeof Type) {
-  switch (post_type) {
-    case '比赛':
-      return MatchTypeMap
-    case '讲座':
-      return LectureTypeMap
-    case '活动':
-      return ActivityTypeMap
-    default:
-      return MatchTypeMap
-  }
-}
-
-export function getScoreConstant(post_type: keyof typeof Type) {
-  switch (post_type) {
-    case '比赛':
-      return {
-        [ScoreType.创新创业]: '创新创业',
-        [ScoreType.科技学术]: '科技学术',
-        [ScoreType.人文社科]: '人文社科',
-      }
-    case '活动':
-      return {
-        [ScoreType.创新创业类]: '创新创业类',
-        [ScoreType.公益类]: '公益类',
-        [ScoreType.科技类]: '科技类',
-        [ScoreType.文体类]: '文体类',
-        [ScoreType.思政教育类]: '思政教育类',
-        [ScoreType.综合类]: '综合类',
-      }
-    case '讲座':
-      return {
-        [ScoreType.创新创业]: '创新创业',
-        [ScoreType.艺术人文]: '艺术人文',
-        [ScoreType.科技学术]: '科技学术',
-      }
-  }
-}
-
 export enum HostType {
   政府 = 0,
   组织机构 = 1,
   学校 = 2,
 }
-
-export const HostTypeMap = {
-  [HostType.政府]: '政府',
-  [HostType.组织机构]: '组织机构',
-  [HostType.学校]: '学校',
-}
-export const HostTypeList = ['政府', '组织机构', '学校']
 export interface ITag {
   title: string
   color: string
@@ -188,7 +84,15 @@ export interface IField {
   - time为时间选择
   - number为数字输入
   */
-  type: 'text' | 'textarea' | 'option' | 'text_option' | 'img' | 'time'
+  type:
+    | 'text'
+    | 'textarea'
+    | 'text_elastic'
+    | 'text_no_enter'
+    | 'option'
+    | 'text_option'
+    | 'imgs'
+    | 'time'
   placeholder?: string
   limit?: number
   monoline?: boolean
@@ -246,12 +150,18 @@ export class Publish implements IPublish {
   access: IField
   description: IField
   imgs?: IField
+  get entries(): [keyof IPublish, IField | State | number | undefined][] {
+    return Object.entries(this) as [
+      keyof IPublish,
+      IField | State | number | undefined
+    ][]
+  }
   constructor(type: string) {
     this.title = {
       title: `${type}名称`,
       value: '',
       type: 'text',
-      placeholder: '请输入比赛名称',
+      placeholder: `请输入${type}名称`,
       limit: 20,
     }
     this.start_time = {
@@ -262,7 +172,7 @@ export class Publish implements IPublish {
     }
     this.end_time = {
       title: '结束时间',
-      value: new Date(),
+      value: addMonths(new Date(), 1),
       type: 'time',
       placeholder: `请输入${type === '比赛' ? '报名结束' : type}时间`,
     }
@@ -271,14 +181,14 @@ export class Publish implements IPublish {
     this.location = {
       title: `${type}地点`,
       value: '',
-      type: 'text',
+      type: 'text_no_enter',
       placeholder: `请输入${type === '比赛' ? '比赛' : type}地点`,
       limit: 30,
     }
     this.host = {
       title: `主办方`,
       value: '',
-      type: 'text',
+      type: 'text_no_enter',
       placeholder: `请输入${type === '比赛' ? '比赛' : type}主办方`,
       limit: 50,
     }
@@ -300,7 +210,7 @@ export class Publish implements IPublish {
     this.access = {
       title: `报名方式`,
       value: '',
-      type: 'text',
+      type: 'text_elastic',
       placeholder: `请输入${type === '比赛' ? '比赛' : type}报名方式`,
       limit: 50,
     }
@@ -314,7 +224,7 @@ export class Publish implements IPublish {
     this.imgs = {
       title: `上传图片（可选）`,
       value: [],
-      type: 'img',
+      type: 'imgs',
     }
     this.state = State.Create
   }
@@ -337,51 +247,35 @@ export class Publish implements IPublish {
     return publish
   }
 
-  public isAllFilled() {
-    // 判断是否所有字段都已填写
-    const values = Object.values(this)
-    for (const value of values) {
-      if (value.type in ['text', 'textarea']) {
-        continue
-      }
-      if (value instanceof Object && value.value === '') {
-        return false
+  public getWhatToFill(post_type: string): string {
+    // 获取未填写字段
+    // 可选项
+    const optional = ['imgs']
+    for (const [key, value] of Object.entries(this)) {
+      // 只有比赛有race_level输入
+      if (key === 'race_level' && post_type !== '比赛') continue
+      if (value instanceof Object) {
+        // 是对象类型，判断是否已填写
+        const isOptional = optional.includes(value.type) ? true : false
+        // 空字符串或者undefined为未填
+        const notFilled = value.value === '' || value.value === undefined
+        if (!isOptional && notFilled) {
+          return value.title
+        }
       }
     }
-    return true
+    return ''
   }
-}
-
-export function PubToDesc(publish: Publish, post_type: string): IDescription {
-  // 将发布的信息转换为描述信息
-  const description: IDescription = {
-    title: publish.title.value as string,
-    start_time: publish.start_time.value as Date,
-    end_time: publish.end_time.value as Date,
-    state: publish.state,
-    post_id: publish.post_id,
-    post_type: TypeMap[post_type as keyof typeof Type],
-    location: publish.location.value as string,
-    host: publish.host.value as string,
-    host_type: publish.host_type.value as HostType,
-    race_level: publish.race_level?.value as Level,
-    score_type: publish.score_type.value as ScoreType,
-    access: publish.access.value as string,
-    description: publish.description.value as string,
-    imgs: publish.imgs?.value as Array<string>,
-  }
-  return description
 }
 
 // 为对接后端产生的临时类型，后面和IPublish融合一下
-export interface PostPublish {
-  zone_id: string
+export interface PostBody {
+  zone_id: number
   event_type: number
   lecture_type: number
   start_time: string
   post_type: number
   sponsor_name: string
-  score_type: number
   detail: string
   location: string
   race_level: number
@@ -403,7 +297,7 @@ export interface GetPublish {
   last_change_time: string
   start_time: string
   end_time: string
-  zone_id: string
+  zone_id: number
   creator_id: string
   sponsor_type: number
   sponsor_name: string
@@ -417,8 +311,8 @@ export interface GetPublish {
   time_state: null
 }
 
-export interface ChangePublish {
-  zone_id: string
+export interface ChangeBody {
+  zone_id: number
   sponsor_type: number
   sponsor_name: string
   detail: string
@@ -435,6 +329,32 @@ export interface ChangePublish {
   post_type: number
 }
 
+export type BodyFilter = {
+  sponsor_type?: string
+  lecture_type?: string
+  event_type?: string
+  race_type?: string
+  race_level?: string
+}
+
+export interface LabelItem {
+  value: string
+  isSelected?: boolean
+}
+
+export interface FilterPopupDataItem {
+  title: string
+  list: Array<LabelItem>
+}
+
+export interface FilterPopupData {
+  resultKey: Array<string>
+  result: {
+    [key: string]: number
+  }
+  map: Array<FilterPopupDataItem>
+}
+
 export interface OSSPostPolicyResult {
   accessKeyId: string
   callback: string
@@ -443,79 +363,4 @@ export interface OSSPostPolicyResult {
   policy: string
   postId: number
   signature: string
-}
-
-// 后续封装到utils
-function toDate(s: string) {
-  const toNumber = (str: string) => Number.parseInt(str)
-  const y = toNumber(s.slice(0, 4))
-  const d = toNumber(s.slice(5, 7))
-  const m = toNumber(s.slice(8, 10))
-  const h = toNumber(s.slice(11, 13))
-  const min = toNumber(s.slice(14, 16))
-  const sec = toNumber(s.slice(17, 19))
-  return new Date(y, d, m, h, min, sec)
-}
-
-export function GetPublishToDesc(p: GetPublish) {
-  const desc: IDescription = {
-    title: p.title,
-    start_time: toDate(p.start_time),
-    end_time: toDate(p.end_time),
-    state: p.state,
-    post_id: p.post_id,
-    post_type: p.post_type,
-    location: p.location,
-    host: p.sponsor_name,
-    host_type: p.sponsor_type,
-    description: p.detail,
-    access: p.regist_info,
-    imgs: p.picture_urls,
-    score_type: p.second_type, // 注意这里是临时应用，希望后面能改成更规范的命名
-  }
-  if (p.race_level !== undefined) desc.race_level = p.race_level
-  return desc
-}
-
-export function DescToPostPublish(d: IDescription) {
-  const p: PostPublish = {
-    zone_id: '1',
-    post_type: d.post_type,
-    start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
-    end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
-    title: d.title,
-    detail: d.description,
-    location: d.location,
-    sponsor_name: d.host,
-    sponsor_type: d.host_type,
-    regist_info: d.access,
-    score_type: d.score_type,
-    pic_count: d.imgs ? d.imgs.length : 0,
-    event_type: 0,
-    lecture_type: 0,
-    race_level: d.race_level ? d.race_level : 0,
-    race_type: 0,
-  }
-  return p
-}
-
-export function DescToChangePublish(d: IDescription) {
-  const p: ChangePublish = {
-    zone_id: '1',
-    sponsor_type: d.host_type,
-    sponsor_name: d.host,
-    detail: d.description,
-    start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
-    end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
-    regist_info: d.access,
-    location: d.location,
-    pic_count: d.imgs ? d.imgs.length : 0,
-    race_level: d.race_level ? d.race_level : 0,
-    title: d.title,
-    race_type: 0,
-    lecture_type: 0,
-    event_type: 0,
-    post_type: d.post_type,
-  }
-  return p
 }

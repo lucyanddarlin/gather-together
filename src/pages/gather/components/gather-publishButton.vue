@@ -1,14 +1,21 @@
 <template>
   <view
     class="w-100rpx h-100rpx bg-white rounded-64rpx flex items-center justify-center text-60rpx text-#4380FF buttonShadow"
-    @click="toGatherPublish"
+    @tap="handleTap"
     ><i class="iconfont icon-fabuanniu1"></i
   ></view>
 </template>
 <script setup lang="ts">
-const toGatherPublish = () => {
+import { isNull } from '@/utils/common'
+
+const props = defineProps<{
+  url?: string
+}>()
+// ext: 全局通用（首页、荟聚、发布者模式）
+const handleTap = () => {
+  if (isNull(props.url)) return
   uni.navigateTo({
-    url: '/pagesSub/gatherSub/gatherSub-publish',
+    url: props.url as string,
   })
 }
 </script>

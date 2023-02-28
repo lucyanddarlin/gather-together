@@ -12,6 +12,6 @@ const props = defineProps<{
 <style scoped>
 .count {
   color: #858585;
-  font-size: 24rpx;
+  font-size: 28rpx;
 }
 </style>

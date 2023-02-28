@@ -7,7 +7,7 @@
       color: isReversed ? props.bgColor : props.color,
       backgroundColor: isReversed ? props.color : props.bgColor,
       border: '2rpx solid ' + (isReversed ? props.bgColor : 'transparent'),
-      boxShadow: `0rpx ${props.boxShadow} 4rpx rgba(0, 0, 0, 0.2)`,
+      boxShadow: `0rpx ${props.boxShadow} ${props.boxShadow} rgba(0, 0, 0, 0.2)`,
       width: Width,
     }"
   >

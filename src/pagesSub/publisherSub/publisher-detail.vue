@@ -1,10 +1,8 @@
 <template>
   <div>
-    <u-navbar :back-text="publisherStore.cur_type + '管理'" />
-    <div v-if="!description">该{{ post_type }}不存在</div>
-    <div v-else relative>
-      <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
-      <div mt-4rpx ml-36rpx text-52rpx>
+    <div v-if="description" relative>
+      <u-icon absolute right-24rpx size="40rpx" name="more-dot-fill"></u-icon>
+      <div mt-4rpx ml-36rpx text-56rpx fw-600 select-text>
         {{ description.title }}
       </div>
       <div ml-36rpx>
@@ -12,14 +10,14 @@
         <PublishTag
           filter
           inline
-          :title="ScoreTypeMap[description.score_type]"
+          :title="TYPE_NAMES[description.post_type][description.score_type]"
           color="#FFAF50"
         ></PublishTag>
         <!-- 主办方类型 -->
         <PublishTag
           filter
           inline
-          :title="HostTypeMap[description.host_type]"
+          :title="HOST[description.host_type]"
           color="#FFAF50"
         ></PublishTag>
         <!-- 比赛级别（比赛特有） -->
@@ -29,7 +27,7 @@
           inline
           :title="
             description.race_level !== undefined
-              ? LevelMap[description.race_level]
+              ? LEVEL[description.race_level]
               : '未分级'
           "
           color="#FFAF50"
@@ -41,24 +39,22 @@
           font-size="32rpx"
         ></PublishTag>
         <!-- 时间 -->
-        <div color="#598DF9" text-32rpx mt-32rpx>报名时间：</div>
+        <div class="title" text-36rpx mt-32rpx>报名时间：</div>
         <PublishTag
           :date="{ start: description.start_time, end: description.end_time }"
           color="#598DF9"
         ></PublishTag>
         <!-- 地点 -->
-        <div color="#598DF9" text-32rpx mt-32rpx>{{ post_type }}地点：</div>
+        <div class="title" text-36rpx mt-32rpx>{{ post_type }}地点：</div>
         <PublishTag color="#598DF9" :title="description.location"></PublishTag>
         <!-- 主办方 -->
-        <div color="#598DF9" text-32rpx mt-32rpx>主办方：</div>
+        <div class="title" text-36rpx mt-32rpx>主办方：</div>
         <PublishTag color="#598DF9" :title="description.host"></PublishTag>
         <!-- 详情描述 -->
-        <div color="#4D4D4D" text-32rpx mt-52rpx fw-600>
-          {{ post_type }}详情
-        </div>
+        <div text-36rpx mt-52rpx fw-600>{{ post_type }}详情</div>
         <!-- TODO: 插入图片 -->
         <div grid grid-cols-3 gap-x-20rpx color="#A4A4A4" pl-36rpx mt-36rpx>
-          <div v-for="img in description.imgs" :key="img">
+          <div v-for="img in description.imgs" :key="hash(img)">
             <img
               :src="img"
               rounded-10rpx
@@ -70,15 +66,17 @@
         </div>
         <div
           color="#A4A4A4"
-          px-36rpx
+          pl-4rpx
+          pr-36rpx
           mt-36rpx
+          text-32rpx
           :class="isOmitted ? 'ellipsis' : 'normal'"
         >
           {{ description.description }}
         </div>
         <div ml-18rpx>
           <PublishTag
-            text-24rpx
+            text-28rpx
             color="#598DF9"
             bg-color="#F5F5F5"
             :title="isOmitted ? '查看全部' : '收起'"
@@ -88,15 +86,17 @@
 
         <!-- 报名方式 -->
         <div relative>
-          <div color="#4D4D4D" text-32rpx mt-52rpx fw-600>报名方式</div>
-          <div color="#A4A4A4" px-36rpx mt-36rpx>{{ description.access }}</div>
+          <div color="#4D4D4D" text-36rpx mt-52rpx fw-600>报名方式</div>
+          <div color="#A4A4A4" text-32rpx px-36rpx mt-36rpx select-text>
+            {{ description.access }}
+          </div>
           <PublishTag
             absolute
             top-0
             right-32rpx
             title="复制"
             color="#598DF9"
-            text-24rpx
+            text-32rpx
             bg-color="#F5F5F5"
             @tap="copyAccess"
           ></PublishTag>
@@ -111,7 +111,7 @@
       <PublishButton
         w-324rpx
         height="78rpx"
-        text-32rpx
+        text-36rpx
         :title="`编辑${post_type}`"
         color="#fff"
         bg-color="#73B297"
@@ -122,7 +122,7 @@
       <PublishButton
         w-324rpx
         height="78rpx"
-        text-32rpx
+        text-36rpx
         title="分享"
         color="#fff"
         bg-color="#FF6969"
@@ -135,32 +135,55 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 // import { useRoute, useRouter } from 'vue-router'
 import { usePublisherStore } from '@/store/modules/publisher'
-import {
-  HostTypeMap,
-  type IDescription,
-  LevelMap,
-  ScoreTypeMap,
-  StateMap,
-  Type,
-  TypeMap,
-} from '@/typings/publisher'
+import { type IDescription, StateMap, Type } from '@/typings/publisher'
+import { hash } from '@/utils/common'
+
+import { HOST, LEVEL, TYPE_LIST, TYPE_NAMES } from '@/utils/publishConstant'
 import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
+
 const id = ref('')
 const description = ref<IDescription | undefined>()
+const isOmitted = ref(true)
+const publisherStore = usePublisherStore()
+const type: Type = publisherStore.cur_type
+const post_type: string = TYPE_LIST[type]
+
+// 显示加载
+if (!description.value) {
+  uni.showLoading({
+    title: '加载中',
+    mask: true,
+  })
+}
+
+// 数据加载完成，隐藏加载
+watch(
+  () => description.value,
+  (newVal: IDescription | undefined) => {
+    if (newVal) {
+      uni.hideLoading()
+    }
+  }
+)
+
 onLoad((options) => {
   if (!options) {
     console.log('options 为空，请检查url参数')
     return
   }
   id.value = options.id
-  description.value = publisherStore.descriptions[TypeMap[post_type]]?.find(
+  description.value = publisherStore.descriptions[type]?.find(
     (item) => `${item.post_id}` === id.value
   )
+  // 设置标题
+  uni.setNavigationBarTitle({
+    title: `${post_type}管理`,
+  })
 })
 onBeforeMount(() => {
   if (!id.value || !post_type) {
@@ -169,10 +192,6 @@ onBeforeMount(() => {
     uni.redirectTo({ url: './publisher-type' })
   }
 })
-const isOmitted = ref(true)
-const publisherStore = usePublisherStore()
-type PostType = keyof typeof Type
-const post_type: PostType = publisherStore.cur_type as PostType
 
 function copyAccess() {
   uni.setClipboardData({
@@ -212,5 +231,9 @@ function previewImg(url: string) {
   display: -webkit-box;
   -webkit-line-clamp: 100;
   -webkit-box-orient: vertical;
+}
+
+.title {
+  color: #598df9;
 }
 </style>
