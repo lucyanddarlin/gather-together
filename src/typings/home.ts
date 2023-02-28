@@ -10,6 +10,7 @@ export interface ListMap<T = any> {
   page: number
   size: number
   status: 'loading' | 'more' | 'noMore'
+  type?: number
 }
 
 export interface IPaperItem {
@@ -67,4 +68,14 @@ export interface PostTopicResult {
   host: string
   callback: string
   topicId: string
+}
+
+export interface LabelItem {
+  index: number
+  value: string
+  isSelected?: boolean
+}
+export interface FilterPopupDataItem {
+  title: string
+  list: Array<LabelItem>
 }

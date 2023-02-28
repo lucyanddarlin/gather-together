@@ -1,11 +1,14 @@
 <template>
   <view fixed bottom-150rpx right-70rpx class="float">
+    {{ scrollValue }}
     <view
       opacity-0
       transition-opacity
       duration-300
       class="float-button"
-      :class="{ 'opacity-100': !isShowPopup }"
+      :class="{
+        'opacity-100': !isShowPopup && (type === HOME || type === GATHER),
+      }"
       @click.stop="handleLinkToPublish"
     >
       <text class="iconfont icon-fasong" />
@@ -24,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { HOME, SHOW_TOP } from '@/utils/constant'
+import { GATHER, HOME, SHOW_TOP } from '@/utils/constant'
 
 const props = defineProps<{
   type: number
@@ -52,9 +55,6 @@ const handleBackToTop = () => {
     width: $btn-wid-he;
     height: $btn-wid-he;
     border-radius: 50%;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
     text-align: center;
     color: #4380ff;
     background-color: #fff;
