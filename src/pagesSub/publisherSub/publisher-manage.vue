@@ -29,7 +29,7 @@
       </view>
     </view>
     <PublishManageCardItem
-      v-for="item in list.value.filter((item) => item.state !== State.Delete)"
+      v-for="item in list.value"
       :key="item.post_id"
       :description="item"
       cursor-pointer
@@ -89,7 +89,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onReachBottom, onUnload } from '@dcloudio/uni-app'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
   HostType,
@@ -118,6 +118,16 @@ console.log('publish', publisherStore.publish[TypeMap[post_type]])
 onLoad(() => {
   publisherStore.loadPage(post_type)
 })
+
+onUnload(() => {
+  publisherStore.resetPage(post_type)
+})
+
+onReachBottom(() => {
+  console.log('reach bottom')
+  publisherStore.loadPage(post_type)
+})
+
 const cur_area = ref('广州大学分区')
 
 const checked = ref(false)
