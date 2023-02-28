@@ -123,10 +123,14 @@ const toPeopleDetail = (id: number) => {
 
 const isTriggered = ref<boolean>(false)
 // 获取主页板块信息
-const startPage = 0
+const startPage = ref(0)
 const getProject = async () => {
-  const { data } = await reqGatherProjectList(startPage, 8)
-  GatherProjectList.value = data.body
+  const { data } = await reqGatherProjectList(startPage.value, 8)
+  // GatherProjectList.value = data.body
+  for (let i = 0; i < data.body.length; i++) {
+    GatherProjectList.value.push(data.body[i])
+  }
+  startPage.value++
 }
 const handleScrollToLower = () => {
   getProject()
