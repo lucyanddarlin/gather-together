@@ -211,7 +211,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { addMonths, format } from 'date-fns'
 import { usePublisherStore } from '@/store/modules/publisher'
@@ -233,10 +233,10 @@ import {
   getMap,
   getScoreConstant,
 } from '@/typings/publisher'
+import { showMsg } from '@/utils/common'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
 import PublishTextCounter from './components/publish-text-counter.vue'
-import { showMsg } from '@/utils/common'
 
 const id = ref('')
 const publisherStore = usePublisherStore()
@@ -340,13 +340,6 @@ const optionsObj = {
 }
 type Options = typeof optionsObj
 const options = ref(optionsObj)
-
-watch(
-  () => options.value.host_type.isShow,
-  (newVal) => {
-    console.log('watch host_type', newVal)
-  }
-)
 
 // 判断是否是新的发布
 const isPublish = computed(() => {
