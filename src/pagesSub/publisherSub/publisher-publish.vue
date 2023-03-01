@@ -183,7 +183,7 @@
           width="694rpx"
           height="96rpx"
           text-36rpx
-          :bg-color="publish.isAllFilled(post_type) ? '#578DF7' : '#DFDFDF'"
+          :bg-color="publish.getWhatToFill(post_type) ? '#DFDFDF' : '#578DF7'"
           color="#fff"
           rounded="24rpx"
           @tap="save"
@@ -367,18 +367,10 @@ const isPublish = computed(() => {
   )
 })
 
-function change(event: any, key: string, forbid?: Array<string>) {
-  let value: string = event.target.value
-  if (forbid) {
-    forbid.forEach((item) => {
-      value = value.replace(item, '')
-    })
-    console.log('禁止输入', value)
-    event.preventDefault()
-    return
-  }
+function change(event: any, key: string) {
   publish.value &&
-    ((publish.value[key as keyof Publish] as IField).value = value.trim())
+    ((publish.value[key as keyof Publish] as IField).value =
+      event.target.value.trim())
 }
 
 function setDate(result: any, key: string) {
@@ -417,9 +409,12 @@ function chooseImage(lists: Object, key: string) {
 }
 
 function save() {
-  if (publish.value && !publish.value.isAllFilled(post_type)) {
+  const not_filled: string =
+    (publish.value && publish.value.getWhatToFill(post_type)) || '__'
+  // 有未填写的字段（即返回值不为''）
+  if (not_filled) {
     uni.showToast({
-      title: '请填写完整信息',
+      title: `请填写${not_filled}`,
       icon: 'none',
     })
     return
@@ -468,7 +463,7 @@ function getList(urls: Array<string> | undefined) {
   background-color: white;
   line-height: 28rpx;
   padding: 24rpx;
-  padding-bottom: 44rpx;
+  padding-bottom: 48rpx;
 }
 
 .input-elastic {
