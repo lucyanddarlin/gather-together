@@ -45,6 +45,7 @@
           :title="option.name"
           :options="option.options"
           :func="handleRadioChange"
+          :checked-all="checked"
         ></PublishRadioGroup>
       </div>
     </div>
@@ -60,7 +61,7 @@
           color="#fff"
           bg-color="#73B297"
           rounded="12rpx"
-          @tap="filt"
+          @tap="filter"
         ></PublishButton>
         <PublishButton
           w-324rpx
@@ -82,11 +83,14 @@ import { reactive, ref } from 'vue'
 import { onLoad, onReachBottom, onUnload } from '@dcloudio/uni-app'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
+  ActivityType,
   HostType,
   HostTypeMap,
   type IDescription,
+  LectureType,
   Level,
   LevelMap,
+  MatchType,
   ScoreType,
   State,
   Type,
@@ -122,6 +126,7 @@ onReachBottom(() => {
 const cur_area = ref('广州大学分区')
 
 const checked = ref(false)
+
 const handleClick = (id: number) => {
   uni.navigateTo({ url: `./publisher-detail?id=${id}` })
 }
@@ -149,7 +154,7 @@ const handleCreate = () => {
 }
 const show = ref(false)
 
-const selections = {
+const selections: Record<string, string> = {
   host_type: '',
   race_level: '',
   score_type: '',
@@ -159,6 +164,7 @@ const handleFilter = () => {
 }
 
 function handleRadioChange(title: string, value: number) {
+  if (title) checked.value = true
   if (title === '主办方类型') {
     selections.host_type = `${value}`
   }
@@ -168,6 +174,7 @@ function handleRadioChange(title: string, value: number) {
   if (title.slice(2, 4) === '类型') {
     selections.score_type = `${value}`
   }
+  console.log('selections', selections)
 }
 
 function getFilter() {
@@ -200,23 +207,27 @@ function getFilter() {
       options: [
         {
           name: '创新创业类',
-          value: ScoreType.创新创业类,
+          value: ActivityType.创新创业类,
         },
         {
           name: '公益类',
-          value: ScoreType.公益类,
+          value: ActivityType.公益类,
         },
         {
           name: '科技类',
-          value: ScoreType.科技类,
+          value: ActivityType.科技类,
         },
         {
           name: '文体类',
-          value: ScoreType.文体类,
+          value: ActivityType.文体类,
         },
         {
           name: '思政教育类',
-          value: ScoreType.思政教育类,
+          value: ActivityType.思政教育类,
+        },
+        {
+          name: '综合类',
+          value: ActivityType.综合类,
         },
       ],
     },
@@ -228,15 +239,15 @@ function getFilter() {
       options: [
         {
           name: '创新创业',
-          value: ScoreType.创新创业,
+          value: MatchType.创新创业,
         },
         {
           name: '科技学术',
-          value: ScoreType.科技学术,
+          value: MatchType.科技学术,
         },
         {
           name: '人文社科',
-          value: ScoreType.人文社科,
+          value: MatchType.人文社科,
         },
       ],
     },
@@ -248,15 +259,15 @@ function getFilter() {
       options: [
         {
           name: '创新创业',
-          value: ScoreType.创新创业,
+          value: LectureType.创新创业,
         },
         {
           name: '艺术人文',
-          value: ScoreType.人文社科,
+          value: LectureType.艺术人文,
         },
         {
           name: '科技学术',
-          value: ScoreType.科技学术,
+          value: LectureType.科技学术,
         },
       ],
     },
@@ -287,27 +298,32 @@ function getFilter() {
   )
 }
 
-function filt() {
+function filter() {
   list.value = publisherStore.descriptions[TypeMap[post_type]]
-  for (const [key, value] of Object.entries(selections)) {
-    if (value) {
-      const map = getFilter().find((item) => item.varname === key)?.map
-      if (map) {
-        list.value = list.value.filter((item) => {
-          return item[key as keyof typeof map] === Number.parseInt(value)
-        })
-      } else {
-        console.log('类型映射map 未定义')
-      }
-    }
-  }
+  publisherStore.reqFilter(selections)
+  // 下面是前端筛选逻辑，现已交由后端筛选，后续可以删除
+  // for (const [key, value] of Object.entries(selections)) {
+  //   if (value) {
+  //     const map = getFilter().find((item) => item.varname === key)?.map
+  //     if (map) {
+  //       list.value = list.value.filter((item) => {
+  //         return item[key as keyof typeof map] === Number.parseInt(value)
+  //       })
+  //     } else {
+  //       console.log('类型映射map 未定义')
+  //     }
+  //   }
+  // }
   show.value = false
 }
 
 function resetFilter() {
-  checked.value = false
   list.value = publisherStore.descriptions[TypeMap[post_type]]
-  show.value = false
+  Object.keys(selections).forEach((key) => {
+    selections[key as string] = ''
+  })
+  checked.value = false
+  console.log('selections', selections)
 }
 </script>
 

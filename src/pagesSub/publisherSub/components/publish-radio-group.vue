@@ -24,18 +24,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps<{
   title: string
   options: Array<{ name: string; value: number }>
   func: Function
+  checkedAll: boolean
 }>()
 const selected = ref()
 
+// 响应重置
+watch(
+  () => props.checkedAll,
+  (newVal: boolean) => {
+    if (!newVal) {
+      selected.value = undefined
+    }
+  }
+)
+
 const handleClick = (title: string, value: number) => {
-  selected.value = value
-  props.func(title, value)
+  if (value === selected.value) {
+    // 取消选择
+    selected.value = undefined
+    props.func(title, '')
+    console.log('取消选择')
+  } else {
+    // 选中
+    selected.value = value
+    props.func(title, value)
+  }
 }
 </script>
 
