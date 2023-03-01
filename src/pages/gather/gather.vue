@@ -39,6 +39,7 @@
   <!-- 发布 和 返回顶部的按钮 -->
   <GatherPublishButton
     v-show="navActiveIndex === 0"
+    url="/pagesSub/gatherSub/gatherSub-publish"
     fixed
     top-1000rpx
     right-40rpx
