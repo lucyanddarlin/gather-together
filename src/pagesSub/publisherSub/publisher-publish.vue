@@ -1,8 +1,7 @@
 <template>
-  <u-navbar :back-text="'编辑' + publisherStore.cur_type">
-    <template #left>
-      <div>GG</div>
-    </template>
+  <u-navbar
+    :back-text="(isPublish ? '发布' : '编辑') + publisherStore.cur_type"
+  >
   </u-navbar>
   <view v-if="!publish">该{{ post_type }}不存在</view>
   <view v-else relative class="bg">
@@ -25,43 +24,36 @@
           class="title"
         >
           {{ value.title }}
-        </view>
-        <!-- 不渲染标题，且伴随文字的选项（主办方类型）-->
-        <view
-          v-else-if="
-            key !== 'race_level' && key !== 'start_time' && key !== 'end_time'
-          "
-        >
-          <view
-            absolute
-            flex
-            justify-center
-            items-center
-            class="text-option"
-            w-210rpx
-            h-54rpx
-            right-46rpx
-            top-790rpx
-            fw-500
-            :style="{
-              backgroundColor: '#598DF9',
-              color: '#fff',
-              fontSize: '28rpx',
-              borderRadius: '9rpx',
-            }"
-            @tap="options[key as keyof Options].isShow = true"
-          >
-            <view pr-10rpx> {{ options[key as keyof Options].value }} </view>
-            <view absolute right-10rpx class="iconfont icon-qianwang" />
+          <view v-if="key === 'host'" float-right mr-46rpx>
+            <view
+              relative
+              flex
+              justify-center
+              items-center
+              class="text-option"
+              w-210rpx
+              h-54rpx
+              fw-500
+              :style="{
+                backgroundColor: '#598DF9',
+                color: '#fff',
+                fontSize: '28rpx',
+                borderRadius: '9rpx',
+              }"
+              @tap="options['host_type'].isShow = true"
+            >
+              <view pr-10rpx> {{ options['host_type'].value }} </view>
+              <view absolute right-10rpx class="iconfont icon-qianwang" />
+            </view>
+            <u-picker
+              v-model="options['host_type'].isShow"
+              mode="selector"
+              :range="options['host_type'].range"
+              @confirm="setOptions($event, 'host_type')"
+              @cancel="options['host_type'].isShow = false"
+              @close="options['host_type'].isShow = false"
+            ></u-picker>
           </view>
-          <u-picker
-            v-model="options[key as keyof Options].isShow"
-            mode="selector"
-            :range="options[key as keyof Options].range"
-            @confirm="setOptions($event, key)"
-            @cancel="options[key as keyof Options].isShow = false"
-            @close="options[key as keyof Options].isShow = false"
-          ></u-picker>
         </view>
 
         <view v-if="value.type === 'text'" mt-36rpx>
@@ -166,7 +158,7 @@
           width="694rpx"
           height="96rpx"
           text-36rpx
-          :bg-color="publish.isAllFilled() ? '#578DF7' : '#DFDFDF'"
+          :bg-color="publish.isAllFilled(post_type) ? '#578DF7' : '#DFDFDF'"
           color="#fff"
           rounded="24rpx"
           @tap="save"
@@ -350,10 +342,6 @@ const isPublish = computed(() => {
   )
 })
 
-// const isAllFilled = computed(() => {
-//   return publish.value?.isAllFilled() || false
-// })
-
 function change(event: any, key: string) {
   publish.value &&
     ((publish.value[key as keyof Publish] as IField).value =
@@ -396,7 +384,7 @@ function chooseImage(lists: Object, key: string) {
 }
 
 function save() {
-  if (publish.value && !publish.value.isAllFilled()) {
+  if (publish.value && !publish.value.isAllFilled(post_type)) {
     uni.showToast({
       title: '请填写完整信息',
       icon: 'none',
