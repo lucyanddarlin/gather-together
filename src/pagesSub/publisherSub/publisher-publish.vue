@@ -367,10 +367,18 @@ const isPublish = computed(() => {
   )
 })
 
-function change(event: any, key: string) {
+function change(event: any, key: string, forbid?: Array<string>) {
+  let value: string = event.target.value
+  if (forbid) {
+    forbid.forEach((item) => {
+      value = value.replace(item, '')
+    })
+    console.log('禁止输入', value)
+    event.preventDefault()
+    return
+  }
   publish.value &&
-    ((publish.value[key as keyof Publish] as IField).value =
-      event.target.value.trim())
+    ((publish.value[key as keyof Publish] as IField).value = value.trim())
 }
 
 function setDate(result: any, key: string) {
