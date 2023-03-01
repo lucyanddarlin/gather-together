@@ -35,13 +35,7 @@
       cursor-pointer
       @tap="handleClick(item.post_id)"
     />
-    <!-- <GatherPublishButton fixed top-1000rpx right-40rpx @tap="handleCreate" /> -->
-    <div class="publish" flex-center @click="handleCreate">
-      <div
-        class="iconfont icon-fabuanniu1"
-        :style="{ fontSize: '47rpx' }"
-      ></div>
-    </div>
+    <GatherPublishButton fixed top-1000rpx right-40rpx @tap="handleCreate" />
   </view>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
