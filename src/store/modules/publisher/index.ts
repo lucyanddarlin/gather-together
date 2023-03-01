@@ -139,6 +139,7 @@ export const usePublisherStore = defineStore('publisher', () => {
   ) {
     if (!description) return new Publish(post_type)
     const type = Type[description.post_type]
+    // 后续提取到配置文件
     const ipublish: IPublish = {
       post_id: description.post_id,
       title: {

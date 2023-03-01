@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { addMonths, format } from 'date-fns'
 
 export enum State {
   Create = 0,
@@ -262,7 +262,7 @@ export class Publish implements IPublish {
     }
     this.end_time = {
       title: '结束时间',
-      value: new Date(),
+      value: addMonths(new Date(), 1),
       type: 'time',
       placeholder: `请输入${type === '比赛' ? '报名结束' : type}时间`,
     }
@@ -337,12 +337,13 @@ export class Publish implements IPublish {
     return publish
   }
 
-  public isAllFilled(): boolean {
+  public isAllFilled(post_type: string): boolean {
     // 判断是否所有字段都已填写
-    const values = Object.values(this)
     // 可选项
     const optional = ['imgs']
-    for (const value of values) {
+    for (const [key, value] of Object.entries(this)) {
+      // 只有比赛有race_level输入
+      if (key === 'race_level' && post_type !== '比赛') continue
       if (value instanceof Object) {
         // 是对象类型，判断是否已填写
         const isOptional = optional.includes(value.type) ? true : false
