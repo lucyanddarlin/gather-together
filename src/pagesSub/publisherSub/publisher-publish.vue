@@ -367,7 +367,6 @@ const isPublish = computed(() => {
   )
 })
 
-<<<<<<< HEAD
 function change(event: any, key: string, forbid?: Array<string>) {
   let value: string = event.target.value
   if (forbid) {
@@ -378,9 +377,6 @@ function change(event: any, key: string, forbid?: Array<string>) {
     event.preventDefault()
     return
   }
-=======
-function change(event: any, key: string) {
->>>>>>> cab6deb (refactor: text_option in flow & isAllFilled renew)
   publish.value &&
     ((publish.value[key as keyof Publish] as IField).value = value.trim())
 }
