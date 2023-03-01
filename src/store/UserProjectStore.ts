@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 export const gatherProjectStore = defineStore('project', () => {
   // 项目库
   const GatherProjectList: any = ref([])
+  const GatherPersonList: any = ref([])
 
-  return { GatherProjectList }
+  return { GatherProjectList, GatherPersonList }
 })

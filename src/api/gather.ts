@@ -13,3 +13,9 @@ export const reqPublishProject = (data: {
   project_type: string
   zone_id?: string
 }) => post<{ code: number; body: any }>('/gather/create/project', data)
+
+export const reqGatherPersonList = (page: number, size: number) =>
+  get<{ code: number; body: any }>('/gather/list/vita', { page, size })
+
+export const reqGatherPersonSingle = (user_id: any) =>
+  get<{ code: number; body: any }>('/gather/get/vita', { user_id })
