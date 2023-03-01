@@ -23,11 +23,11 @@
       /></view>
       <view v-show="navActiveIndex == PEOPLE_LIBRARY" pt-20rpx>
         <GatherPeople
-          v-for="item in UserVita"
+          v-for="item in GatherPersonList"
           :key="item.user_id"
           :name="item.name"
           :tags="item.tags"
-          :school="item.school"
+          :school="'广州大学'"
           :profession="item.profession"
           :content="item.profile"
           @toPeopleDetail="toPeopleDetail(item.user_id)"
@@ -93,7 +93,7 @@ import { gatherProjectStore } from '@/store/UserProjectStore'
 // 引入项目库组件
 import PaperItem from '@/components/paper-item.vue'
 // 引入 获取项目数据的 请求
-import { reqGatherProjectList } from '@/api/gather'
+import { reqGatherPersonList, reqGatherProjectList } from '@/api/gather'
 
 import GatherPeople from '@/pages/gather/components/gather-people.vue'
 import GatherProjectModeFilter from './components/gather-projectModeFilter.vue'
@@ -111,32 +111,51 @@ const {
   oldScrollTop,
 } = storeToRefs(useGatherIndexStore)
 // 导入选中的 人才库 id；人才库数据
-const { currentUserVitaId, UserVita } = storeToRefs(userStore)
+const { currentUserVitaId } = storeToRefs(userStore)
 const userGatherProjectStore = gatherProjectStore()
 // todo 后续接口接入，需要换接口的id请求数据
-const { GatherProjectList } = storeToRefs(userGatherProjectStore)
+const { GatherProjectList, GatherPersonList } = storeToRefs(
+  userGatherProjectStore
+)
 // 跳转到 人才库 详情页
-const toPeopleDetail = (id: number) => {
+const toPeopleDetail = (id: any) => {
   currentUserVitaId.value = id
-  uni.navigateTo({ url: '/pagesSub/gatherSub/gatherSub-person' })
+  uni.navigateTo({
+    url: `/pagesSub/gatherSub/gatherSub-person?user_id=${id}`,
+  })
 }
 
 const isTriggered = ref<boolean>(false)
 // 获取主页板块信息
-const startPage = ref(0)
+const startProjectPage = ref(0)
+
 const getProject = async () => {
-  const { data } = await reqGatherProjectList(startPage.value, 8)
-  // GatherProjectList.value = data.body
+  const { data } = await reqGatherProjectList(startProjectPage.value, 8)
+
   for (let i = 0; i < data.body.length; i++) {
     GatherProjectList.value.push(data.body[i])
   }
-  startPage.value++
+  startProjectPage.value++
 }
+
+const getPerson = async () => {
+  const { data } = await reqGatherPersonList(startProjectPage.value, 8)
+
+  for (let i = 0; i < data.body.result.length; i++) {
+    GatherPersonList.value.push(data.body.result[i])
+  }
+  startProjectPage.value++
+}
+
 const handleScrollToLower = () => {
   getProject()
+
+  getPerson()
 }
 onLoad(() => {
   getProject()
+
+  getPerson()
 })
 // 检测滚动
 const handleScroll = (options: any) => {

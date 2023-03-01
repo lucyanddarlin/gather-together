@@ -54,6 +54,6 @@ export const currentUserVitaStore = defineStore('vita', () => {
       user_id: 123321,
     },
   ])
-
-  return { currentUserVitaId, UserVita }
+  const currentPerson = ref()
+  return { currentUserVitaId, UserVita, currentPerson }
 })

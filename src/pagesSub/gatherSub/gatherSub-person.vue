@@ -1,14 +1,12 @@
 <template>
   <u-navbar :border-bottom="false"></u-navbar>
-
-  <view v-for="item in UserVita" :key="item.user_id">
+  <view>
     <!-- 顶部名字 和 学校信息 -->
     <GatherSubAvaterSection
-      :name="item.name"
-      :tags="item.tags"
-      :grade="item.grade"
-      :school="item.school"
-      :profession="item.profession"
+      :name="currentPerson.name"
+      :profession="currentPerson.profession"
+      :school="currentPerson.school"
+      :grade="currentPerson.grade"
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
@@ -36,13 +34,16 @@
     <!-- 个人介绍 -->
     <GatherSubContentSection
       :type="'个人介绍'"
-      :content="'我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们 五动十方工都'"
+      :content="currentPerson.profile"
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 联系方式 -->
-    <GatherSubContentSection :type="'联系方式'" :title="'19300231123'" />
+    <GatherSubContentSection
+      :type="'联系方式'"
+      :title="currentPerson.contact"
+    />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
@@ -51,15 +52,23 @@
   </view>
 </template>
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
-import { currentUserVitaStore } from '@/store/UserVitaStore'
+import { onLoad } from '@dcloudio/uni-app'
 import GatherSubContentSection from '@/pagesSub/gatherSub/components/gatherSub-ContentSection.vue'
 import GatherSubAvaterSection from '@/pagesSub/gatherSub/components/gatherSub-AvaterSection.vue'
 import GatherSubFucntionButton from '@/pagesSub/gatherSub/components/gatherSub-fucntionButton.vue'
-const userStore = currentUserVitaStore()
-// todo 后续接口接入，需要换接口的id请求数据
-const { UserVita } = storeToRefs(userStore)
+import { reqGatherPersonSingle } from '@/api/gather'
+
+const currentPerson = ref()
+onLoad((option: any) => {
+  const getCurrentPagePerson = async () => {
+    const { data } = await reqGatherPersonSingle(String(option.user_id))
+    currentPerson.value = data.body
+  }
+
+  getCurrentPagePerson()
+})
 </script>
 
 <style scoped>
