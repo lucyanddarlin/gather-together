@@ -9,8 +9,6 @@
       :scroll-y="true"
       :scroll-with-animation="true"
       :scroll-top="scrollTop"
-      :refresher-enabled="true"
-      :refresher-triggered="isTriggered"
       @scroll="handleScroll"
       @scrolltolower="handleScrollToLower"
     >
@@ -157,6 +155,7 @@ onLoad(() => {
 
   getPerson()
 })
+
 // 检测滚动
 const handleScroll = (options: any) => {
   oldScrollTop.value = options.target.scrollTop as number

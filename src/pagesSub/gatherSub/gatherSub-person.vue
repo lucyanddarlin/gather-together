@@ -5,7 +5,7 @@
     <GatherSubAvaterSection
       :name="currentPerson.name"
       :profession="currentPerson.profession"
-      :school="currentPerson.school"
+      :school="'广州大学'"
       :grade="currentPerson.grade"
     />
     <!-- 分割线 -->
