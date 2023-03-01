@@ -68,7 +68,8 @@
         </div>
         <div
           color="#A4A4A4"
-          px-36rpx
+          pl-4rpx
+          pr-36rpx
           mt-36rpx
           text-32rpx
           :class="isOmitted ? 'ellipsis' : 'normal'"
