@@ -33,20 +33,16 @@
       :key="item.post_id"
       :description="item"
       cursor-pointer
-      @tap="handleClick(item.post_id)" />
-    <!-- TODO: 删除状态的帖子，经沟通确认已删除的帖子不显示，后续可以删掉这段代码 -->
-    <!-- <PublishManageCardItem
-      v-for="item in list.value.filter((item) => item.state === State.Delete)"
-      :key="item.post_id"
-      :description="item"
-      cursor-pointer
-      @tap="handleClick(item.post_id)" /> -->
+      @tap="handleClick(item.post_id)"
+    />
+    <!-- <GatherPublishButton fixed top-1000rpx right-40rpx @tap="handleCreate" /> -->
     <div class="publish" flex-center @click="handleCreate">
       <div
         class="iconfont icon-fabuanniu1"
         :style="{ fontSize: '47rpx' }"
-      ></div></div
-  ></view>
+      ></div>
+    </div>
+  </view>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
     <div mx-32rpx relative>
@@ -102,6 +98,7 @@ import {
   Type,
   TypeMap,
 } from '@/typings/publisher'
+import GatherPublishButton from '@/pages/gather/components/gather-publishButton.vue'
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
