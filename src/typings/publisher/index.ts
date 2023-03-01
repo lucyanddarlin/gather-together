@@ -188,7 +188,15 @@ export interface IField {
   - time为时间选择
   - number为数字输入
   */
-  type: 'text' | 'textarea' | 'option' | 'text_option' | 'imgs' | 'time'
+  type:
+    | 'text'
+    | 'textarea'
+    | 'text_elastic'
+    | 'text_no_enter'
+    | 'option'
+    | 'text_option'
+    | 'imgs'
+    | 'time'
   placeholder?: string
   limit?: number
   monoline?: boolean
@@ -271,14 +279,14 @@ export class Publish implements IPublish {
     this.location = {
       title: `${type}地点`,
       value: '',
-      type: 'text',
+      type: 'text_no_enter',
       placeholder: `请输入${type === '比赛' ? '比赛' : type}地点`,
       limit: 30,
     }
     this.host = {
       title: `主办方`,
       value: '',
-      type: 'text',
+      type: 'text_no_enter',
       placeholder: `请输入${type === '比赛' ? '比赛' : type}主办方`,
       limit: 50,
     }
@@ -300,7 +308,7 @@ export class Publish implements IPublish {
     this.access = {
       title: `报名方式`,
       value: '',
-      type: 'text',
+      type: 'text_elastic',
       placeholder: `请输入${type === '比赛' ? '比赛' : type}报名方式`,
       limit: 50,
     }

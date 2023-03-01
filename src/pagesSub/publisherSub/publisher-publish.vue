@@ -67,6 +67,31 @@
             @input="change($event, key)"
           />
         </view>
+
+        <view v-if="value.type === 'text_elastic'" relative>
+          <textarea
+            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :placeholder="value.placeholder"
+            placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
+            class="input-elastic"
+            auto-height
+            :maxlength="value.limit"
+            @input="change($event, key)"
+          ></textarea>
+        </view>
+
+        <view v-if="value.type === 'text_no_enter'" relative>
+          <textarea
+            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :placeholder="value.placeholder"
+            placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
+            auto-height
+            class="input-no-enter"
+            :maxlength="value.limit"
+            @input="change($event, key, ['\n'])"
+          ></textarea>
+        </view>
+
         <view v-if="value.type === 'textarea'" relative>
           <textarea
             :value="((publish[key as keyof Publish] as IField).value as string)"
@@ -342,10 +367,18 @@ const isPublish = computed(() => {
   )
 })
 
-function change(event: any, key: string) {
+function change(event: any, key: string, forbid?: Array<string>) {
+  let value: string = event.target.value
+  if (forbid) {
+    forbid.forEach((item) => {
+      value = value.replace(item, '')
+    })
+    console.log('禁止输入', value)
+    event.preventDefault()
+    return
+  }
   publish.value &&
-    ((publish.value[key as keyof Publish] as IField).value =
-      event.target.value.trim())
+    ((publish.value[key as keyof Publish] as IField).value = value.trim())
 }
 
 function setDate(result: any, key: string) {
@@ -436,5 +469,28 @@ function getList(urls: Array<string> | undefined) {
   line-height: 28rpx;
   padding: 24rpx;
   padding-bottom: 44rpx;
+}
+
+.input-elastic {
+  width: 626rpx;
+  height: auto;
+  border-radius: 12rpx;
+  margin-top: 30rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  background-color: white;
+  line-height: 28rpx;
+  padding: 24rpx;
+}
+.input-no-enter {
+  width: 626rpx;
+  height: 170rpx;
+  border-radius: 12rpx;
+  margin-top: 30rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  background-color: white;
+  line-height: 28rpx;
+  padding: 24rpx;
 }
 </style>

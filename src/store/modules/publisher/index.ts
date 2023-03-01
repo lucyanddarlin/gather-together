@@ -165,7 +165,7 @@ export const usePublisherStore = defineStore('publisher', () => {
       host: {
         title: '主办方',
         value: description.host,
-        type: 'text',
+        type: 'text_no_enter',
         placeholder: `请输入主办方名称，多个主办方请以顿号隔开`,
         limit: 50,
       },
@@ -177,7 +177,7 @@ export const usePublisherStore = defineStore('publisher', () => {
       location: {
         title: `${type}地点`,
         value: description.location,
-        type: 'text',
+        type: 'text_no_enter',
         placeholder: `请输入${type}举办地点`,
         limit: 30,
       },
@@ -190,7 +190,7 @@ export const usePublisherStore = defineStore('publisher', () => {
       access: {
         title: '报名方式',
         value: description.access,
-        type: 'text',
+        type: 'text_elastic',
         placeholder: `请输入报名途径指引或者报名链接`,
         limit: 50,
       },
