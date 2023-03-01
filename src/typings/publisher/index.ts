@@ -345,8 +345,8 @@ export class Publish implements IPublish {
     return publish
   }
 
-  public isAllFilled(post_type: string): boolean {
-    // 判断是否所有字段都已填写
+  public getWhatToFill(post_type: string): string {
+    // 获取未填写字段
     // 可选项
     const optional = ['imgs']
     for (const [key, value] of Object.entries(this)) {
@@ -357,10 +357,12 @@ export class Publish implements IPublish {
         const isOptional = optional.includes(value.type) ? true : false
         // 空字符串或者undefined为未填
         const notFilled = value.value === '' || value.value === undefined
-        if (!isOptional && notFilled) return false
+        if (!isOptional && notFilled) {
+          return value.title
+        }
       }
     }
-    return true
+    return ''
   }
 }
 
@@ -387,7 +389,7 @@ export function PubToDesc(publish: Publish, post_type: string): IDescription {
 
 // 为对接后端产生的临时类型，后面和IPublish融合一下
 export interface PostPublish {
-  zone_id: string
+  zone_id: number
   event_type: number
   lecture_type: number
   start_time: string
@@ -415,7 +417,7 @@ export interface GetPublish {
   last_change_time: string
   start_time: string
   end_time: string
-  zone_id: string
+  zone_id: number
   creator_id: string
   sponsor_type: number
   sponsor_name: string
@@ -430,7 +432,7 @@ export interface GetPublish {
 }
 
 export interface ChangePublish {
-  zone_id: string
+  zone_id: number
   sponsor_type: number
   sponsor_name: string
   detail: string
@@ -446,6 +448,16 @@ export interface ChangePublish {
   event_type: number
   post_type: number
 }
+
+export type BodyFilter = {
+  sponsor_type?: string
+  lecture_type?: string
+  event_type?: string
+  race_type?: string
+  race_level?: string
+}
+
+export type Selector = Record<string, string>
 
 export interface OSSPostPolicyResult {
   accessKeyId: string
@@ -491,7 +503,7 @@ export function GetPublishToDesc(p: GetPublish) {
 
 export function DescToPostPublish(d: IDescription) {
   const p: PostPublish = {
-    zone_id: '1',
+    zone_id: 1,
     post_type: d.post_type,
     start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
     end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
@@ -513,7 +525,7 @@ export function DescToPostPublish(d: IDescription) {
 
 export function DescToChangePublish(d: IDescription) {
   const p: ChangePublish = {
-    zone_id: '1',
+    zone_id: 1,
     sponsor_type: d.host_type,
     sponsor_name: d.host,
     detail: d.description,
