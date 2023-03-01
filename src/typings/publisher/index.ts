@@ -57,8 +57,8 @@ export enum ScoreType {
 }
 export enum MatchType {
   创新创业 = 0,
-  人文社科 = 1,
-  科技学术 = 2,
+  科技学术 = 1,
+  人文社科 = 2,
 }
 
 export const MatchTypeMap = {
@@ -69,8 +69,8 @@ export const MatchTypeMap = {
 
 export enum LectureType {
   创新创业 = 0,
-  科技学术 = 1,
-  艺术人文 = 2,
+  艺术人文 = 1,
+  科技学术 = 2,
 }
 
 export const LectureTypeMap = {
