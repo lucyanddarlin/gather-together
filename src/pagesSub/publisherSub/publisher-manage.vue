@@ -92,6 +92,7 @@ import {
   LevelMap,
   MatchType,
   ScoreType,
+  type Selector,
   State,
   Type,
   TypeMap,
@@ -111,7 +112,7 @@ console.log('list', list.value)
 console.log('publish', publisherStore.publish[TypeMap[post_type]])
 
 onLoad(() => {
-  publisherStore.loadPage(post_type)
+  publisherStore.loadPage(post_type, selections)
 })
 
 onUnload(() => {
@@ -120,7 +121,7 @@ onUnload(() => {
 
 onReachBottom(() => {
   console.log('reach bottom')
-  publisherStore.loadPage(post_type)
+  publisherStore.loadPage(post_type, selections)
 })
 
 const cur_area = ref('广州大学分区')
@@ -154,7 +155,7 @@ const handleCreate = () => {
 }
 const show = ref(false)
 
-const selections: Record<string, string> = {
+const selections: Selector = {
   host_type: '',
   race_level: '',
   score_type: '',
@@ -164,6 +165,7 @@ const handleFilter = () => {
 }
 
 function handleRadioChange(title: string, value: number) {
+  // 选择的不为空字符串则设置为“有选项被勾选”状态
   if (title) checked.value = true
   if (title === '主办方类型') {
     selections.host_type = `${value}`
@@ -299,8 +301,9 @@ function getFilter() {
 }
 
 function filter() {
-  list.value = publisherStore.descriptions[TypeMap[post_type]]
-  publisherStore.reqFilter(selections)
+  // list.value = publisherStore.descriptions[TypeMap[post_type]]
+  publisherStore.resetPage(post_type)
+  publisherStore.loadPage(post_type, selections)
   // 下面是前端筛选逻辑，现已交由后端筛选，后续可以删除
   // for (const [key, value] of Object.entries(selections)) {
   //   if (value) {

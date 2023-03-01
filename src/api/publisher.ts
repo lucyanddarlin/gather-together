@@ -1,6 +1,8 @@
 import { get, post } from './request'
 import type {
+  BodyFilter,
   ChangePublish,
+  GetPublish,
   OSSPostPolicyResult,
   PostPublish,
 } from '@/typings/publisher'
@@ -11,12 +13,20 @@ export const reqGetNormalListRace = () =>
     message: string
   }>('/normal/list/race')
 
-export const reqGetPublish = (page: number, size: number, post_type: number) =>
-  get<{
+export const reqGetPublish = (
+  page: number,
+  size: number,
+  post_type: number,
+  selections: BodyFilter
+) =>
+  post<{
     code: number
-    body: Array<any>
+    body: { result: Array<GetPublish>; total_count: number }
     message: string
-  }>(`/publish/get?page=${page}&size=${size}&postType=${post_type}`)
+  }>(
+    `/home/get/list/post?page=${page}&size=${size}&post_type=${post_type}`,
+    selections
+  )
 
 export const reqPostPublish = (data: PostPublish) =>
   post<{

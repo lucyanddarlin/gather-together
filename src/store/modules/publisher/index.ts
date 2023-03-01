@@ -1,13 +1,16 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 import {
+  type BodyFilter,
   DescToChangePublish,
   DescToPostPublish,
+  type GetPublish,
   GetPublishToDesc,
   type IDescription,
   type IPublish,
   PubToDesc,
   Publish,
+  type Selector,
   State,
   Type,
   TypeMap,
@@ -57,34 +60,36 @@ export const usePublisherStore = defineStore('publisher', () => {
   })
 
   // 加载页面
-  async function loadPage(post_type: string) {
+  async function loadPage(post_type: string, selections: Selector) {
     const t = types.find((item) => item.type === post_type)
     if (!t) return
     const nextPage = t.pages // 当前需要请求的页
     const id = Number.parseInt(t.id)
-    const page = await reqGetPublish(nextPage, LOAD_PAGES_SIZE, id)
+    const body: BodyFilter = getBodyFilter(post_type, selections)
+    const page = await reqGetPublish(nextPage, LOAD_PAGES_SIZE, id, body)
     console.log('page', page)
-    if (page.data.body.length === 0) return
+    const result: Array<GetPublish> = page.data.body.result
+    if (result.length === 0) return
     t.pages++
 
-    const arr_desc: Array<IDescription> = page.data.body
+    const arr_desc: Array<IDescription> = result
       .map((item) => GetPublishToDesc(item))
       .filter((item) => item.state !== State.Delete)
     // 因为State.Delete被过滤，能显示的不一定是LOAD_PAGES_SIZE个
     // 这时，若下一页还有，且本页数量不够LOAD_PAGES_SIZE，则继续请求，保证onReachBottom能够正常触发
-    while (arr_desc.length < LOAD_PAGES_SIZE) {
-      // 请求下一页
-      const page = await reqGetPublish(t.pages, LOAD_PAGES_SIZE, id)
-      // 没有下一页了
-      if (page.data.body.length === 0) break
-      // 有下一页，把请求到的push到数组
-      arr_desc.push(
-        ...page.data.body
-          .map((item) => GetPublishToDesc(item))
-          .filter((item) => item.state !== State.Delete)
-      )
-      t.pages++
-    }
+    // while (arr_desc.length < LOAD_PAGES_SIZE) {
+    //   // 请求下一页
+    //   const page = await reqGetPublish(t.pages, LOAD_PAGES_SIZE, id, {})
+    //   // 没有下一页了
+    //   if (page.data.body.length === 0) break
+    //   // 有下一页，把请求到的push到数组
+    //   arr_desc.push(
+    //     ...page.data.body
+    //       .map((item) => GetPublishToDesc(item))
+    //       .filter((item) => item.state !== State.Delete)
+    //   )
+    //   t.pages++
+    // }
     descriptions[TypeMap[post_type as keyof typeof Type]].push(...arr_desc)
     publish[TypeMap[post_type as keyof typeof Type]] = descriptions[
       TypeMap[post_type as keyof typeof Type]
@@ -290,6 +295,31 @@ export const usePublisherStore = defineStore('publisher', () => {
     const type: Type = TypeMap[post_type as keyof typeof Type]
     descriptions[type].splice(0)
     publish[type].splice(0)
+  }
+
+  function getBodyFilter(post_type: string, selections: Selector): BodyFilter {
+    // 收集已经被选中的筛选项
+    console.log('selections', selections)
+    // 空字符串即未选
+    const body: BodyFilter = {}
+    Object.values(selections).forEach((key: string) => {
+      // 公有
+      if (key === 'host_type') {
+        body.sponsor_type = selections[key]
+      }
+      // 公有，但是类型不同使用不同命名
+      if (key === 'score_type') {
+        if (post_type === '比赛') body.race_type = selections[key]
+        else if (post_type === '活动') body.event_type = selections[key]
+        else if (post_type === '讲座') body.lecture_type = selections[key]
+      }
+      // 专有
+      if (key === 'race_level') {
+        body[key as keyof BodyFilter] = selections[key]
+      }
+    })
+    console.log('body', body)
+    return body
   }
 
   return {
