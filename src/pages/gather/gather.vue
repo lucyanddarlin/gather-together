@@ -256,9 +256,6 @@ const handleConfirmFilter = async () => {
       }
     }
   }
-  console.log(ProjectFilterPopupData[currentListKey.value].result.manner_type)
-
-  console.log(ProjectFilterPopupData[currentListKey.value].result)
 
   if (activeIndex.value === PROJECT) {
     const { data } = await reqGatherProjectListFilter(
