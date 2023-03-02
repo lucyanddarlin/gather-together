@@ -121,7 +121,7 @@ export const PROJECTTYPE_LIST = [
 ]
 
 export const enum SPONSOR_TYPE {
-  GOVERNMENT = 1,
+  GOVERNMENT,
   ORGANIZATION,
   SCHOOL,
 }
@@ -132,7 +132,7 @@ export const SPONSOR_LIST = [
 ]
 
 export const enum RACE_TYPE_KEY {
-  INNOVATE = 1,
+  INNOVATE,
   TECHNOLOGY,
   SOCIAL,
 }
@@ -143,7 +143,7 @@ export const RACE_TYPE_LIST = [
 ]
 
 export const enum RACE_LEVEL_KEY {
-  SCHOOL = 1,
+  SCHOOL,
   LOCAL,
   COUNTRY,
 }
@@ -154,7 +154,7 @@ export const RACE_LEVEL_LIST = [
 ]
 
 export const enum LECTURE_TYPE_KEY {
-  INNOVATE = 1,
+  INNOVATE,
   ART,
   TECHNOLOGY,
 }
@@ -165,7 +165,7 @@ export const LECTURE_TYPE_LIST = [
 ]
 
 export const enum ACTIVITY_TYPE_KEY {
-  INNOVATE = 1,
+  INNOVATE,
   COMMONWEAL,
   TECHNOLOGY,
   ATHLETICS,

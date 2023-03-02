@@ -28,12 +28,37 @@
         </view>
         <view v-show="activeIndex === RACE">
           <ChangeFilter @filter="handleShowFilter" />
+          <PaperItem
+            v-for="item in homeOtherListMap['race'].dataList"
+            :key="item.post_id"
+            :paper-item="item"
+          >
+            <template #title>比赛标题</template>
+            <template #content>{{ item.detail }}</template>
+          </PaperItem>
         </view>
         <view v-show="activeIndex === LECTURE">
           <ChangeFilter @filter="handleShowFilter" />
+          <PaperItem
+            v-for="item in homeOtherListMap['lecture'].dataList"
+            :key="item.post_id"
+            :paper-item="item"
+            }
+          >
+            <template #title>讲座标题</template>
+            <template #content>{{ item.detail }}</template>
+          </PaperItem>
         </view>
         <view v-show="activeIndex === ACTIVITY">
           <ChangeFilter @filter="handleShowFilter" />
+          <PaperItem
+            v-for="item in homeOtherListMap['activity'].dataList"
+            :key="item.post_id"
+            :paper-item="item"
+          >
+            <template #title>活动标题</template>
+            <template #content>{{ item.detail }}</template>
+          </PaperItem>
         </view>
       </view>
     </scroll-view>
@@ -50,7 +75,7 @@
       height="70%"
       border-radius="30"
     >
-      <view px-32rpx py-52rpx>
+      <view v-if="activeIndex !== HOME" px-32rpx py-52rpx>
         <view
           v-for="item in filterPopupData[currentListKey].map"
           :key="item.title"
@@ -96,10 +121,13 @@
 <script setup lang="ts">
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
 import {
   ACTIVITY,
   ACTIVITY_TYPE_LIST,
+  DEFAULT_PAGE,
   HOME,
+  INDEX_LIST,
   INDEX_LIST_KEY,
   LECTURE,
   LECTURE_TYPE_LIST,
@@ -123,6 +151,7 @@ interface FilterPopupData {
   [key: string]: {
     resultKey: Array<string>
     result: any
+    post_type: number
     map: Array<FilterPopupDataItem>
   }
 }
@@ -135,8 +164,9 @@ const topSectionList: TopSection[] = [
   { index: LECTURE, title: '讲座' },
   { index: ACTIVITY, title: '活动' },
 ]
-const activeIndex = ref<number>(RACE)
-const { getHomePaperList } = useHomeStore()
+const activeIndex = ref<number>(HOME)
+const { getHomePaperList, getHomeOtherList } = useHomeStore()
+const { homeOtherListMap } = storeToRefs(useHomeStore())
 const scrollTop = ref<number>(0)
 const oldScrollTop = ref<number>(0)
 const isTriggered = ref<boolean>(false)
@@ -151,6 +181,7 @@ const filterPopupData = reactive<FilterPopupData>({
     ],
     resultKey: ['sponsor_type', 'race_type', 'race_level'],
     result: {},
+    post_type: INDEX_LIST.RACE,
   },
   lecture: {
     map: [
@@ -159,6 +190,7 @@ const filterPopupData = reactive<FilterPopupData>({
     ],
     resultKey: ['lecture_type', 'sponsor_type'],
     result: {},
+    post_type: INDEX_LIST.LECTURE,
   },
   activity: {
     map: [
@@ -167,11 +199,13 @@ const filterPopupData = reactive<FilterPopupData>({
     ],
     resultKey: ['sponsor_type', 'event_type'],
     result: {},
+    post_type: INDEX_LIST.ACTIVITY,
   },
 })
 const currentListKey = computed<string>(() => INDEX_LIST_KEY[activeIndex.value])
 
 onLoad(() => {
+  getHomePaperList()
   uni.$on('postNewTopic', handleRefresh)
 })
 onUnload(() => {
@@ -180,11 +214,14 @@ onUnload(() => {
 watch(
   activeIndex,
   (value) => {
-    if (value === HOME) {
-      getHomePaperList()
-    } else {
-      //TODO: get list
-    }
+    if (
+      value &&
+      homeOtherListMap.value[currentListKey.value].page === DEFAULT_PAGE
+    )
+      getHomeOtherList(
+        activeIndex.value,
+        filterPopupData[currentListKey.value].result
+      )
   },
   { deep: true, immediate: true }
 )
@@ -193,18 +230,32 @@ const handleTabSwitch = (index: number) => {
 }
 const handleRefresh = async () => {
   isTriggered.value = true
-  await getHomePaperList(true)
+  if (activeIndex.value === HOME) {
+    await getHomePaperList(true)
+  } else {
+    await getHomeOtherList(
+      activeIndex.value,
+      filterPopupData[currentListKey.value].result,
+      true
+    )
+  }
   isTriggered.value = false
 }
 const handleRefresherAbort = () => {
   isTriggered.value = false
 }
-const handleScrollToLower = () => {
-  getHomePaperList()
+const handleScrollToLower = async () => {
+  if (activeIndex.value === HOME) {
+    await getHomePaperList()
+  } else {
+    await getHomeOtherList(
+      activeIndex.value,
+      filterPopupData[currentListKey.value].result
+    )
+  }
 }
-const handleScroll = (options: any) => {
-  console.log(oldScrollTop.value)
 
+const handleScroll = (options: any) => {
   oldScrollTop.value = options.target.scrollTop as number
 }
 const handleBackToTop = () => {
@@ -231,7 +282,7 @@ const handleClickLabel = (label: LabelItem, list: LabelItem[]) => {
   list.forEach((item) => (item.isSelected = false))
   label.isSelected = true
 }
-const handleConfirmFilter = () => {
+const handleConfirmFilter = async () => {
   filterPopupData[currentListKey.value].result = {}
   for (let i = 0; i < filterPopupData[currentListKey.value].map.length; i++) {
     for (
@@ -248,13 +299,26 @@ const handleConfirmFilter = () => {
     }
   }
   console.log(filterPopupData[currentListKey.value])
+  await getHomeOtherList(
+    activeIndex.value,
+    filterPopupData[currentListKey.value].result,
+    true
+  )
+  isShowFilter.value = false
 }
-const handleResetFilter = () => {
+const handleResetFilter = async () => {
+  filterPopupData[currentListKey.value].result = {}
   filterPopupData[currentListKey.value].map.forEach((item) => {
     item.list.forEach((i) => {
       i.isSelected = false
     })
   })
+  await getHomeOtherList(
+    activeIndex.value,
+    filterPopupData[currentListKey.value].result,
+    true
+  )
+  isShowFilter.value = false
 }
 </script>
 
