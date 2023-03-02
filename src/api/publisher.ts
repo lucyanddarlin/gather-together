@@ -1,10 +1,10 @@
 import { get, post } from './request'
 import type {
   BodyFilter,
-  ChangePublish,
+  ChangeBody,
   GetPublish,
   OSSPostPolicyResult,
-  PostPublish,
+  PostBody,
 } from '@/typings/publisher'
 export const reqGetNormalListRace = () =>
   get<{
@@ -28,14 +28,14 @@ export const reqGetPublish = (
     selections
   )
 
-export const reqPostPublish = (data: PostPublish) =>
+export const reqPostPublish = (data: PostBody) =>
   post<{
     code: number
     body: OSSPostPolicyResult
     message: string
   }>(`/publish/create`, data)
 
-export const reqPostChange = (data: ChangePublish, post_id: number) => {
+export const reqPostChange = (data: ChangeBody, post_id: number) => {
   return post<{
     code: number
     body: OSSPostPolicyResult

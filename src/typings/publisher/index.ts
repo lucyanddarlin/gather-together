@@ -1,4 +1,4 @@
-import { addMonths, format } from 'date-fns'
+import { addMonths } from 'date-fns'
 
 export enum State {
   Create = 0,
@@ -139,24 +139,24 @@ export function getScoreConstant(post_type: keyof typeof Type) {
   switch (post_type) {
     case '比赛':
       return {
-        [ScoreType.创新创业]: '创新创业',
-        [ScoreType.科技学术]: '科技学术',
-        [ScoreType.人文社科]: '人文社科',
+        [MatchType.创新创业]: '创新创业',
+        [MatchType.科技学术]: '科技学术',
+        [MatchType.人文社科]: '人文社科',
       }
     case '活动':
       return {
-        [ScoreType.创新创业类]: '创新创业类',
-        [ScoreType.公益类]: '公益类',
-        [ScoreType.科技类]: '科技类',
-        [ScoreType.文体类]: '文体类',
-        [ScoreType.思政教育类]: '思政教育类',
-        [ScoreType.综合类]: '综合类',
+        [ActivityType.创新创业类]: '创新创业类',
+        [ActivityType.公益类]: '公益类',
+        [ActivityType.科技类]: '科技类',
+        [ActivityType.文体类]: '文体类',
+        [ActivityType.思政教育类]: '思政教育类',
+        [ActivityType.综合类]: '综合类',
       }
     case '讲座':
       return {
-        [ScoreType.创新创业]: '创新创业',
-        [ScoreType.艺术人文]: '艺术人文',
-        [ScoreType.科技学术]: '科技学术',
+        [LectureType.创新创业]: '创新创业',
+        [LectureType.艺术人文]: '艺术人文',
+        [LectureType.科技学术]: '科技学术',
       }
   }
 }
@@ -259,7 +259,7 @@ export class Publish implements IPublish {
       title: `${type}名称`,
       value: '',
       type: 'text',
-      placeholder: '请输入比赛名称',
+      placeholder: `请输入${type}名称`,
       limit: 20,
     }
     this.start_time = {
@@ -366,29 +366,8 @@ export class Publish implements IPublish {
   }
 }
 
-export function PubToDesc(publish: Publish, post_type: string): IDescription {
-  // 将发布的信息转换为描述信息
-  const description: IDescription = {
-    title: publish.title.value as string,
-    start_time: publish.start_time.value as Date,
-    end_time: publish.end_time.value as Date,
-    state: publish.state,
-    post_id: publish.post_id,
-    post_type: TypeMap[post_type as keyof typeof Type],
-    location: publish.location.value as string,
-    host: publish.host.value as string,
-    host_type: publish.host_type.value as HostType,
-    race_level: publish.race_level?.value as Level,
-    score_type: publish.score_type.value as ScoreType,
-    access: publish.access.value as string,
-    description: publish.description.value as string,
-    imgs: publish.imgs?.value as Array<string>,
-  }
-  return description
-}
-
 // 为对接后端产生的临时类型，后面和IPublish融合一下
-export interface PostPublish {
+export interface PostBody {
   zone_id: number
   event_type: number
   lecture_type: number
@@ -431,7 +410,7 @@ export interface GetPublish {
   time_state: null
 }
 
-export interface ChangePublish {
+export interface ChangeBody {
   zone_id: number
   sponsor_type: number
   sponsor_name: string
@@ -467,79 +446,4 @@ export interface OSSPostPolicyResult {
   policy: string
   postId: number
   signature: string
-}
-
-// 后续封装到utils
-function toDate(s: string) {
-  const toNumber = (str: string) => Number.parseInt(str)
-  const y = toNumber(s.slice(0, 4))
-  const d = toNumber(s.slice(5, 7))
-  const m = toNumber(s.slice(8, 10))
-  const h = toNumber(s.slice(11, 13))
-  const min = toNumber(s.slice(14, 16))
-  const sec = toNumber(s.slice(17, 19))
-  return new Date(y, d, m, h, min, sec)
-}
-
-export function GetPublishToDesc(p: GetPublish) {
-  const desc: IDescription = {
-    title: p.title,
-    start_time: toDate(p.start_time),
-    end_time: toDate(p.end_time),
-    state: p.state,
-    post_id: p.post_id,
-    post_type: p.post_type,
-    location: p.location,
-    host: p.sponsor_name,
-    host_type: p.sponsor_type,
-    description: p.detail,
-    access: p.regist_info,
-    imgs: p.picture_urls,
-    score_type: p.second_type, // 注意这里是临时应用，希望后面能改成更规范的命名
-  }
-  if (p.race_level !== undefined) desc.race_level = p.race_level
-  return desc
-}
-
-export function DescToPostPublish(d: IDescription) {
-  const p: PostPublish = {
-    zone_id: 1,
-    post_type: d.post_type,
-    start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
-    end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
-    title: d.title,
-    detail: d.description,
-    location: d.location,
-    sponsor_name: d.host,
-    sponsor_type: d.host_type,
-    regist_info: d.access,
-    score_type: d.score_type,
-    pic_count: d.imgs ? d.imgs.length : 0,
-    event_type: 0,
-    lecture_type: 0,
-    race_level: d.race_level ? d.race_level : 0,
-    race_type: 0,
-  }
-  return p
-}
-
-export function DescToChangePublish(d: IDescription) {
-  const p: ChangePublish = {
-    zone_id: 1,
-    sponsor_type: d.host_type,
-    sponsor_name: d.host,
-    detail: d.description,
-    start_time: format(d.start_time, 'yyyy-MM-dd HH:mm:ss'),
-    end_time: format(d.end_time, 'yyyy-MM-dd HH:mm:ss'),
-    regist_info: d.access,
-    location: d.location,
-    pic_count: d.imgs ? d.imgs.length : 0,
-    race_level: d.race_level ? d.race_level : 0,
-    title: d.title,
-    race_type: 0,
-    lecture_type: 0,
-    event_type: 0,
-    post_type: d.post_type,
-  }
-  return p
 }
