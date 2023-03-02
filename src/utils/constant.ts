@@ -7,6 +7,8 @@ export const RACE = 1
 export const LECTURE = 2
 export const ACTIVITY = 3
 export const GATHER = 4
+export const PROJECT = 0
+export const PEOPLE = 1
 export const OWN_TOPIC = 0
 export const OWN_PROJECT = 1
 
@@ -22,7 +24,11 @@ export enum INDEX_LIST {
   LECTURE,
   ACTIVITY,
 }
-
+export const GATHER_LIST_KEY: Array<string> = ['project', 'people']
+export enum GATHER_LIST {
+  PROJECT,
+  PEOPLE,
+}
 export const SHOW_TOP = 300
 export const TITLE = 0
 export const CONTENT = 1
@@ -108,18 +114,62 @@ export const enum ADD {
   PROJECTS,
   CERTS,
 }
+
 export const PROJECTMODE_LIST = [
-  { index: PROJECT_MODE.IT, value: 'IT/软件' },
-  { index: PROJECT_MODE.ELEC, value: '硬件/电子' },
-  { index: PROJECT_MODE.NET, value: '互联网+' },
-  { index: PROJECT_MODE.UNDERLINE, value: '线下运营' },
-  { index: PROJECT_MODE.RESULT, value: '成果转化' },
-  { index: PROJECT_MODE.DISCOVER, value: '调研/探究' },
+  { index: PROJECT_MODE.IT, value: 'IT/软件', isSelected: false },
+  { index: PROJECT_MODE.ELEC, value: '硬件/电子', isSelected: false },
+  { index: PROJECT_MODE.NET, value: '互联网+', isSelected: false },
+  { index: PROJECT_MODE.UNDERLINE, value: '线下运营', isSelected: false },
+  { index: PROJECT_MODE.RESULT, value: '成果转化', isSelected: false },
+  { index: PROJECT_MODE.DISCOVER, value: '调研/探究', isSelected: false },
 ]
+
 export const PROJECTTYPE_LIST = [
-  { index: PROJECT_TYPE.CREATE, value: '创新创业' },
-  { index: PROJECT_TYPE.TECH, value: '科技学术' },
-  { index: PROJECT_TYPE.SOCIAL, value: '人文社科' },
+  { index: PROJECT_TYPE.CREATE, value: '创新创业', isSelected: false },
+  { index: PROJECT_TYPE.TECH, value: '科技学术', isSelected: false },
+  { index: PROJECT_TYPE.SOCIAL, value: '人文社科', isSelected: false },
+]
+
+export const enum MANNER_TYPE {
+  OPERATION,
+  APP,
+  MONEY,
+  ART,
+  PUSH,
+  SCIENCE,
+}
+
+export const MANNERTYPE_LIST = [
+  { index: MANNER_TYPE.OPERATION, value: '运营/规划', isSelected: false },
+  { index: MANNER_TYPE.APP, value: '软件/硬件', isSelected: false },
+  { index: MANNER_TYPE.MONEY, value: '财务/法律', isSelected: false },
+  { index: MANNER_TYPE.ART, value: '美术/设计', isSelected: false },
+  { index: MANNER_TYPE.PUSH, value: '宣传/推广', isSelected: false },
+  { index: MANNER_TYPE.SCIENCE, value: '科研/学术', isSelected: false },
+]
+
+export const enum LEARNING_DIRECTION {
+  TECHNOLOGY,
+  MANAGEMENT,
+  LAW,
+  CRAFT,
+  TEACH,
+  HISTORY,
+  AGRICULTURE,
+  MEDICINE,
+  SPECIAL,
+}
+
+export const LEARNINGDIRECTION_LIST = [
+  { index: LEARNING_DIRECTION.TECHNOLOGY, value: '理工类' },
+  { index: LEARNING_DIRECTION.MANAGEMENT, value: '经管类' },
+  { index: LEARNING_DIRECTION.LAW, value: '法学类' },
+  { index: LEARNING_DIRECTION.CRAFT, value: '艺术/人文' },
+  { index: LEARNING_DIRECTION.TEACH, value: '教育类' },
+  { index: LEARNING_DIRECTION.HISTORY, value: '历史/哲学' },
+  { index: LEARNING_DIRECTION.AGRICULTURE, value: '农业类' },
+  { index: LEARNING_DIRECTION.MEDICINE, value: '医学类' },
+  { index: LEARNING_DIRECTION.SPECIAL, value: '特殊类' },
 ]
 
 export const enum SPONSOR_TYPE {

@@ -1,8 +1,25 @@
 import { get, post } from './request'
 export const reqGatherProjectList = (page: number, size: number) =>
-  get<{ code: number; body: any }>('/gather/list/cond/project', { page, size })
+  get<{ code: number; body: any }>('/gather/list/cond/project', {
+    page,
+    size,
+  })
+export const reqGatherProjectListFilter = (
+  page: number,
+  size: number,
+  projectMode: number,
+  projectType: number
+) =>
+  get<{ code: number; body: any }>('/gather/list/cond/project', {
+    page,
+    size,
+    projectMode,
+    projectType,
+  })
+
 export const reqGatherProjectSingle = (project_id: any) =>
   get<{ code: number; body: any }>('/gather/get/project', { project_id })
+
 export const reqPublishProject = (data: {
   contact: string
   introduce: string

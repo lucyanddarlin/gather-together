@@ -81,7 +81,7 @@ const publishProject = reactive({
   contact: '',
   introduce: '',
   needs: '',
-  pic_count: '1',
+  pic_count: '0',
   project_mode: '',
   project_name: '',
   project_type: '',
