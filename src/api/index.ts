@@ -1,5 +1,6 @@
 import { get, post } from './request'
 import type {
+  FilterParams,
   HomeTopicInfo,
   ICommentItem,
   IPaperItem,
@@ -18,6 +19,17 @@ export const reqGetTest = (page: number, size: number) =>
 export const reqGetHomeTopicInfo = (topic_id: string | number) =>
   get<{ code: string; body: HomeTopicInfo }>(
     `/home/get/forum/one?topic_id=${topic_id}`
+  )
+
+export const reqGetHomeOtherList = (
+  page: number,
+  size: number,
+  post_type: number,
+  data: FilterParams = {}
+) =>
+  post(
+    `/home/get/list/post?page=${page}&size=${size}&post_type=${post_type}`,
+    data
   )
 
 export const reqGetTopicComments = (

@@ -79,3 +79,11 @@ export interface FilterPopupDataItem {
   title: string
   list: Array<LabelItem>
 }
+
+export interface FilterParams {
+  lecture_type?: number
+  sponsor_type?: number
+  race_type?: number
+  race_level?: number
+  event_type?: number
+}

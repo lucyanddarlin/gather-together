@@ -10,7 +10,7 @@
     @click="handleClickItem"
   >
     <view text-40rpx font-bold class="text-#534E4E">
-      {{ paperItem.title || paperItem.project_name }}
+      <slot name="title"></slot>
     </view>
     <span
       absolute
@@ -40,8 +40,9 @@
       text-28rpx
       text-justify
       class="paper-desc bg-#F5F5F5 text-#A4A4A4"
-      >{{ commonObj.content }}</view
     >
+      <slot name="content"></slot>
+    </view>
     <view
       v-if="type === HOME && !isNull(paperItem.picture_urls)"
       class="images-wrap"
@@ -121,7 +122,7 @@ interface IGatherItem {
   state: Number
 }
 const props = defineProps<{
-  type: number
+  type?: number
   paperItem: Partial<PaperItem & IGatherItem>
 }>()
 const emit = defineEmits(['moreOptions'])
