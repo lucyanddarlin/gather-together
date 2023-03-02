@@ -3,8 +3,7 @@
     :back-text="(isPublish ? '发布' : '编辑') + publisherStore.cur_type"
   >
   </u-navbar>
-  <view v-if="!publish">该{{ post_type }}不存在</view>
-  <view v-else relative class="bg">
+  <view v-if="publish" relative class="bg">
     <view
       v-for="[key, value] in Object.entries(publish)"
       :key="key + value.title"
@@ -86,7 +85,8 @@
             :placeholder="value.placeholder"
             placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
             auto-height
-            class="input-no-enter"
+            rows="1"
+            class="input-elastic"
             :maxlength="value.limit"
             @input="change($event, key)"
           ></textarea>
@@ -228,7 +228,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { addMonths, format } from 'date-fns'
 import { usePublisherStore } from '@/store/modules/publisher'
@@ -240,7 +240,6 @@ import {
   type IField,
   Level,
   LevelMap,
-  PubToDesc,
   type Publish,
   type ScoreType,
   State,
@@ -250,6 +249,7 @@ import {
   getMap,
   getScoreConstant,
 } from '@/typings/publisher'
+import { DescToPub, PubToDesc } from '@/typings/publisher/resolve'
 import { showMsg } from '@/utils/common'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
@@ -271,6 +271,23 @@ const params = {
   second: false,
 }
 
+if (!publish.value) {
+  uni.showLoading({
+    title: '加载中',
+    mask: true,
+  })
+}
+
+// 显示加载
+watch(
+  () => publish.value,
+  (newVal: Publish | undefined) => {
+    if (newVal) {
+      uni.hideLoading()
+    }
+  }
+)
+
 onLoad((options) => {
   if (!options) {
     console.log('options 为空，请检查url参数')
@@ -282,7 +299,7 @@ onLoad((options) => {
   description.value = publisherStore.descriptions[TypeMap[post_type]]?.find(
     (item) => `${item.post_id}` === id.value
   )
-  publish.value = publisherStore.getPubFromDesc(description.value, post_type)
+  publish.value = DescToPub(description.value, post_type)
   if (description.value === undefined) {
     description.value = PubToDesc(publish.value, post_type)
   }
@@ -309,7 +326,7 @@ const pickerObj = {
   end_time: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.start_time) return `请选择${post_type}结束时间`
+      if (!publish.value?.end_time) return `请选择${post_type}结束时间`
 
       return format(publish.value.end_time.value as Date, 'yyyy-MM-dd HH:mm')
     }),
@@ -409,8 +426,8 @@ function chooseImage(lists: Object, key: string) {
 }
 
 function save() {
-  const not_filled: string =
-    (publish.value && publish.value.getWhatToFill(post_type)) || '__'
+  const not_filled: string | undefined =
+    publish.value && publish.value.getWhatToFill(post_type)
   // 有未填写的字段（即返回值不为''）
   if (not_filled) {
     uni.showToast({
@@ -469,17 +486,6 @@ function getList(urls: Array<string> | undefined) {
 .input-elastic {
   width: 626rpx;
   height: auto;
-  border-radius: 12rpx;
-  margin-top: 30rpx;
-  font-size: 32rpx;
-  font-weight: 500;
-  background-color: white;
-  line-height: 28rpx;
-  padding: 24rpx;
-}
-.input-no-enter {
-  width: 626rpx;
-  height: 170rpx;
   border-radius: 12rpx;
   margin-top: 30rpx;
   font-size: 32rpx;
