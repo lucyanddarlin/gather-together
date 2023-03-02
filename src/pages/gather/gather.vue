@@ -101,7 +101,6 @@ import {
   PROJECT,
   PROJECTMODE_LIST,
   PROJECTTYPE_LIST,
-  PROJECT_MODE,
 } from '@/utils/constant'
 // 导入 gatherIndex 的 pinia
 import { gatherIndexStore } from '@/store/gatherIndex'
@@ -114,7 +113,10 @@ import { gatherProjectStore } from '@/store/UserProjectStore'
 // 引入项目库组件
 import PaperItem from '@/components/paper-item.vue'
 // 引入 获取项目数据的 请求
-import { reqGatherPersonList, reqGatherProjectListFilter } from '@/api/gather'
+import {
+  reqGatherPersonListFilter,
+  reqGatherProjectListFilter,
+} from '@/api/gather'
 
 import GatherPeople from '@/pages/gather/components/gather-people.vue'
 // import { deepClone } from '@/utils/common'
@@ -145,6 +147,7 @@ const toPeopleDetail = (id: any) => {
 const startProjectPage = ref(0)
 const startPeoplePage = ref(0)
 const startFilterProjectPage = ref(0)
+const startFilterPersonPage = ref(0)
 
 const getProject = async () => {
   const { data } = await reqGatherProjectListFilter(
@@ -160,7 +163,12 @@ const getProject = async () => {
 }
 
 const getPerson = async () => {
-  const { data } = await reqGatherPersonList(startPeoplePage.value, 8)
+  const { data } = await reqGatherPersonListFilter(
+    startPeoplePage.value,
+    8,
+    ProjectFilterPopupData[currentListKey.value].result.manner_type,
+    ProjectFilterPopupData[currentListKey.value].result.learning_direction
+  )
 
   for (let i = 0; i < data.body.result.length; i++) {
     GatherPersonList.value.push(data.body.result[i])
@@ -248,8 +256,11 @@ const handleConfirmFilter = async () => {
       }
     }
   }
+  console.log(ProjectFilterPopupData[currentListKey.value].result.manner_type)
 
-  if (activeIndex.value === 0) {
+  console.log(ProjectFilterPopupData[currentListKey.value].result)
+
+  if (activeIndex.value === PROJECT) {
     const { data } = await reqGatherProjectListFilter(
       startFilterProjectPage.value,
       8,
@@ -261,8 +272,23 @@ const handleConfirmFilter = async () => {
     for (let i = 0; i < data.body.length; i++) {
       GatherProjectList.value.push(data.body[i])
     }
+    showPopup.value = false
   } else {
-    console.log(2)
+    const { data } = await reqGatherPersonListFilter(
+      startFilterPersonPage.value,
+      8,
+      ProjectFilterPopupData[currentListKey.value].result.manner_type,
+      ProjectFilterPopupData[currentListKey.value].result.learning_direction
+    )
+    console.log(data.body.result)
+
+    GatherPersonList.value = []
+
+    for (let i = 0; i < data.body.result.length; i++) {
+      GatherPersonList.value.push(data.body.result[i])
+    }
+
+    showPopup.value = false
   }
 }
 </script>
