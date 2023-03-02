@@ -98,8 +98,10 @@ import {
   GATHER_LIST_KEY,
   LEARNINGDIRECTION_LIST,
   MANNERTYPE_LIST,
+  PROJECT,
   PROJECTMODE_LIST,
   PROJECTTYPE_LIST,
+  PROJECT_MODE,
 } from '@/utils/constant'
 // 导入 gatherIndex 的 pinia
 import { gatherIndexStore } from '@/store/gatherIndex'
@@ -112,7 +114,7 @@ import { gatherProjectStore } from '@/store/UserProjectStore'
 // 引入项目库组件
 import PaperItem from '@/components/paper-item.vue'
 // 引入 获取项目数据的 请求
-import { reqGatherPersonList, reqGatherProjectList } from '@/api/gather'
+import { reqGatherPersonList, reqGatherProjectListFilter } from '@/api/gather'
 
 import GatherPeople from '@/pages/gather/components/gather-people.vue'
 // import { deepClone } from '@/utils/common'
@@ -141,28 +143,35 @@ const toPeopleDetail = (id: any) => {
 
 // 获取主页板块信息
 const startProjectPage = ref(0)
+const startPeoplePage = ref(0)
+const startFilterProjectPage = ref(0)
 
 const getProject = async () => {
-  const { data } = await reqGatherProjectList(startProjectPage.value, 8)
+  const { data } = await reqGatherProjectListFilter(
+    startProjectPage.value,
+    8,
+    ProjectFilterPopupData[currentListKey.value].result.project_mode,
+    ProjectFilterPopupData[currentListKey.value].result.project_type
+  )
 
   for (let i = 0; i < data.body.length; i++) {
     GatherProjectList.value.push(data.body[i])
   }
-  startProjectPage.value++
 }
 
 const getPerson = async () => {
-  const { data } = await reqGatherPersonList(startProjectPage.value, 8)
+  const { data } = await reqGatherPersonList(startPeoplePage.value, 8)
 
   for (let i = 0; i < data.body.result.length; i++) {
     GatherPersonList.value.push(data.body.result[i])
   }
-  startProjectPage.value++
 }
 
 const handleScrollToLower = () => {
+  startProjectPage.value++
   getProject()
 
+  startPeoplePage.value++
   getPerson()
 }
 onLoad(() => {
@@ -217,7 +226,7 @@ const handleResetFilter = () => {
     }
   )
 }
-const handleConfirmFilter = () => {
+const handleConfirmFilter = async () => {
   ProjectFilterPopupData[currentListKey.value].result = {}
   for (
     let i = 0;
@@ -239,7 +248,22 @@ const handleConfirmFilter = () => {
       }
     }
   }
-  console.log(ProjectFilterPopupData[currentListKey.value].result)
+
+  if (activeIndex.value === 0) {
+    const { data } = await reqGatherProjectListFilter(
+      startFilterProjectPage.value,
+      8,
+      ProjectFilterPopupData[currentListKey.value].result.project_mode,
+      ProjectFilterPopupData[currentListKey.value].result.project_type
+    )
+
+    GatherProjectList.value = []
+    for (let i = 0; i < data.body.length; i++) {
+      GatherProjectList.value.push(data.body[i])
+    }
+  } else {
+    console.log(2)
+  }
 }
 </script>
 
