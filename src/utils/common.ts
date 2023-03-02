@@ -101,3 +101,14 @@ export const chooseImages = (count: number): Promise<string[]> => {
     })
   )
 }
+
+export function toDate(s: string) {
+  const toNumber = (str: string) => Number.parseInt(str)
+  const y = toNumber(s.slice(0, 4))
+  const d = toNumber(s.slice(5, 7))
+  const m = toNumber(s.slice(8, 10))
+  const h = toNumber(s.slice(11, 13))
+  const min = toNumber(s.slice(14, 16))
+  const sec = toNumber(s.slice(17, 19))
+  return new Date(y, d, m, h, min, sec)
+}
