@@ -1,5 +1,5 @@
 <template>
-  <u-navbar :title="publisherStore.cur_type + '管理'" />
+  <PublishNavbar :title="publisherStore.cur_type + '管理'"></PublishNavbar>
   <view class="bg" pt-12rpx>
     <view flex items-center justify-between>
       <view flex justify-start h-72rpx w-584rpx pl-28rpx class="bar">
@@ -7,23 +7,14 @@
           <u-icon mt-16rpx name="map" size="46rpx" color="#598DF9" />
         </view>
         <view h-72rpx>
-          <div mt-16rpx ml-24rpx>{{ cur_area }}</div>
+          <div mt-12rpx ml-24rpx>{{ cur_area }}</div>
         </view>
       </view>
-      <view
-        h-72rpx
-        w-158rpx
-        flex
-        items-center
-        justify-end
-        pr-20rpx
-        class="bar"
-        @tap="handleFilter"
-      >
-        <span>筛选</span>
+      <view class="bar filter" @tap="handleFilter">
+        <span mb-4rpx>筛选</span>
         <span
           class="iconfont icon-shaixuan"
-          :style="{ fontSize: '40rpx' }"
+          :style="{ fontSize: '44rpx' }"
           color="#598DF9"
         ></span>
       </view>
@@ -40,10 +31,10 @@
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
     <div mx-32rpx relative>
-      <div v-for="option in getFilter()" :key="option.name">
+      <div v-for="option in getFilter(post_type)" :key="option.name">
         <PublishRadioGroup
           :title="option.name"
-          :options="option.options"
+          :options="option.value"
           :func="handleRadioChange"
           :checked-all="checked"
         ></PublishRadioGroup>
@@ -83,24 +74,25 @@ import { reactive, ref } from 'vue'
 import { onLoad, onReachBottom, onUnload } from '@dcloudio/uni-app'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
-  ActivityType,
   HostType,
-  HostTypeMap,
   type IDescription,
-  LectureType,
   Level,
-  LevelMap,
-  MatchType,
   ScoreType,
   type Selector,
   State,
   Type,
   TypeMap,
 } from '@/typings/publisher'
+import {
+  EVENT_OPTION,
+  LECTURE_OPTION,
+  RACE_OPTION,
+} from '@/utils/publishConstant'
 import GatherPublishButton from '@/pages/gather/components/gather-publishButton.vue'
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
+import PublishNavbar from './components/publish-navbar.vue'
 type PostType = keyof typeof Type
 const publisherStore = usePublisherStore()
 const post_type = publisherStore.cur_type as PostType
@@ -179,144 +171,22 @@ function handleRadioChange(title: string, value: number) {
   console.log('selections', selections)
 }
 
-function getFilter() {
-  const allFilters = [
-    {
-      name: '主办方类型',
-      fit: 'all',
-      varname: 'host_type',
-      map: HostTypeMap,
-      options: [
-        {
-          name: '政府',
-          value: HostType.政府,
-        },
-        {
-          name: '组织机构',
-          value: HostType.组织机构,
-        },
-        {
-          name: '学校',
-          value: HostType.学校,
-        },
-      ],
-    },
-    {
-      name: '活动类型',
-      fit: '活动',
-      varname: 'score_type',
-      map: TypeMap,
-      options: [
-        {
-          name: '创新创业类',
-          value: ActivityType.创新创业类,
-        },
-        {
-          name: '公益类',
-          value: ActivityType.公益类,
-        },
-        {
-          name: '科技类',
-          value: ActivityType.科技类,
-        },
-        {
-          name: '文体类',
-          value: ActivityType.文体类,
-        },
-        {
-          name: '思政教育类',
-          value: ActivityType.思政教育类,
-        },
-        {
-          name: '综合类',
-          value: ActivityType.综合类,
-        },
-      ],
-    },
-    {
-      name: '比赛类型',
-      fit: '比赛',
-      varname: 'score_type',
-      map: TypeMap,
-      options: [
-        {
-          name: '创新创业',
-          value: MatchType.创新创业,
-        },
-        {
-          name: '科技学术',
-          value: MatchType.科技学术,
-        },
-        {
-          name: '人文社科',
-          value: MatchType.人文社科,
-        },
-      ],
-    },
-    {
-      name: '讲座类型',
-      fit: '讲座',
-      varname: 'score_type',
-      map: TypeMap,
-      options: [
-        {
-          name: '创新创业',
-          value: LectureType.创新创业,
-        },
-        {
-          name: '艺术人文',
-          value: LectureType.艺术人文,
-        },
-        {
-          name: '科技学术',
-          value: LectureType.科技学术,
-        },
-      ],
-    },
-    {
-      name: '比赛级别',
-      fit: '比赛',
-      varname: 'race_level',
-      map: LevelMap,
-      options: [
-        {
-          name: '院/校级',
-          value: Level.院校级,
-        },
-        {
-          name: '地方级',
-          value: Level.地方级,
-        },
-        {
-          name: '国家级',
-          value: Level.国家级,
-        },
-      ],
-    },
-  ]
-
-  return allFilters.filter(
-    (item) => item.fit === 'all' || item.fit === post_type
-  )
+function getFilter(post_type: string) {
+  switch (post_type) {
+    case '比赛':
+      return RACE_OPTION
+    case '讲座':
+      return LECTURE_OPTION
+    case '活动':
+      return EVENT_OPTION
+    default:
+      return []
+  }
 }
 
 function filter() {
-  // list.value = publisherStore.descriptions[TypeMap[post_type]]
   publisherStore.resetPage(post_type)
   publisherStore.loadPage(post_type, selections)
-  // 下面是前端筛选逻辑，现已交由后端筛选，后续可以删除
-  // for (const [key, value] of Object.entries(selections)) {
-  //   if (value) {
-  //     const map = getFilter().find((item) => item.varname === key)?.map
-  //     if (map) {
-  //       list.value = list.value.filter((item) => {
-  //         return item[key as keyof typeof map] === Number.parseInt(value)
-  //       })
-  //     } else {
-  //       console.log('类型映射map 未定义')
-  //     }
-  //   }
-  // }
   show.value = false
 }
 
@@ -326,7 +196,6 @@ function resetFilter() {
     selections[key as string] = ''
   })
   checked.value = false
-  console.log('selections', selections)
 }
 </script>
 
@@ -353,25 +222,23 @@ function resetFilter() {
   box-shadow: 0rpx 0rpx 10rpx 0rpx rgba(0, 0, 0, 0.25);
 }
 
-.test {
-  position: fixed;
-  background-color: #f5f5f5;
-  bottom: 380rpx;
-  right: 66rpx;
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  border: 2rpx solid #e5e5e5;
-  box-shadow: 0rpx 0rpx 10rpx 0rpx rgba(0, 0, 0, 0.25);
-}
-
 .bg {
   background-color: #f7f7f7;
+  min-height: 96rpx;
 }
 .bar {
   background-color: white;
   color: #598df9;
   font-size: 36rpx;
   border-radius: 12rpx;
+}
+
+.filter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 72rpx;
+  width: 158rpx;
+  padding-right: 20rpx;
 }
 </style>
