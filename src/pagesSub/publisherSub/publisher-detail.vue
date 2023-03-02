@@ -1,6 +1,6 @@
 <template>
   <div>
-    <u-navbar :back-text="publisherStore.cur_type + '管理'" />
+    <PublishNavbar left :title="publisherStore.cur_type + '管理'" />
     <div v-if="description" relative>
       <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
       <div mt-4rpx ml-36rpx text-56rpx fw-600>

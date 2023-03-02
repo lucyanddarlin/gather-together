@@ -1,8 +1,8 @@
 <template>
-  <u-navbar
-    :back-text="(isPublish ? '发布' : '编辑') + publisherStore.cur_type"
-  >
-  </u-navbar>
+  <PublishNavbar
+    left
+    :title="(isPublish ? '发布' : '编辑') + publisherStore.cur_type"
+  ></PublishNavbar>
   <view v-if="publish" relative class="bg">
     <view
       v-for="[key, value] in Object.entries(publish)"
@@ -254,6 +254,7 @@ import { showMsg } from '@/utils/common'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
 import PublishTextCounter from './components/publish-text-counter.vue'
+import PublishNavbar from './components/publish-navbar.vue'
 
 const id = ref('')
 const publisherStore = usePublisherStore()
