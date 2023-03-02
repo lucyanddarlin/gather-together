@@ -9,7 +9,7 @@
         v-for="option in item.selectList"
         :key="option.id"
         class="rounded-18rpx flex items-center justify-center text-24rpx bg-#F5F5F5 text-#A4A4A4"
-        :class="activeFilterOption == option.id ? 'activeFilterOption' : ''"
+        :class="activeMannerFilterOption == option.id ? 'activeOption' : ''"
         @click="selectOption(option.id)"
       >
         {{ option.value }}</view
@@ -18,12 +18,17 @@
   >
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { mannerFilterList } from '@/utils/gatherConstant'
+// 导入 gatherIndex 的 pinia
+import { gatherIndexStore } from '@/store/gatherIndex'
+// 实例化 gatherIndex pinia
+const useGatherIndexStore = gatherIndexStore()
+// 导入 nav 栏 活动的值 ； 导入是否展示 筛选
+const { activeMannerFilterOption } = storeToRefs(useGatherIndexStore)
 
-const activeFilterOption = ref(99)
 const selectOption = (id: number) => {
-  activeFilterOption.value = id
+  activeMannerFilterOption.value = id
 }
 </script>
 

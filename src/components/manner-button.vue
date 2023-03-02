@@ -24,7 +24,7 @@ const toPublishApi = () => {
       contact: props.publishData.contact,
       introduce: props.publishData.introduce,
       needs: props.publishData.needs,
-      pic_count: '99',
+      pic_count: '0',
       project_mode: props.publishData.project_mode,
       project_name: props.publishData.project_name,
       project_type: props.publishData.project_type,
