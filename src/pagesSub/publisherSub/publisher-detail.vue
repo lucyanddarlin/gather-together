@@ -1,8 +1,7 @@
 <template>
   <div>
     <u-navbar :back-text="publisherStore.cur_type + '管理'" />
-    <div v-if="!description">该{{ post_type }}不存在</div>
-    <div v-else relative>
+    <div v-if="description" relative>
       <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
       <div mt-4rpx ml-36rpx text-56rpx fw-600>
         {{ description.title }}
@@ -137,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 // import { useRoute, useRouter } from 'vue-router'
 import { usePublisherStore } from '@/store/modules/publisher'
@@ -154,6 +153,25 @@ import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
 const id = ref('')
 const description = ref<IDescription | undefined>()
+
+// 显示加载
+if (!description.value) {
+  uni.showLoading({
+    title: '加载中',
+    mask: true,
+  })
+}
+
+// 数据加载完成，隐藏加载
+watch(
+  () => description.value,
+  (newVal: IDescription | undefined) => {
+    if (newVal) {
+      uni.hideLoading()
+    }
+  }
+)
+
 onLoad((options) => {
   if (!options) {
     console.log('options 为空，请检查url参数')
