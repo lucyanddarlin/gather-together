@@ -11,23 +11,32 @@
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <GatherSubContentSection
+      v-for="item in currentPerson.certs"
+      :key="item"
       :type="'技能/能力'"
-      :title="'软件/硬件'"
-      :content="'全栈型，前端VUE2/3,后端JAVA SpringBoot'"
+      :title="item.skill_id"
+      :content="item.skill_des"
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 项目/实践 -->
     <GatherSubContentSection
+      v-for="item in currentPerson.projects"
+      :key="item"
       :type="'项目/实践'"
-      :title="'个人博客项目'"
-      :content="'开发了一个个人博客，前端采用VUE3框架，后端采用的是SpringBoot架构，实现博客的创建、编辑、按时间查找的功能.…'"
+      :title="item.project_name"
+      :content="item.project_exp"
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <!-- 证书/荣誉 -->
-    <GatherSubContentSection :type="'证书/荣誉'" :title="'大学英语六级'" />
+    <GatherSubContentSection
+      v-for="item in currentPerson.certs"
+      :key="item"
+      :type="'证书/荣誉'"
+      :title="item.cert_name"
+    />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 

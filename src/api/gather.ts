@@ -1,21 +1,36 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { get, post } from './request'
-export const reqGatherProjectList = (page: number, size: number) =>
-  get<{ code: number; body: any }>('/gather/list/cond/project', {
-    page,
-    size,
-  })
+
 export const reqGatherProjectListFilter = (
   page: number,
   size: number,
-  projectMode: number,
-  projectType: number
-) =>
-  get<{ code: number; body: any }>('/gather/list/cond/project', {
-    page,
-    size,
-    projectMode,
-    projectType,
-  })
+  project_mode?: number,
+  project_type?: number
+) => {
+  let url = `/gather/list/cond/project?page=${page}&size=${size}`
+  if (project_mode !== undefined) {
+    url += `&projectMode=${project_mode}`
+  }
+  if (project_type !== undefined) {
+    url += `&projectType=${project_type}`
+  }
+  return get<{ code: number; body: any }>(url)
+}
+export const reqGatherPersonListFilter = (
+  page: number,
+  size: number,
+  skillId?: number,
+  direction?: number
+) => {
+  let url = `/gather/list/vita?page=${page}&size=${size}`
+  if (skillId !== undefined) {
+    url += `&skillId=${skillId}`
+  }
+  if (direction !== undefined) {
+    url += `&direction=${direction}`
+  }
+  return get<{ code: number; body: any }>(url)
+}
 
 export const reqGatherProjectSingle = (project_id: any) =>
   get<{ code: number; body: any }>('/gather/get/project', { project_id })
