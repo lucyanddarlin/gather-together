@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="description" relative>
-      <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
-      <div mt-4rpx ml-36rpx text-56rpx fw-600>
+      <u-icon absolute right-24rpx size="40rpx" name="more-dot-fill"></u-icon>
+      <div mt-4rpx ml-36rpx text-56rpx fw-600 select-text>
         {{ description.title }}
       </div>
       <div ml-36rpx>

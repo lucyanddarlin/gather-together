@@ -26,7 +26,9 @@
       <PublishTag
         filter
         inline
-        :title="ScoreTypeMap[props.description.score_type]"
+        :title="
+          TYPE_NAMES[props.description.post_type][props.description.score_type]
+        "
         color="#FFAF50"
       ></PublishTag>
       <!-- 主办方类型 -->
@@ -65,11 +67,11 @@ import {
   HostTypeMap,
   type IDescription,
   LevelMap,
-  ScoreTypeMap,
   type State,
   StateMap,
   Type,
 } from '@/typings/publisher'
+import { TYPE_NAMES } from '@/utils/publishConstant'
 import PublishTag from './publish-tag.vue'
 const props = defineProps<{
   description: IDescription

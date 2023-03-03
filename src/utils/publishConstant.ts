@@ -25,3 +25,9 @@ export const EVENT_OPTION = [
   { name: '主办方类型', value: HOST },
   { name: '活动类型', value: EVENT },
 ]
+
+export const TYPE_NAMES = [
+  RACE, // 比赛
+  EVENT, // 活动
+  LECTURE, // 讲座
+]

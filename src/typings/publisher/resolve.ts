@@ -151,12 +151,19 @@ export function DescToPostBody(d: IDescription) {
     sponsor_name: d.host,
     sponsor_type: d.host_type,
     regist_info: d.access,
-    score_type: d.score_type,
     pic_count: d.imgs ? d.imgs.length : 0,
     event_type: 0,
     lecture_type: 0,
     race_level: d.race_level ? d.race_level : 0,
     race_type: 0,
+  }
+  // 前期使用了score_type 统一收集类型，这里作转换
+  if (d.post_type === Type.比赛) {
+    p.race_type = d.score_type
+  } else if (d.post_type === Type.讲座) {
+    p.lecture_type = d.score_type
+  } else if (d.post_type === Type.活动) {
+    p.event_type = d.score_type
   }
   return p
 }

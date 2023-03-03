@@ -59,7 +59,7 @@
             placeholder-style="font-weight: 500;font-size: 32rpx;color: #bdbdbd"
             class="input-text"
             :maxlength="value.limit"
-            @input="change($event, key)"
+            @input="change($event, key, value.limit)"
           />
         </view>
 
@@ -71,7 +71,7 @@
             class="input-elastic"
             auto-height
             :maxlength="value.limit"
-            @input="change($event, key)"
+            @input="change($event, key, value.limit)"
           ></textarea>
         </view>
 
@@ -84,7 +84,7 @@
             rows="1"
             class="input-elastic"
             :maxlength="value.limit"
-            @input="change($event, key)"
+            @input="change($event, key, value.limit, true)"
           ></textarea>
         </view>
 
@@ -95,7 +95,7 @@
             placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
             class="input-textarea"
             :maxlength="value.limit"
-            @input="change($event, key)"
+            @input="change($event, key, value.limit)"
           ></textarea>
           <PublishTextCounter
             absolute
@@ -229,7 +229,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import { addMonths, format } from 'date-fns'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
-  HostType,
+  type HostType,
   HostTypeList,
   HostTypeMap,
   type IDescription,
@@ -242,7 +242,6 @@ import {
   type Type,
   TypeMap,
   getEnum,
-  getMap,
   getScoreConstant,
 } from '@/typings/publisher'
 import { DescToPub, PubToDesc } from '@/typings/publisher/resolve'
@@ -352,8 +351,6 @@ const optionsObj = {
       return HostTypeList[host_type]
     }),
     range: Object.values(HostTypeMap),
-    enummer: HostTypeMap,
-    map: HostType,
   },
   score_type: {
     isShow: false,
@@ -363,8 +360,6 @@ const optionsObj = {
       return getEnum(post_type)[publish.value.score_type.value as ScoreType]
     }),
     range: Object.values(getScoreConstant(post_type)),
-    enummer: getEnum(post_type),
-    map: getMap(post_type),
   },
   race_level: {
     isShow: false,
@@ -375,14 +370,18 @@ const optionsObj = {
       return Level[race_level.value as Level]
     }),
     range: Object.values(LevelMap),
-    enummer: Level,
-    map: LevelMap,
   },
 }
 type Options = typeof optionsObj
 const options = ref(optionsObj)
 
-function change(event: any, key: string) {
+function change(event: any, key: string, limit: number, removeEnter = false) {
+  if (removeEnter) {
+    event.target.value = event.target.value.replace(/\n/g, '')
+  }
+  if (event.target.value.length === limit) {
+    showMsg(`最多输入${limit}个字符`)
+  }
   publish.value &&
     ((publish.value[key as keyof Publish] as IField).value =
       event.target.value.trim())

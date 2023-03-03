@@ -26,7 +26,7 @@ import {
 } from '@/api/publisher'
 import { showMsg } from '@/utils/common'
 export const usePublisherStore = defineStore('publisher', () => {
-  const LOAD_PAGES_SIZE = 5
+  const LOAD_PAGES_SIZE = 8
   const current_desc = ref<IDescription>()
   const cur_type = ref<'' | keyof typeof Type>('')
   const types = [
@@ -77,21 +77,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     const arr_desc: Array<IDescription> = result
       .map((item) => GetPublishToDesc(item))
       .filter((item) => item.state !== State.Delete)
-    // 因为State.Delete被过滤，能显示的不一定是LOAD_PAGES_SIZE个
-    // 这时，若下一页还有，且本页数量不够LOAD_PAGES_SIZE，则继续请求，保证onReachBottom能够正常触发
-    // while (arr_desc.length < LOAD_PAGES_SIZE) {
-    //   // 请求下一页
-    //   const page = await reqGetPublish(t.pages, LOAD_PAGES_SIZE, id, {})
-    //   // 没有下一页了
-    //   if (page.data.body.length === 0) break
-    //   // 有下一页，把请求到的push到数组
-    //   arr_desc.push(
-    //     ...page.data.body
-    //       .map((item) => GetPublishToDesc(item))
-    //       .filter((item) => item.state !== State.Delete)
-    //   )
-    //   t.pages++
-    // }
     descriptions[TypeMap[post_type as keyof typeof Type]].push(...arr_desc)
     publish[TypeMap[post_type as keyof typeof Type]] = descriptions[
       TypeMap[post_type as keyof typeof Type]
@@ -168,9 +153,12 @@ export const usePublisherStore = defineStore('publisher', () => {
             uni.navigateBack()
             return
           }
+          // 更新收到的post_id
           description.post_id = post_id
-          descriptions[description.post_type].push(description)
-          publish[description.post_type].push(p)
+          // 更新帖子的状态，后面可根据返回信息定义帖子状态，如有图片则进入审核状态等等
+          description.state = State.Publish
+          descriptions[description.post_type].unshift(description)
+          publish[description.post_type].unshift(p)
           console.log('publish', publish[description.post_type])
           console.log('description', descriptions[description.post_type])
           uni.navigateBack()
@@ -217,10 +205,13 @@ export const usePublisherStore = defineStore('publisher', () => {
     console.log('selections', selections)
     // 空字符串即未选
     const body: BodyFilter = {}
-    Object.values(selections).forEach((key: string) => {
-      // 公有
+
+    for (const [key, value] of Object.entries(selections)) {
+      if (value === '') continue
       if (key === 'host_type') {
+        console.log('key', key)
         body.sponsor_type = selections[key]
+        console.log('赋值后', body)
       }
       // 公有，但是类型不同使用不同命名
       if (key === 'score_type') {
@@ -232,7 +223,7 @@ export const usePublisherStore = defineStore('publisher', () => {
       if (key === 'race_level') {
         body[key as keyof BodyFilter] = selections[key]
       }
-    })
+    }
     console.log('body', body)
     return body
   }

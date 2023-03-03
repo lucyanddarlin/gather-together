@@ -122,13 +122,13 @@ export function getEnum(post_type: keyof typeof Type) {
   }
 }
 
-export function getMap(post_type: keyof typeof Type) {
-  switch (post_type) {
-    case '比赛':
+export function getMap(type: Type) {
+  switch (type) {
+    case Type.比赛:
       return MatchTypeMap
-    case '讲座':
+    case Type.讲座:
       return LectureTypeMap
-    case '活动':
+    case Type.活动:
       return ActivityTypeMap
     default:
       return MatchTypeMap
@@ -374,7 +374,6 @@ export interface PostBody {
   start_time: string
   post_type: number
   sponsor_name: string
-  score_type: number
   detail: string
   location: string
   race_level: number

@@ -9,6 +9,8 @@
         <view
           class="btn"
           :class="index === selected ? 'selected' : 'unselected'"
+          transition-color
+          duration-300
           @tap="handleClick(props.title, index)"
         >
           <view>
