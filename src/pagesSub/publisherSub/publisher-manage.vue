@@ -1,5 +1,4 @@
 <template>
-  <PublishNavbar :title="publisherStore.cur_type + '管理'"></PublishNavbar>
   <view class="bg" pt-12rpx>
     <view flex items-center justify-between>
       <view flex justify-start h-72rpx w-584rpx pl-28rpx class="bar">
@@ -92,7 +91,6 @@ import GatherPublishButton from '@/pages/gather/components/gather-publishButton.
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
-import PublishNavbar from './components/publish-navbar.vue'
 type PostType = keyof typeof Type
 const publisherStore = usePublisherStore()
 const post_type = publisherStore.cur_type as PostType
@@ -102,6 +100,11 @@ const list = reactive({
 console.log('description', publisherStore.descriptions[TypeMap[post_type]])
 console.log('list', list.value)
 console.log('publish', publisherStore.publish[TypeMap[post_type]])
+
+// 设置标题
+uni.setNavigationBarTitle({
+  title: `${publisherStore.cur_type}管理`,
+})
 
 onLoad(() => {
   publisherStore.loadPage(post_type, selections)

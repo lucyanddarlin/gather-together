@@ -90,19 +90,19 @@
         {
           "path": "publisherSub/publisher-manage",
           "style": {
-            "navigationStyle": "custom"
+            "navigationBarTitleText": "管理"
           }
         },
         {
           "path": "publisherSub/publisher-detail",
           "style": {
-            "navigationStyle": "custom"
+            "navigationBarTitleText": "详情"
           }
         },
         {
           "path": "publisherSub/publisher-publish",
           "style": {
-            "navigationStyle": "custom"
+            "navigationBarTitleText": "发布帖子"
           }
         },
         {

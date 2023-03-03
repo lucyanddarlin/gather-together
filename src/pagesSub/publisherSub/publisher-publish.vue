@@ -1,8 +1,4 @@
 <template>
-  <PublishNavbar
-    left
-    :title="(isPublish ? '发布' : '编辑') + publisherStore.cur_type"
-  ></PublishNavbar>
   <view v-if="publish" relative class="bg">
     <view
       v-for="[key, value] in Object.entries(publish)"
@@ -254,7 +250,6 @@ import { showMsg } from '@/utils/common'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
 import PublishTextCounter from './components/publish-text-counter.vue'
-import PublishNavbar from './components/publish-navbar.vue'
 
 const id = ref('')
 const publisherStore = usePublisherStore()
@@ -271,6 +266,14 @@ const params = {
   minute: true,
   second: false,
 }
+// 判断是否是新的发布
+const isPublish = computed(() => {
+  return (
+    description.value &&
+    description.value.state === State.Create &&
+    description.value.post_id === 0
+  )
+})
 
 if (!publish.value) {
   uni.showLoading({
@@ -284,6 +287,9 @@ watch(
   () => publish.value,
   (newVal: Publish | undefined) => {
     if (newVal) {
+      uni.setNavigationBarTitle({
+        title: (isPublish.value ? '发布' : '编辑') + publisherStore.cur_type,
+      })
       uni.hideLoading()
     }
   }
@@ -375,15 +381,6 @@ const optionsObj = {
 }
 type Options = typeof optionsObj
 const options = ref(optionsObj)
-
-// 判断是否是新的发布
-const isPublish = computed(() => {
-  return (
-    description.value &&
-    description.value.state === State.Create &&
-    description.value.post_id === 0
-  )
-})
 
 function change(event: any, key: string) {
   publish.value &&

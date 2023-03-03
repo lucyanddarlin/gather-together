@@ -1,6 +1,5 @@
 <template>
   <div>
-    <PublishNavbar left :title="publisherStore.cur_type + '管理'" />
     <div v-if="description" relative>
       <u-icon absolute top-20rpx right-24rpx name="more-dot-fill"></u-icon>
       <div mt-4rpx ml-36rpx text-56rpx fw-600>
@@ -153,6 +152,14 @@ import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
 const id = ref('')
 const description = ref<IDescription | undefined>()
+const isOmitted = ref(true)
+const publisherStore = usePublisherStore()
+type PostType = keyof typeof Type
+const post_type: PostType = publisherStore.cur_type as PostType
+// 设置标题
+uni.setNavigationBarTitle({
+  title: `${publisherStore.cur_type}管理`,
+})
 
 // 显示加载
 if (!description.value) {
@@ -189,10 +196,6 @@ onBeforeMount(() => {
     uni.redirectTo({ url: './publisher-type' })
   }
 })
-const isOmitted = ref(true)
-const publisherStore = usePublisherStore()
-type PostType = keyof typeof Type
-const post_type: PostType = publisherStore.cur_type as PostType
 
 function copyAccess() {
   uni.setClipboardData({
