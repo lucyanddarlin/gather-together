@@ -5,16 +5,16 @@
       <span class="sub-title"> 单选 </span>
     </view>
     <view grid grid-cols-3 gap-x-40rpx gap-y-12rpx>
-      <view v-for="(name, index) in options" :key="props.title + name" ml-20rpx>
+      <view v-for="(label, index) in options" :key="index" ml-20rpx>
         <view
           class="btn"
-          :class="index === selected ? 'selected' : 'unselected'"
+          :class="label.isSelected ? 'selected' : 'unselected'"
           transition-color
           duration-300
-          @tap="handleClick(props.title, index)"
+          @tap="handleClickLabel(label, options)"
         >
           <view>
-            {{ name }}
+            {{ label.value }}
           </view>
         </view>
       </view>
@@ -23,37 +23,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import type { LabelItem } from '@/typings/publisher'
 
 const props = defineProps<{
   title: string
-  options: Array<string>
-  func: Function
-  checkedAll: boolean
+  options: Array<LabelItem>
+  multiSelect?: boolean
 }>()
-const selected = ref()
 
-// 响应重置
-watch(
-  () => props.checkedAll,
-  (newVal: boolean) => {
-    if (!newVal) {
-      selected.value = undefined
-    }
-  }
-)
-
-const handleClick = (title: string, value: number) => {
-  if (value === selected.value) {
-    // 取消选择
-    selected.value = undefined
-    props.func(title, '')
-    console.log('取消选择')
-  } else {
-    // 选中
-    selected.value = value
-    props.func(title, value)
-  }
+const handleClickLabel = (label: LabelItem, list: LabelItem[]) => {
+  if (!props.multiSelect) list.forEach((item) => (item.isSelected = false))
+  label.isSelected = !label.isSelected
 }
 </script>
 

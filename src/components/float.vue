@@ -33,12 +33,19 @@ const props = defineProps<{
   type: number
   scrollValue: number
   isShowPopup?: boolean
+  url?: string
 }>()
 const emit = defineEmits(['backToTop'])
 const handleLinkToPublish = () => {
   if (props.type === HOME) {
     uni.navigateTo({
       url: '/pagesSub/publishPage/index',
+    })
+    return
+  }
+  if (props.url) {
+    uni.navigateTo({
+      url: props.url,
     })
   }
 }

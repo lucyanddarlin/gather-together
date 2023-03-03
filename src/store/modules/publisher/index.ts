@@ -6,7 +6,6 @@ import {
   type IDescription,
   type IPublish,
   type Publish,
-  type Selector,
   State,
   Type,
   TypeMap,
@@ -62,12 +61,12 @@ export const usePublisherStore = defineStore('publisher', () => {
   })
 
   // 加载页面
-  async function loadPage(post_type: string, selections: Selector) {
+  async function loadPage(post_type: string, body: BodyFilter) {
     const t = types.find((item) => item.type === post_type)
     if (!t) return
+    console.log('body', body)
     const nextPage = t.pages // 当前需要请求的页
     const id = Number.parseInt(t.id)
-    const body: BodyFilter = getBodyFilter(post_type, selections)
     const page = await reqGetPublish(nextPage, LOAD_PAGES_SIZE, id, body)
     console.log('page', page)
     const result: Array<GetPublish> = page.data.body.result
@@ -198,34 +197,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     const type: Type = TypeMap[post_type as keyof typeof Type]
     descriptions[type].splice(0)
     publish[type].splice(0)
-  }
-
-  function getBodyFilter(post_type: string, selections: Selector): BodyFilter {
-    // 收集已经被选中的筛选项
-    console.log('selections', selections)
-    // 空字符串即未选
-    const body: BodyFilter = {}
-
-    for (const [key, value] of Object.entries(selections)) {
-      if (value === '') continue
-      if (key === 'host_type') {
-        console.log('key', key)
-        body.sponsor_type = selections[key]
-        console.log('赋值后', body)
-      }
-      // 公有，但是类型不同使用不同命名
-      if (key === 'score_type') {
-        if (post_type === '比赛') body.race_type = selections[key]
-        else if (post_type === '活动') body.event_type = selections[key]
-        else if (post_type === '讲座') body.lecture_type = selections[key]
-      }
-      // 专有
-      if (key === 'race_level') {
-        body[key as keyof BodyFilter] = selections[key]
-      }
-    }
-    console.log('body', body)
-    return body
   }
 
   return {

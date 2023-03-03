@@ -10,7 +10,7 @@
         <PublishTag
           filter
           inline
-          :title="ScoreTypeMap[description.score_type]"
+          :title="TYPE_NAMES[description.post_type][description.score_type]"
           color="#FFAF50"
         ></PublishTag>
         <!-- 主办方类型 -->
@@ -87,7 +87,7 @@
         <!-- 报名方式 -->
         <div relative>
           <div color="#4D4D4D" text-36rpx mt-52rpx fw-600>报名方式</div>
-          <div color="#A4A4A4" text-32rpx px-36rpx mt-36rpx>
+          <div color="#A4A4A4" text-32rpx px-36rpx mt-36rpx select-text>
             {{ description.access }}
           </div>
           <PublishTag
@@ -143,11 +143,11 @@ import {
   HostTypeMap,
   type IDescription,
   LevelMap,
-  ScoreTypeMap,
   StateMap,
   Type,
   TypeMap,
 } from '@/typings/publisher'
+import { TYPE_NAMES } from '@/utils/publishConstant'
 import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
 const id = ref('')

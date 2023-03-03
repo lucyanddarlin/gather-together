@@ -28,6 +28,6 @@ export const EVENT_OPTION = [
 
 export const TYPE_NAMES = [
   RACE, // 比赛
-  EVENT, // 活动
   LECTURE, // 讲座
+  EVENT, // 活动
 ]

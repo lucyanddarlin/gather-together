@@ -25,17 +25,20 @@
       cursor-pointer
       @tap="handleClick(item.post_id)"
     />
-    <GatherPublishButton fixed top-1000rpx right-40rpx @tap="handleCreate" />
+    <Float :is-show-popup="false" :type="4" url="./publisher-publish?id=0">
+    </Float>
+    <!-- <GatherPublishButton fixed top-1000rpx right-40rpx @tap="handleCreate" /> -->
   </view>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
     <div mx-32rpx relative>
-      <div v-for="option in getFilter(post_type)" :key="option.name">
+      <div
+        v-for="(option, index) in filterData.map"
+        :key="index + option.title"
+      >
         <PublishRadioGroup
-          :title="option.name"
-          :options="option.value"
-          :func="handleRadioChange"
-          :checked-all="checked"
+          :title="option.title"
+          :options="option.list"
         ></PublishRadioGroup>
       </div>
     </div>
@@ -51,7 +54,7 @@
           color="#fff"
           bg-color="#73B297"
           rounded="12rpx"
-          @tap="filter"
+          @tap="handleConfirmFilter"
         ></PublishButton>
         <PublishButton
           w-324rpx
@@ -61,7 +64,7 @@
           color="#fff"
           bg-color="#FF6969"
           rounded="12rpx"
-          @tap="resetFilter"
+          @tap="handleResetFilter"
         ></PublishButton>
       </div>
     </div>
@@ -71,15 +74,12 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { onLoad, onReachBottom, onUnload } from '@dcloudio/uni-app'
+import { deepClone } from '@/utils/common'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
-  HostType,
-  type IDescription,
-  Level,
-  ScoreType,
-  type Selector,
-  State,
-  Type,
+  type BodyFilter,
+  type FilterPopupData,
+  type Type,
   TypeMap,
 } from '@/typings/publisher'
 import {
@@ -87,15 +87,29 @@ import {
   LECTURE_OPTION,
   RACE_OPTION,
 } from '@/utils/publishConstant'
-import GatherPublishButton from '@/pages/gather/components/gather-publishButton.vue'
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
 type PostType = keyof typeof Type
+
 const publisherStore = usePublisherStore()
 const post_type = publisherStore.cur_type as PostType
 const list = reactive({
   value: publisherStore.descriptions[TypeMap[post_type]],
+})
+const filterData = reactive<FilterPopupData>({
+  map: getFilter(post_type).map((group) => {
+    return {
+      title: group.name,
+      list: deepClone(
+        group.value.map((item) => {
+          return { value: item }
+        })
+      ),
+    }
+  }),
+  resultKey: getKeys(),
+  result: {},
 })
 console.log('description', publisherStore.descriptions[TypeMap[post_type]])
 console.log('list', list.value)
@@ -107,7 +121,7 @@ uni.setNavigationBarTitle({
 })
 
 onLoad(() => {
-  publisherStore.loadPage(post_type, selections)
+  publisherStore.loadPage(post_type, getBody())
 })
 
 onUnload(() => {
@@ -116,62 +130,34 @@ onUnload(() => {
 
 onReachBottom(() => {
   console.log('reach bottom')
-  publisherStore.loadPage(post_type, selections)
+  publisherStore.loadPage(post_type, getBody())
 })
 
 const cur_area = ref('广州大学分区')
-
-const checked = ref(false)
 
 const handleClick = (id: number) => {
   uni.navigateTo({ url: `./publisher-detail?id=${id}` })
 }
 
-const handleCreate = () => {
-  const description: IDescription = {
-    post_id: 0,
-    title: '',
-    start_time: new Date(),
-    end_time: new Date(),
-    state: State.Create,
-    host: '',
-    host_type: HostType.学校,
-    location: '',
-    race_level: Level.院校级,
-    post_type: Type.比赛,
-    score_type: ScoreType.科技学术,
-    access: '',
-    description: '',
-  }
-  publisherStore.current_desc = description
-  uni.navigateTo({
-    url: `./publisher-publish?id=${description.post_id}`,
-  })
-}
 const show = ref(false)
 
-const selections: Selector = {
-  host_type: '',
-  race_level: '',
-  score_type: '',
-}
 const handleFilter = () => {
   show.value = true
 }
 
-function handleRadioChange(title: string, value: number) {
-  // 选择的不为空字符串则设置为“有选项被勾选”状态
-  if (title) checked.value = true
-  if (title === '主办方类型') {
-    selections.host_type = `${value}`
-  }
-  if (title === '比赛级别') {
-    selections.race_level = `${value}`
-  }
-  if (title.slice(2, 4) === '类型') {
-    selections.score_type = `${value}`
-  }
-  console.log('selections', selections)
+// 遍历收集result的逻辑单独抽离
+function getBody(): BodyFilter {
+  // 清空
+  filterData.result = {}
+  // 收集
+  filterData.map.forEach((group, group_index) => {
+    // 单选逻辑，如果多选需定义数组
+    const index: number = group.list.findIndex((item) => item.isSelected)
+    if (index === -1) return
+    const key: string = filterData.resultKey[group_index]
+    filterData.result[key] = index
+  })
+  return filterData.result
 }
 
 function getFilter(post_type: string) {
@@ -187,18 +173,31 @@ function getFilter(post_type: string) {
   }
 }
 
-function filter() {
+// 获取后端需要的键值
+function getKeys(): Array<string> {
+  switch (post_type) {
+    case '比赛':
+      return ['sponsor_type', 'race_type', 'race_level']
+    case '讲座':
+      return ['sponsor_type', 'lecture_type']
+    case '活动':
+      return ['sponsor_type', 'event_type']
+  }
+}
+
+function handleConfirmFilter() {
   publisherStore.resetPage(post_type)
-  publisherStore.loadPage(post_type, selections)
+  publisherStore.loadPage(post_type, getBody())
   show.value = false
 }
 
-function resetFilter() {
+function handleResetFilter() {
   list.value = publisherStore.descriptions[TypeMap[post_type]]
-  Object.keys(selections).forEach((key) => {
-    selections[key as string] = ''
+  filterData.map.forEach((group) => {
+    group.list.forEach((item) => (item.isSelected = false))
   })
-  checked.value = false
+  // 以防万一后来维护没有调用getBody
+  filterData.result = {}
 }
 </script>
 

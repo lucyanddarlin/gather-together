@@ -435,7 +435,23 @@ export type BodyFilter = {
   race_level?: string
 }
 
-export type Selector = Record<string, string>
+export interface LabelItem {
+  value: string
+  isSelected?: boolean
+}
+
+export interface FilterPopupDataItem {
+  title: string
+  list: Array<LabelItem>
+}
+
+export interface FilterPopupData {
+  resultKey: Array<string>
+  result: {
+    [key: string]: number
+  }
+  map: Array<FilterPopupDataItem>
+}
 
 export interface OSSPostPolicyResult {
   accessKeyId: string
