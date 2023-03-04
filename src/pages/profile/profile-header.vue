@@ -45,6 +45,7 @@ const handleLogin = async () => {
 <style lang="scss">
 .profile-header {
   .avatar {
+    overflow: hidden;
     $pic-wid-he: 120rpx;
     width: $pic-wid-he;
     height: $pic-wid-he;
@@ -53,7 +54,7 @@ const handleLogin = async () => {
     .image {
       width: $pic-wid-he;
       height: $pic-wid-he;
-      border: 50%;
+      border-radius: 50%;
     }
   }
   // .username {
