@@ -188,7 +188,7 @@ function getFilter(post_type: string) {
 function getKeys(): Array<string> {
   switch (post_type) {
     case '比赛':
-      return ['sponsor_type', 'race_type', 'race_level']
+      return ['sponsor_type', 'race_level', 'race_type']
     case '讲座':
       return ['sponsor_type', 'lecture_type']
     case '活动':

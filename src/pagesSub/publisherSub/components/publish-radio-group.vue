@@ -32,8 +32,11 @@ const props = defineProps<{
 }>()
 
 const handleClickLabel = (label: LabelItem, list: LabelItem[]) => {
+  console.log(props.multiSelect, label.isSelected)
+  const isSelected = label.isSelected
   if (!props.multiSelect) list.forEach((item) => (item.isSelected = false))
-  label.isSelected = !label.isSelected
+  label.isSelected = !isSelected
+  console.log('label.isSelected', label.isSelected)
 }
 </script>
 
