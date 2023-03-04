@@ -150,6 +150,12 @@ export class Publish implements IPublish {
   access: IField
   description: IField
   imgs?: IField
+  get entries(): [keyof IPublish, IField | State | number | undefined][] {
+    return Object.entries(this) as [
+      keyof IPublish,
+      IField | State | number | undefined
+    ][]
+  }
   constructor(type: string) {
     this.title = {
       title: `${type}名称`,

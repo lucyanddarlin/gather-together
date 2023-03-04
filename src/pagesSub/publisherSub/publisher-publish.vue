@@ -1,11 +1,7 @@
 <template>
   <view v-if="publish" relative class="bg">
-    <view
-      v-for="[key, value] in Object.entries(publish)"
-      :key="hash(key)"
-      pl-38rpx
-    >
-      <view v-if="value.type">
+    <view v-for="[key, value] in publish.entries" :key="hash(key)" pl-38rpx>
+      <view v-if="value instanceof Object && value.type">
         <view v-if="key === 'start_time'" pt-48rpx pb-32rpx class="title"
           >报名日期</view
         >
@@ -53,55 +49,55 @@
 
         <view v-if="value.type === 'text'" mt-36rpx>
           <input
-            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :value="(value.value as string)"
             type="text"
             :placeholder="value.placeholder"
             placeholder-style="font-weight: 500;font-size: 32rpx;color: #bdbdbd"
             class="input-text"
             :maxlength="value.limit"
-            @input="change($event, key, value.limit)"
+            @input="value.limit && change($event, key, value.limit)"
           />
         </view>
 
         <view v-if="value.type === 'text_elastic'" relative>
           <textarea
-            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :value="(value.value as string)"
             :placeholder="value.placeholder"
             placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
             class="input-elastic"
             auto-height
             :maxlength="value.limit"
-            @input="change($event, key, value.limit)"
+            @input="value.limit && change($event, key, value.limit)"
           ></textarea>
         </view>
 
         <view v-if="value.type === 'text_no_enter'" relative>
           <textarea
-            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :value="(value.value as string)"
             :placeholder="value.placeholder"
             placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
             auto-height
             rows="1"
             class="input-elastic"
             :maxlength="value.limit"
-            @input="change($event, key, value.limit, true)"
+            @input="value.limit && change($event, key, value.limit, true)"
           ></textarea>
         </view>
 
         <view v-if="value.type === 'textarea'" relative>
           <textarea
-            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :value="(value.value as string)"
             :placeholder="value.placeholder"
             placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
             class="input-textarea"
             :maxlength="value.limit"
-            @input="change($event, key, value.limit)"
+            @input="value.limit && change($event, key, value.limit)"
           ></textarea>
           <PublishTextCounter
             absolute
             right-54rpx
             bottom-12rpx
-            :cur="((publish[key as keyof Publish] as IField).value as string).length"
+            :cur="(value.value as string).length"
             :max="2000"
           />
         </view>
@@ -161,7 +157,7 @@
         <!-- 图片 -->
         <view v-if="value.type === 'imgs'">
           <u-upload
-            :file-list="getList((publish[key as keyof Publish] as IField).value as string[]) || []"
+            :file-list="getList(value.value as string[] || [])"
             width="162rpx"
             height="162rpx"
             max-count="9"
