@@ -31,3 +31,5 @@ export const TYPE_NAMES = [
   LECTURE, // 讲座
   EVENT, // 活动
 ]
+
+export const TYPE_LIST = ['比赛', '讲座', '活动']

@@ -8,7 +8,6 @@ import {
   type Publish,
   State,
   Type,
-  TypeMap,
 } from '@/typings/publisher'
 import {
   DescToChangeBody,
@@ -24,10 +23,11 @@ import {
   reqPostPublish,
 } from '@/api/publisher'
 import { showMsg } from '@/utils/common'
+import { TYPE_LIST } from '@/utils/publishConstant'
 export const usePublisherStore = defineStore('publisher', () => {
   const LOAD_PAGES_SIZE = 8
   const current_desc = ref<IDescription>()
-  const cur_type = ref<'' | keyof typeof Type>('')
+  const cur_type = ref<Type>(0)
   const types = [
     {
       id: '0',
@@ -61,8 +61,8 @@ export const usePublisherStore = defineStore('publisher', () => {
   })
 
   // 加载页面
-  async function loadPage(post_type: string, body: BodyFilter) {
-    const t = types.find((item) => item.type === post_type)
+  async function loadPage(body: BodyFilter) {
+    const t = types.find((item) => item.type === TYPE_LIST[cur_type.value])
     if (!t) return
     console.log('body', body)
     const nextPage = t.pages // 当前需要请求的页
@@ -76,10 +76,10 @@ export const usePublisherStore = defineStore('publisher', () => {
     const arr_desc: Array<IDescription> = result
       .map((item) => GetPublishToDesc(item))
       .filter((item) => item.state !== State.Delete)
-    descriptions[TypeMap[post_type as keyof typeof Type]].push(...arr_desc)
-    publish[TypeMap[post_type as keyof typeof Type]] = descriptions[
-      TypeMap[post_type as keyof typeof Type]
-    ].map((item) => DescToPub(item, post_type))
+    descriptions[cur_type.value].push(...arr_desc)
+    publish[cur_type.value] = descriptions[cur_type.value].map((item) =>
+      DescToPub(item, TYPE_LIST[cur_type.value])
+    )
   }
 
   // 创建发布
@@ -137,8 +137,8 @@ export const usePublisherStore = defineStore('publisher', () => {
     })
   }
 
-  function update(p: Publish, post_type: string) {
-    const description = PubToDesc(p, post_type)
+  function update(p: Publish) {
+    const description = PubToDesc(p, cur_type.value)
     const index = descriptions[description.post_type].findIndex(
       (d) => d.post_id === p.post_id
     )
@@ -194,9 +194,8 @@ export const usePublisherStore = defineStore('publisher', () => {
     // 重置页数
     t.pages = 0
     // 清空描述页面和发布页面
-    const type: Type = TypeMap[post_type as keyof typeof Type]
-    descriptions[type].splice(0)
-    publish[type].splice(0)
+    descriptions[cur_type.value].splice(0)
+    publish[cur_type.value].splice(0)
   }
 
   return {

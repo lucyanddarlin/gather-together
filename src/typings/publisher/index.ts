@@ -19,38 +19,26 @@ export const StateMap = {
 }
 
 export enum Type {
-  比赛 = 0,
-  讲座 = 1,
-  活动 = 2,
-}
-
-export const TypeMap = {
-  比赛: Type.比赛,
-  讲座: Type.讲座,
-  活动: Type.活动,
+  比赛,
+  讲座,
+  活动,
 }
 
 export enum Level {
-  院校级 = 0,
-  地方级 = 1,
-  国家级 = 2,
-}
-
-export const LevelMap = {
-  [Level.院校级]: '院校级',
-  [Level.地方级]: '地方级',
-  [Level.国家级]: '国家级',
+  院校级,
+  地方级,
+  国家级,
 }
 
 export enum ScoreType {
   // TODO: 使用了api的得分类型作为代替，发送int32，接口升级后需要更改
-  创新创业 = 0,
-  人文社科 = 1,
-  科技学术 = 2,
-  艺术人文 = 3,
-  创新创业类 = 4,
-  公益类 = 5,
-  科技类 = 6,
+  创新创业,
+  人文社科,
+  科技学术,
+  艺术人文,
+  创新创业类,
+  公益类,
+  科技类,
   文体类 = 7,
   思政教育类 = 8,
   综合类 = 9,
@@ -61,23 +49,12 @@ export enum MatchType {
   人文社科 = 2,
 }
 
-export const MatchTypeMap = {
-  [MatchType.创新创业]: '创新创业',
-  [MatchType.人文社科]: '人文社科',
-  [MatchType.科技学术]: '科技学术',
-}
-
 export enum LectureType {
   创新创业 = 0,
   艺术人文 = 1,
   科技学术 = 2,
 }
 
-export const LectureTypeMap = {
-  [LectureType.创新创业]: '创新创业',
-  [LectureType.科技学术]: '科技学术',
-  [LectureType.艺术人文]: '艺术人文',
-}
 export enum ActivityType {
   创新创业类 = 0,
   公益类 = 1,
@@ -87,92 +64,11 @@ export enum ActivityType {
   综合类 = 5,
 }
 
-export const ActivityTypeMap = {
-  [ActivityType.创新创业类]: '创新创业类',
-  [ActivityType.公益类]: '公益类',
-  [ActivityType.科技类]: '科技类',
-  [ActivityType.文体类]: '文体类',
-  [ActivityType.思政教育类]: '思政教育类',
-  [ActivityType.综合类]: '综合类',
-}
-
-export const ScoreTypeMap = {
-  [ScoreType.创新创业]: '创新创业',
-  [ScoreType.人文社科]: '人文社科',
-  [ScoreType.科技学术]: '科技学术',
-  [ScoreType.艺术人文]: '艺术人文',
-  [ScoreType.创新创业类]: '创新创业类',
-  [ScoreType.公益类]: '公益类',
-  [ScoreType.科技类]: '科技类',
-  [ScoreType.文体类]: '文体类',
-  [ScoreType.思政教育类]: '思政教育类',
-  [ScoreType.综合类]: '综合类',
-}
-
-export function getEnum(post_type: keyof typeof Type) {
-  switch (post_type) {
-    case '比赛':
-      return MatchType
-    case '讲座':
-      return LectureType
-    case '活动':
-      return ActivityType
-    default:
-      return MatchType
-  }
-}
-
-export function getMap(type: Type) {
-  switch (type) {
-    case Type.比赛:
-      return MatchTypeMap
-    case Type.讲座:
-      return LectureTypeMap
-    case Type.活动:
-      return ActivityTypeMap
-    default:
-      return MatchTypeMap
-  }
-}
-
-export function getScoreConstant(post_type: keyof typeof Type) {
-  switch (post_type) {
-    case '比赛':
-      return {
-        [MatchType.创新创业]: '创新创业',
-        [MatchType.科技学术]: '科技学术',
-        [MatchType.人文社科]: '人文社科',
-      }
-    case '活动':
-      return {
-        [ActivityType.创新创业类]: '创新创业类',
-        [ActivityType.公益类]: '公益类',
-        [ActivityType.科技类]: '科技类',
-        [ActivityType.文体类]: '文体类',
-        [ActivityType.思政教育类]: '思政教育类',
-        [ActivityType.综合类]: '综合类',
-      }
-    case '讲座':
-      return {
-        [LectureType.创新创业]: '创新创业',
-        [LectureType.艺术人文]: '艺术人文',
-        [LectureType.科技学术]: '科技学术',
-      }
-  }
-}
-
 export enum HostType {
   政府 = 0,
   组织机构 = 1,
   学校 = 2,
 }
-
-export const HostTypeMap = {
-  [HostType.政府]: '政府',
-  [HostType.组织机构]: '组织机构',
-  [HostType.学校]: '学校',
-}
-export const HostTypeList = ['政府', '组织机构', '学校']
 export interface ITag {
   title: string
   color: string

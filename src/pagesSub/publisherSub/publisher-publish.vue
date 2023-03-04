@@ -2,7 +2,7 @@
   <view v-if="publish" relative class="bg">
     <view
       v-for="[key, value] in Object.entries(publish)"
-      :key="key + value.title"
+      :key="hash(key)"
       pl-38rpx
     >
       <view v-if="value.type">
@@ -229,23 +229,16 @@ import { onLoad } from '@dcloudio/uni-app'
 import { addMonths, format } from 'date-fns'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
-  type HostType,
-  HostTypeList,
-  HostTypeMap,
   type IDescription,
   type IField,
   Level,
-  LevelMap,
   type Publish,
-  type ScoreType,
   State,
   type Type,
-  TypeMap,
-  getEnum,
-  getScoreConstant,
 } from '@/typings/publisher'
+import { HOST, LEVEL, TYPE_LIST, TYPE_NAMES } from '@/utils/publishConstant'
 import { DescToPub, PubToDesc } from '@/typings/publisher/resolve'
-import { showMsg } from '@/utils/common'
+import { hash, showMsg } from '@/utils/common'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
 import PublishTextCounter from './components/publish-text-counter.vue'
@@ -253,8 +246,8 @@ import PublishTextCounter from './components/publish-text-counter.vue'
 const id = ref('')
 const publisherStore = usePublisherStore()
 
-type PostType = keyof typeof Type
-const post_type = publisherStore.cur_type as PostType
+const type: Type = publisherStore.cur_type
+const post_type: string = TYPE_LIST[type]
 const description = ref<IDescription | undefined>()
 const publish = ref<Publish>()
 const params = {
@@ -286,9 +279,6 @@ watch(
   () => publish.value,
   (newVal: Publish | undefined) => {
     if (newVal) {
-      uni.setNavigationBarTitle({
-        title: (isPublish.value ? '发布' : '编辑') + publisherStore.cur_type,
-      })
       uni.hideLoading()
     }
   }
@@ -302,13 +292,17 @@ onLoad((options) => {
   console.log('options', options)
 
   id.value = options.id
-  description.value = publisherStore.descriptions[TypeMap[post_type]]?.find(
+  description.value = publisherStore.descriptions[type]?.find(
     (item) => `${item.post_id}` === id.value
   )
   publish.value = DescToPub(description.value, post_type)
   if (description.value === undefined) {
-    description.value = PubToDesc(publish.value, post_type)
+    description.value = PubToDesc(publish.value, type)
   }
+  // 设置标题
+  uni.setNavigationBarTitle({
+    title: (isPublish.value ? '发布' : '编辑') + post_type,
+  })
   console.log('publish.value', publish.value)
   console.log('description.value', description.value)
 })
@@ -347,19 +341,18 @@ const optionsObj = {
     isShow: false,
     value: computed(() => {
       if (publish.value?.host_type.value === undefined) return `主办方类型`
-      const host_type: HostType = publish.value.host_type.value as HostType
-      return HostTypeList[host_type]
+      return HOST[publish.value.host_type.value as number]
     }),
-    range: Object.values(HostTypeMap),
+    range: HOST,
   },
   score_type: {
     isShow: false,
     value: computed(() => {
       if (publish.value?.score_type.value === undefined)
         return `请选择${post_type}类型`
-      return getEnum(post_type)[publish.value.score_type.value as ScoreType]
+      return TYPE_NAMES[type][publish.value.score_type.value as number]
     }),
-    range: Object.values(getScoreConstant(post_type)),
+    range: TYPE_NAMES[type],
   },
   race_level: {
     isShow: false,
@@ -369,7 +362,7 @@ const optionsObj = {
         return `请选择${post_type}级别`
       return Level[race_level.value as Level]
     }),
-    range: Object.values(LevelMap),
+    range: LEVEL,
   },
 }
 type Options = typeof optionsObj
@@ -423,6 +416,7 @@ function chooseImage(lists: Object, key: string) {
 }
 
 function save() {
+  if (!publish.value) return
   const not_filled: string | undefined =
     publish.value && publish.value.getWhatToFill(post_type)
   // 有未填写的字段（即返回值不为''）
@@ -433,7 +427,7 @@ function save() {
     })
     return
   }
-  publisherStore.update(publish.value as Publish, post_type)
+  publisherStore.update(publish.value)
 }
 
 function getList(urls: Array<string> | undefined) {

@@ -1,11 +1,11 @@
 <template>
-  <view v-for="item in types" :key="item.id" class="wrapper">
+  <view v-for="(item, index) in types" :key="item.id" class="wrapper">
     <PublishItem
       :title="`${item.type}管理`"
       height="82rpx"
       color="#000"
       font-size="32rpx"
-      @tap="handleClick(item)"
+      @tap="handleClick(index)"
     />
   </view>
 </template>
@@ -15,8 +15,8 @@ import PublishItem from './components/publish-item.vue'
 const publisherStore = usePublisherStore()
 const types = publisherStore.types
 
-const handleClick = (item: any) => {
-  publisherStore.cur_type = item.type
+const handleClick = (type: number) => {
+  publisherStore.cur_type = type
   uni.navigateTo({ url: `./publisher-manage` })
 }
 </script>

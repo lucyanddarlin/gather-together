@@ -17,7 +17,7 @@
         <PublishTag
           filter
           inline
-          :title="HostTypeMap[description.host_type]"
+          :title="HOST[description.host_type]"
           color="#FFAF50"
         ></PublishTag>
         <!-- 比赛级别（比赛特有） -->
@@ -27,7 +27,7 @@
           inline
           :title="
             description.race_level !== undefined
-              ? LevelMap[description.race_level]
+              ? LEVEL[description.race_level]
               : '未分级'
           "
           color="#FFAF50"
@@ -54,7 +54,7 @@
         <div text-36rpx mt-52rpx fw-600>{{ post_type }}详情</div>
         <!-- TODO: 插入图片 -->
         <div grid grid-cols-3 gap-x-20rpx color="#A4A4A4" pl-36rpx mt-36rpx>
-          <div v-for="img in description.imgs" :key="img">
+          <div v-for="img in description.imgs" :key="hash(img)">
             <img
               :src="img"
               rounded-10rpx
@@ -139,27 +139,19 @@ import { onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 // import { useRoute, useRouter } from 'vue-router'
 import { usePublisherStore } from '@/store/modules/publisher'
-import {
-  HostTypeMap,
-  type IDescription,
-  LevelMap,
-  StateMap,
-  Type,
-  TypeMap,
-} from '@/typings/publisher'
-import { TYPE_NAMES } from '@/utils/publishConstant'
+import { type IDescription, StateMap, Type } from '@/typings/publisher'
+import { hash } from '@/utils/common'
+
+import { HOST, LEVEL, TYPE_LIST, TYPE_NAMES } from '@/utils/publishConstant'
 import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
+
 const id = ref('')
 const description = ref<IDescription | undefined>()
 const isOmitted = ref(true)
 const publisherStore = usePublisherStore()
-type PostType = keyof typeof Type
-const post_type: PostType = publisherStore.cur_type as PostType
-// 设置标题
-uni.setNavigationBarTitle({
-  title: `${publisherStore.cur_type}管理`,
-})
+const type: Type = publisherStore.cur_type
+const post_type: string = TYPE_LIST[type]
 
 // 显示加载
 if (!description.value) {
@@ -185,9 +177,13 @@ onLoad((options) => {
     return
   }
   id.value = options.id
-  description.value = publisherStore.descriptions[TypeMap[post_type]]?.find(
+  description.value = publisherStore.descriptions[type]?.find(
     (item) => `${item.post_id}` === id.value
   )
+  // 设置标题
+  uni.setNavigationBarTitle({
+    title: `${post_type}管理`,
+  })
 })
 onBeforeMount(() => {
   if (!id.value || !post_type) {

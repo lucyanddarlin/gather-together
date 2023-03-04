@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { toDate } from '@/utils/common'
 
-import { Publish, Type, TypeMap } from '.'
+import { Publish, Type } from '.'
 import type {
   ChangeBody,
   GetPublish,
@@ -98,7 +98,7 @@ export function DescToPub(
   return p
 }
 
-export function PubToDesc(publish: Publish, post_type: string): IDescription {
+export function PubToDesc(publish: Publish, post_type: Type): IDescription {
   // 将发布的信息转换为描述信息
   const description: IDescription = {
     title: publish.title.value as string,
@@ -106,7 +106,7 @@ export function PubToDesc(publish: Publish, post_type: string): IDescription {
     end_time: publish.end_time.value as Date,
     state: publish.state,
     post_id: publish.post_id,
-    post_type: TypeMap[post_type as keyof typeof Type],
+    post_type,
     location: publish.location.value as string,
     host: publish.host.value as string,
     host_type: publish.host_type.value as HostType,

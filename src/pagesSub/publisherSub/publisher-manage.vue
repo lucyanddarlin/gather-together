@@ -18,24 +18,41 @@
         ></span>
       </view>
     </view>
-    <PublishManageCardItem
-      v-for="item in list.value"
-      :key="item.post_id"
-      :description="item"
-      cursor-pointer
-      @tap="handleClick(item.post_id)"
-    />
-    <Float :is-show-popup="false" :type="4" url="./publisher-publish?id=0">
+    <scroll-view
+      class="main-page"
+      :scroll-y="true"
+      :refresher-enabled="true"
+      :refresher-triggered="isTriggered"
+      :scroll-with-animation="true"
+      :scroll-top="scrollTop"
+      @scroll="handleScroll"
+      @scrolltolower="handleScrollToLower"
+      @refresherrefresh="handleRefresh"
+      @refresherabort="handleRefresherAbort"
+    >
+      <view>
+        <PublishManageCardItem
+          v-for="item in list.value"
+          :key="item.post_id"
+          :description="item"
+          cursor-pointer
+          @tap="handleClick(item.post_id)"
+      /></view>
+    </scroll-view>
+    <Float
+      :is-show-popup="isShowPopup"
+      :type="4"
+      :scroll-value="oldScrollTop"
+      url="./publisher-publish?id=0"
+      @back-to-top="handleBackToTop"
+    >
     </Float>
     <!-- <GatherPublishButton fixed top-1000rpx right-40rpx @tap="handleCreate" /> -->
   </view>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
     <div mx-32rpx relative>
-      <div
-        v-for="(option, index) in filterData.map"
-        :key="index + option.title"
-      >
+      <div v-for="option in filterData.map" :key="hash(option.title)">
         <PublishRadioGroup
           :title="option.title"
           :options="option.list"
@@ -72,30 +89,30 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { onLoad, onReachBottom, onUnload } from '@dcloudio/uni-app'
-import { deepClone } from '@/utils/common'
+import { nextTick, reactive, ref } from 'vue'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { deepClone, hash } from '@/utils/common'
 import { usePublisherStore } from '@/store/modules/publisher'
-import {
-  type BodyFilter,
-  type FilterPopupData,
-  type Type,
-  TypeMap,
-} from '@/typings/publisher'
 import {
   EVENT_OPTION,
   LECTURE_OPTION,
   RACE_OPTION,
+  TYPE_LIST,
 } from '@/utils/publishConstant'
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
-type PostType = keyof typeof Type
+import type { BodyFilter, FilterPopupData, Type } from '@/typings/publisher'
 
+const isTriggered = ref<boolean>(false)
+const isShowPopup = ref<boolean>(false)
+const scrollTop = ref<number>(0)
+const oldScrollTop = ref<number>(0)
 const publisherStore = usePublisherStore()
-const post_type = publisherStore.cur_type as PostType
+const type: Type = publisherStore.cur_type
+const post_type: string = TYPE_LIST[type]
 const list = reactive({
-  value: publisherStore.descriptions[TypeMap[post_type]],
+  value: publisherStore.descriptions[type],
 })
 const filterData = reactive<FilterPopupData>({
   map: getFilter(post_type).map((group) => {
@@ -111,26 +128,20 @@ const filterData = reactive<FilterPopupData>({
   resultKey: getKeys(),
   result: {},
 })
-console.log('description', publisherStore.descriptions[TypeMap[post_type]])
+console.log('description', publisherStore.descriptions[publisherStore.cur_type])
 console.log('list', list.value)
-console.log('publish', publisherStore.publish[TypeMap[post_type]])
-
-// 设置标题
-uni.setNavigationBarTitle({
-  title: `${publisherStore.cur_type}管理`,
-})
+console.log('publish', publisherStore.publish[publisherStore.cur_type])
 
 onLoad(() => {
-  publisherStore.loadPage(post_type, getBody())
+  // 设置标题
+  uni.setNavigationBarTitle({
+    title: `${post_type}管理`,
+  })
+  publisherStore.loadPage(getBody())
 })
 
 onUnload(() => {
   publisherStore.resetPage(post_type)
-})
-
-onReachBottom(() => {
-  console.log('reach bottom')
-  publisherStore.loadPage(post_type, getBody())
 })
 
 const cur_area = ref('广州大学分区')
@@ -182,22 +193,53 @@ function getKeys(): Array<string> {
       return ['sponsor_type', 'lecture_type']
     case '活动':
       return ['sponsor_type', 'event_type']
+    default:
+      return []
   }
 }
 
 function handleConfirmFilter() {
   publisherStore.resetPage(post_type)
-  publisherStore.loadPage(post_type, getBody())
+  publisherStore.loadPage(getBody())
   show.value = false
 }
 
 function handleResetFilter() {
-  list.value = publisherStore.descriptions[TypeMap[post_type]]
+  list.value = publisherStore.descriptions[type]
   filterData.map.forEach((group) => {
     group.list.forEach((item) => (item.isSelected = false))
   })
   // 以防万一后来维护没有调用getBody
   filterData.result = {}
+}
+
+function handleScroll(options: any) {
+  oldScrollTop.value = options.target.scrollTop as number
+}
+
+function handleScrollToLower() {
+  console.log('handleScrollToLower')
+  publisherStore.loadPage(getBody())
+}
+
+async function handleRefresh() {
+  console.log('handleRefresh')
+  isTriggered.value = true
+  publisherStore.resetPage(post_type)
+  await publisherStore.loadPage(getBody())
+  isTriggered.value = false
+}
+
+function handleRefresherAbort() {
+  isTriggered.value = false
+}
+
+function handleBackToTop() {
+  console.log('handleBackToTop')
+  scrollTop.value = oldScrollTop.value
+  nextTick(() => {
+    scrollTop.value = 0
+  })
 }
 </script>
 
@@ -242,5 +284,11 @@ function handleResetFilter() {
   height: 72rpx;
   width: 158rpx;
   padding-right: 20rpx;
+}
+
+.main-page {
+  position: absolute;
+  top: 96rpx;
+  bottom: 0;
 }
 </style>

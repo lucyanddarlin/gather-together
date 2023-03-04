@@ -35,7 +35,7 @@
       <PublishTag
         filter
         inline
-        :title="HostTypeMap[props.description.host_type]"
+        :title="HOST[props.description.host_type]"
         color="#FFAF50"
       ></PublishTag>
       <!-- 比赛级别（比赛特有） -->
@@ -45,7 +45,7 @@
         inline
         :title="
           props.description.race_level !== undefined
-            ? LevelMap[props.description.race_level]
+            ? LEVEL[props.description.race_level]
             : '未分级'
         "
         color="#FFAF50"
@@ -64,14 +64,12 @@
 
 <script setup lang="ts">
 import {
-  HostTypeMap,
   type IDescription,
-  LevelMap,
   type State,
   StateMap,
   Type,
 } from '@/typings/publisher'
-import { TYPE_NAMES } from '@/utils/publishConstant'
+import { HOST, LEVEL, TYPE_NAMES } from '@/utils/publishConstant'
 import PublishTag from './publish-tag.vue'
 const props = defineProps<{
   description: IDescription

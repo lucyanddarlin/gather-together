@@ -112,3 +112,16 @@ export function toDate(s: string) {
   const sec = toNumber(s.slice(17, 19))
   return new Date(y, d, m, h, min, sec)
 }
+
+export function hash(s: string): number {
+  let hash = 0,
+    i,
+    chr
+  if (s.length === 0) return hash
+  for (i = 0; i < s.length; i++) {
+    chr = s.charCodeAt(i)
+    hash = (hash << 5) - hash + chr
+    hash = Math.trunc(hash)
+  }
+  return hash
+}
