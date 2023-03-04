@@ -32,9 +32,29 @@
             v-for="item in homeOtherListMap['race'].dataList"
             :key="item.post_id"
             :paper-item="item"
+            :type="RACE"
           >
-            <template #title>比赛标题</template>
-            <template #content>{{ item.detail }}</template>
+            <template #title>{{ item.title }}</template>
+            <template #label>
+              <view class="label-item text-main">
+                {{ item.start_time }} 至 {{ item.end_time }}
+              </view>
+              <view class="label-item text-main">{{ item.location }}</view>
+              <view flex flex-wrap>
+                <view class="label-item text-#56C28E">进行中</view>
+                <view
+                  v-for="(key, index) in filterPopupData['race'].resultKey"
+                  :key="key"
+                  class="label-item text-#FFAF50"
+                >
+                  #{{
+                    filterPopupData['race'].map[index].list.find(
+                      (i) => i.index === item[key]
+                    )?.value || '未知字段'
+                  }}
+                </view>
+              </view>
+            </template>
           </PaperItem>
         </view>
         <view v-show="activeIndex === LECTURE">
@@ -43,10 +63,29 @@
             v-for="item in homeOtherListMap['lecture'].dataList"
             :key="item.post_id"
             :paper-item="item"
-            }
+            :type="LECTURE"
           >
-            <template #title>讲座标题</template>
-            <template #content>{{ item.detail }}</template>
+            <template #title>{{ item.title }}</template>
+            <template #label>
+              <view class="label-item text-main">
+                {{ item.start_time }} 至 {{ item.end_time }}
+              </view>
+              <view class="label-item text-main">{{ item.location }}</view>
+              <view flex flex-wrap>
+                <view class="label-item text-#56C28E">进行中</view>
+                <view
+                  v-for="(key, index) in filterPopupData['lecture'].resultKey"
+                  :key="key"
+                  class="label-item text-#FFAF50"
+                >
+                  #{{
+                    filterPopupData['lecture'].map[index].list.find(
+                      (i) => i.index === item[key]
+                    )?.value || '未知字段'
+                  }}
+                </view>
+              </view>
+            </template>
           </PaperItem>
         </view>
         <view v-show="activeIndex === ACTIVITY">
@@ -55,9 +94,29 @@
             v-for="item in homeOtherListMap['activity'].dataList"
             :key="item.post_id"
             :paper-item="item"
+            :type="ACTIVITY"
           >
-            <template #title>活动标题</template>
-            <template #content>{{ item.detail }}</template>
+            <template #title>{{ item.title }}</template>
+            <template #label>
+              <view class="label-item text-main">
+                {{ item.start_time }} 至 {{ item.end_time }}
+              </view>
+              <view class="label-item text-main">{{ item.location }}</view>
+              <view flex flex-wrap>
+                <view class="label-item text-#56C28E">进行中</view>
+                <view
+                  v-for="(key, index) in filterPopupData['activity'].resultKey"
+                  :key="key"
+                  class="label-item text-#FFAF50"
+                >
+                  #{{
+                    filterPopupData['activity'].map[index].list.find(
+                      (i) => i.index === item[key]
+                    )?.value || '未知字段'
+                  }}
+                </view>
+              </view>
+            </template>
           </PaperItem>
         </view>
       </view>
@@ -164,7 +223,7 @@ const topSectionList: TopSection[] = [
   { index: LECTURE, title: '讲座' },
   { index: ACTIVITY, title: '活动' },
 ]
-const activeIndex = ref<number>(HOME)
+const activeIndex = ref<number>(RACE)
 const { getHomePaperList, getHomeOtherList } = useHomeStore()
 const { homeOtherListMap } = storeToRefs(useHomeStore())
 const scrollTop = ref<number>(0)

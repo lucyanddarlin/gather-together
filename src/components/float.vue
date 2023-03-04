@@ -1,6 +1,5 @@
 <template>
   <view fixed bottom-150rpx right-70rpx class="float">
-    {{ scrollValue }}
     <view
       opacity-0
       transition-opacity
@@ -11,7 +10,7 @@
       }"
       @click.stop="handleLinkToPublish"
     >
-      <text class="iconfont icon-fasong" />
+      <text class="iconfont icon-fabuanniu1" />
     </view>
     <view
       opacity-0
@@ -21,7 +20,7 @@
       class="float-button"
       @click.stop="handleBackToTop"
     >
-      <view class="iconfont icon-sousuo" />
+      <view class="iconfont icon-shouqi" />
     </view>
   </view>
 </template>

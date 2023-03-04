@@ -25,7 +25,7 @@
         </view>
         <view class="iconfont icon-sousuo" @click="handleShowMoreOptions" />
       </view>
-      <view class="mt-26rpx text-28rpx text-#575757 leading-40rpx text-justify">
+      <view class="content-wrap">
         <span>{{ homeTopicInfo.content }}</span>
       </view>
       <view>
@@ -391,6 +391,16 @@ const handleShowMoreOptions = () => {
 
 <style lang="scss">
 .paper-detail {
+  .content-wrap {
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    margin-top: 26rpx;
+    font-size: 28rpx;
+    color: #575757;
+    line-height: 40rpx;
+    text-align: justify;
+  }
   .images-wrap {
     margin-top: 16rpx;
     display: flex;
