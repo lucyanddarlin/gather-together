@@ -5,7 +5,7 @@
       v-show="activeIndex === 1"
       w-124rpx
       h-124rpx
-      bg-red
+      bg-blue
       rounded-50%
       mr-30rpx
       mt-12rpx

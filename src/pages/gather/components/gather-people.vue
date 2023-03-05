@@ -32,7 +32,7 @@
         </view>
       </view>
       <!-- 头绪 -->
-      <view bg-red rounded-50% w-124rpx h-124rpx mr-60rpx></view>
+      <view bg-blue rounded-50% w-124rpx h-124rpx mr-60rpx></view>
     </view>
     <!-- tag 类 -->
     <view flex mb-12rpx>

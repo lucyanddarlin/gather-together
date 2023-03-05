@@ -49,6 +49,8 @@ const { activeIndex, filterActiveIndex, showPopup } =
 
 // 切换 页面
 const handleNavBarSwitch = (index: number) => {
+  console.log(1)
+
   activeIndex.value = index
 }
 const handleFilterSwitch = (index: number) => {

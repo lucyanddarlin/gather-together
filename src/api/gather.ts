@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { get, post } from './request'
 
-export const reqGatherProjectListFilter = (
+export const reqGatherProjectList = (page: number, size: number) => {
+  return get<{ code: number; body: any }>(
+    `/gather/list/cond/project?page=${page}&size=${size}`
+  )
+}
+export const reqOtherGatherProjectList = (
   page: number,
   size: number,
   project_mode?: number,
@@ -16,7 +21,12 @@ export const reqGatherProjectListFilter = (
   }
   return get<{ code: number; body: any }>(url)
 }
-export const reqGatherPersonListFilter = (
+export const reqGatherPersonList = (page: number, size: number) => {
+  return get<{ code: number; body: any }>(
+    `/gather/list/vita?page=${page}&size=${size}`
+  )
+}
+export const reqOtherGatherPersonList = (
   page: number,
   size: number,
   skillId?: number,
@@ -45,9 +55,6 @@ export const reqPublishProject = (data: {
   project_type: string
   zone_id?: string
 }) => post<{ code: number; body: any }>('/gather/create/project', data)
-
-export const reqGatherPersonList = (page: number, size: number) =>
-  get<{ code: number; body: any }>('/gather/list/vita', { page, size })
 
 export const reqGatherPersonSingle = (user_id: any) =>
   get<{ code: number; body: any }>('/gather/get/vita', { user_id })

@@ -1,6 +1,5 @@
 <!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
-  <!-- <NavBar></NavBar>  -->
   <view class="discovery-page bg-#f7f7f7">
     <div h-178rpx class="bg-#4380FF"></div>
     <GatherSelectPage w-full />
@@ -14,17 +13,32 @@
     >
       <view v-show="activeIndex == PROJECT_LIBRARY">
         <PaperItem
-          v-for="project in GatherProjectList"
-          :key="project.project_id"
+          v-for="item in gatherPaperListMap['project'].dataList"
+          :key="item.project_id"
           :type="GATHER"
-          :paper-item="project"
-          ><template #title>{{ project.project_name }}</template>
-          <template #content>{{ project.introduce }}</template></PaperItem
-        ></view
+          :paper-item="item"
+        >
+          <template #title>{{ item.project_name }}</template>
+          <template #label>
+            <view flex flex-wrap>
+              <view
+                v-for="(key, index) in projectLabelList.labelKey"
+                :key="key"
+                class="label-item text-#FFAF50"
+              >
+                #{{
+                  projectLabelList.map[index].list.find(
+                    (i) => i.index === item[key]
+                  )?.value || '未知字段'
+                }}
+              </view>
+            </view>
+          </template>
+        </PaperItem></view
       >
       <view v-show="activeIndex == PEOPLE_LIBRARY" pt-20rpx>
         <GatherPeople
-          v-for="item in GatherPersonList"
+          v-for="item in gatherPaperListMap['people'].dataList"
           :key="item.user_id"
           :name="item.name"
           :tags="item.tags"
@@ -91,16 +105,18 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+
 // 切换页面
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
 import {
+  DEFAULT_PAGE,
+  DEFAULT_SIZE,
   GATHER,
   GATHER_LIST_KEY,
   LEARNINGDIRECTION_LIST,
   MANNERTYPE_LIST,
-  PROJECT,
   PROJECTMODE_LIST,
   PROJECTTYPE_LIST,
 } from '@/utils/constant'
@@ -111,32 +127,37 @@ import GatherSelectPage from '@/pages/gather/components/gather-pageSelect.vue'
 
 import GatherPublishButton from '@/pages/gather/components/gather-publishButton.vue'
 import GatherBackTopButton from '@/pages/gather/components/gather-backTopButton.vue'
-import { gatherProjectStore } from '@/store/UserProjectStore'
 // 引入项目库组件
 import PaperItem from '@/components/paper-item.vue'
-// 引入 获取项目数据的 请求
-import {
-  reqGatherPersonListFilter,
-  reqGatherProjectListFilter,
-} from '@/api/gather'
 
 import GatherPeople from '@/pages/gather/components/gather-people.vue'
-// import { deepClone } from '@/utils/common'
+import {
+  reqGatherPersonList,
+  reqGatherProjectList,
+  reqOtherGatherPersonList,
+  reqOtherGatherProjectList,
+} from '@/api/gather'
+import { isNull } from '@/utils/common'
+import type { FilterPopupDataItem, ListMap } from '@/typings/home'
+interface ProjectLabelList {
+  labelKey: Array<string>
+  map: Array<FilterPopupDataItem>
+}
+const projectLabelList: ProjectLabelList = {
+  map: [
+    { title: '项目模式', list: PROJECTMODE_LIST },
+    { title: '项目类型', list: PROJECTTYPE_LIST },
+  ],
+  labelKey: ['project_mode', 'project_type'],
+}
 
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()
-// 实例化 当前页面的 数据
 
 // 导入 nav 栏 活动的值 ； 导入是否展示 筛选
 const { activeIndex, scrollTop, oldScrollTop, showPopup } =
   storeToRefs(useGatherIndexStore)
-// 导入选中的 人才库 id；人才库数据
 
-const userGatherProjectStore = gatherProjectStore()
-
-const { GatherProjectList, GatherPersonList } = storeToRefs(
-  userGatherProjectStore
-)
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: any) => {
   uni.navigateTo({
@@ -144,50 +165,178 @@ const toPeopleDetail = (id: any) => {
   })
 }
 
-// 获取主页板块信息
-const startProjectPage = ref(0)
-const startPeoplePage = ref(0)
-const startFilterProjectPage = ref(0)
-const startFilterPersonPage = ref(0)
+type RequestReturnData<T> = {
+  code: 200 | 500 | number
+  data: T
+}
+const apiKeyMap: Array<
+  [
+    string,
+    (page: number, size: number) => Promise<RequestReturnData<AnyObject>>
+  ]
+> = [
+  ['project', reqGatherProjectList],
+  ['people', reqGatherPersonList],
+]
 
-const getProject = async () => {
-  const { data } = await reqGatherProjectListFilter(
-    startProjectPage.value,
-    8,
+const gatherPaperListMap = reactive<{ [key: string]: ListMap }>({
+  project: {
+    dataList: [],
+    dataMap: {},
+    page: DEFAULT_PAGE,
+    size: DEFAULT_SIZE,
+    status: 'more',
+    key: 'project_id',
+  },
+  people: {
+    dataList: [],
+    dataMap: {},
+    page: DEFAULT_PAGE,
+    size: DEFAULT_SIZE,
+    status: 'more',
+    key: 'people_id',
+  },
+})
+
+const getDataList = async (isClear?: boolean) => {
+  const type = apiKeyMap[activeIndex.value][0]
+  const requestApi = apiKeyMap[activeIndex.value][1]
+  if (isClear) {
+    gatherPaperListMap[type].status = 'more'
+    gatherPaperListMap[type].page = DEFAULT_PAGE
+  }
+  if (gatherPaperListMap[type].status === 'noMore') return
+  if (
+    gatherPaperListMap[type].status === 'loading' &&
+    gatherPaperListMap[type].page
+  )
+    return
+  gatherPaperListMap[type].status = 'loading'
+  const { data } = await requestApi(
+    gatherPaperListMap[type].page++,
+    gatherPaperListMap[type].size
+  )
+
+  if (isClear) {
+    gatherPaperListMap[type].dataList = []
+    gatherPaperListMap[type].dataMap = {}
+  }
+  if (!isNull(data)) {
+    gatherPaperListMap[type].status =
+      data.body.result.length < gatherPaperListMap[type].size
+        ? 'noMore'
+        : 'more'
+    data.body.result.forEach((item: any) => {
+      if (
+        !gatherPaperListMap[type].dataMap[item[gatherPaperListMap[type].key]]
+      ) {
+        gatherPaperListMap[type].dataList.push(item)
+      }
+    })
+    return
+  }
+  gatherPaperListMap[type].page--
+  gatherPaperListMap[type].status = 'more'
+}
+
+const getProjectOtherList = async (isClear?: boolean) => {
+  const type = apiKeyMap[activeIndex.value][0]
+
+  if (isClear) {
+    gatherPaperListMap[type].status = 'more'
+    gatherPaperListMap[type].page = DEFAULT_PAGE
+  }
+  if (gatherPaperListMap[type].status === 'noMore') return
+  if (
+    gatherPaperListMap[type].status === 'loading' &&
+    gatherPaperListMap[type].page
+  )
+    return
+  gatherPaperListMap[type].status = 'loading'
+  const { data } = await reqOtherGatherProjectList(
+    gatherPaperListMap[type].page++,
+    gatherPaperListMap[type].size,
     ProjectFilterPopupData[currentListKey.value].result.project_mode,
     ProjectFilterPopupData[currentListKey.value].result.project_type
   )
 
-  for (let i = 0; i < data.body.length; i++) {
-    GatherProjectList.value.push(data.body[i])
+  if (isClear) {
+    gatherPaperListMap[type].dataList = []
+    gatherPaperListMap[type].dataMap = {}
   }
+  if (!isNull(data)) {
+    gatherPaperListMap[type].status =
+      data.body.result.length < gatherPaperListMap[type].size
+        ? 'noMore'
+        : 'more'
+    data.body.result.forEach((item: any) => {
+      if (
+        !gatherPaperListMap[type].dataMap[item[gatherPaperListMap[type].key]]
+      ) {
+        gatherPaperListMap[type].dataList.push(item)
+      }
+    })
+    return
+  }
+  gatherPaperListMap[type].page--
+  gatherPaperListMap[type].status = 'more'
 }
+const getPeopleOtherList = async (isClear?: boolean) => {
+  const type = apiKeyMap[activeIndex.value][0]
 
-const getPerson = async () => {
-  const { data } = await reqGatherPersonListFilter(
-    startPeoplePage.value,
-    8,
+  if (isClear) {
+    gatherPaperListMap[type].status = 'more'
+    gatherPaperListMap[type].page = DEFAULT_PAGE
+  }
+  if (gatherPaperListMap[type].status === 'noMore') return
+  if (
+    gatherPaperListMap[type].status === 'loading' &&
+    gatherPaperListMap[type].page
+  )
+    return
+  gatherPaperListMap[type].status = 'loading'
+  const { data } = await reqOtherGatherPersonList(
+    gatherPaperListMap[type].page++,
+    gatherPaperListMap[type].size,
     ProjectFilterPopupData[currentListKey.value].result.manner_type,
     ProjectFilterPopupData[currentListKey.value].result.learning_direction
   )
 
-  for (let i = 0; i < data.body.result.length; i++) {
-    GatherPersonList.value.push(data.body.result[i])
+  if (isClear) {
+    gatherPaperListMap[type].dataList = []
+    gatherPaperListMap[type].dataMap = {}
   }
+  if (!isNull(data)) {
+    gatherPaperListMap[type].status =
+      data.body.result.length < gatherPaperListMap[type].size
+        ? 'noMore'
+        : 'more'
+    data.body.result.forEach((item: any) => {
+      if (
+        !gatherPaperListMap[type].dataMap[item[gatherPaperListMap[type].key]]
+      ) {
+        gatherPaperListMap[type].dataList.push(item)
+      }
+    })
+    return
+  }
+  gatherPaperListMap[type].page--
+  gatherPaperListMap[type].status = 'more'
 }
 
-const handleScrollToLower = () => {
-  startProjectPage.value++
-  getProject()
-
-  startPeoplePage.value++
-  getPerson()
-}
 onLoad(() => {
-  getProject()
-
-  getPerson()
+  getDataList()
 })
+watch(
+  activeIndex,
+  () => {
+    getDataList()
+  },
+  { deep: true, immediate: true }
+)
+const handleScrollToLower = async () => {
+  await getDataList()
+}
 
 // 检测滚动
 const handleScroll = (options: any) => {
@@ -257,36 +406,12 @@ const handleConfirmFilter = async () => {
       }
     }
   }
-
-  if (activeIndex.value === PROJECT) {
-    const { data } = await reqGatherProjectListFilter(
-      startFilterProjectPage.value,
-      8,
-      ProjectFilterPopupData[currentListKey.value].result.project_mode,
-      ProjectFilterPopupData[currentListKey.value].result.project_type
-    )
-
-    GatherProjectList.value = []
-    for (let i = 0; i < data.body.length; i++) {
-      GatherProjectList.value.push(data.body[i])
-    }
-    showPopup.value = false
+  console.log(ProjectFilterPopupData[currentListKey.value].result)
+  showPopup.value = false
+  if (activeIndex.value === PROJECT_LIBRARY) {
+    await getProjectOtherList(true)
   } else {
-    const { data } = await reqGatherPersonListFilter(
-      startFilterPersonPage.value,
-      8,
-      ProjectFilterPopupData[currentListKey.value].result.manner_type,
-      ProjectFilterPopupData[currentListKey.value].result.learning_direction
-    )
-    console.log(data.body.result)
-
-    GatherPersonList.value = []
-
-    for (let i = 0; i < data.body.result.length; i++) {
-      GatherPersonList.value.push(data.body.result[i])
-    }
-
-    showPopup.value = false
+    await getPeopleOtherList(true)
   }
 }
 </script>
