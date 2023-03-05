@@ -3,49 +3,37 @@
     w-full
     p-28rpx
     mb-16rpx
-    text-24rpx
+    text-40rpx
     min-h-200rpx
     bg-white
     @click="$emit('toPeopleDetail')"
   >
     <!-- 项目名 学校 头像 -->
-    <view
-      text-32rpx
-      mb-40rpx
-      flex
-      justify-between
-      items-center
-      class="text-#534E4E"
-    >
+    <view mb-40rpx flex justify-between items-center class="text-#534E4E">
       <!-- 名称和 专业 -->
       <view>
         <view font-bold mb-12rpx>{{ props.name }}</view>
         <view flex>
           <GatherContentBlock
             :content="props.school"
-            class="text-#598DF9 text-24rpx"
+            class="text-#598DF9 text-28rpx"
           />
           <GatherContentBlock
             :content="props.profession"
-            class="text-#598DF9 text-24rpx"
+            class="text-#598DF9 text-28rpx"
           />
         </view>
       </view>
       <!-- 头绪 -->
-      <view bg-blue rounded-50% w-124rpx h-124rpx mr-60rpx></view>
+
+      <img src="@/static/avater_default.png" w-140rpx h-140rpx mr-60rpx />
     </view>
     <!-- tag 类 -->
-    <view flex mb-12rpx>
-      <!-- todo 后期更换 tag源头 和key 源 -->
-      <GatherContentBlock
-        v-for="(tag, index) in props.tags"
-        :key="index"
-        :content="'# ' + tag"
-        class="text-#FFAF50"
-      />
+    <view flex>
+      <slot name="tags"></slot>
     </view>
     <!-- 简介类 -->
-    <view>
+    <view text-28rpx>
       <GatherContentBlock :content="props.content" class="text-#A4A4A4" />
     </view>
   </view>

@@ -8,8 +8,12 @@
       :scroll-y="true"
       :scroll-with-animation="true"
       :scroll-top="scrollTop"
+      :refresher-enabled="true"
+      :refresher-triggered="isTriggered"
       @scroll="handleScroll"
       @scrolltolower="handleScrollToLower"
+      @refresherrefresh="handleRefresh"
+      @refresherabort="handleRefresherAbort"
     >
       <view v-show="activeIndex == PROJECT_LIBRARY">
         <PaperItem
@@ -41,12 +45,27 @@
           v-for="item in gatherPaperListMap['people'].dataList"
           :key="item.user_id"
           :name="item.name"
-          :tags="item.tags"
           :school="'广州大学'"
           :profession="item.profession"
           :content="item.profile"
           @toPeopleDetail="toPeopleDetail(item.user_id)"
-        />
+        >
+          <template #tags>
+            <view flex flex-wrap>
+              <view
+                v-for="(key, index) in peopleLabelList.labelKey"
+                :key="key"
+                class="label-item text-#FFAF50"
+              >
+                #{{
+                  peopleLabelList.map[index].list.find(
+                    (i) => i.index === item[key]
+                  )?.value || '未知字段'
+                }}
+              </view>
+            </view></template
+          >
+        </GatherPeople>
       </view>
     </scroll-view>
   </view>
@@ -103,7 +122,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
-import { computed, nextTick, reactive, watch } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 
 // 切换页面
@@ -135,6 +154,8 @@ interface ProjectLabelList {
   labelKey: Array<string>
   map: Array<FilterPopupDataItem>
 }
+
+const isTriggered = ref<boolean>(false)
 const projectLabelList: ProjectLabelList = {
   map: [
     { title: '项目模式', list: PROJECT_MODE_LIST },
@@ -143,6 +164,13 @@ const projectLabelList: ProjectLabelList = {
   labelKey: ['project_mode', 'project_type'],
 }
 
+const peopleLabelList: ProjectLabelList = {
+  map: [
+    { title: '能力类型', list: MANNERp_TYPE_LIST },
+    { title: '学习方向', list: LEARNING_DIRECTION_LIST },
+  ],
+  labelKey: ['manner_type', 'learning_direction'],
+}
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()
 
@@ -411,6 +439,14 @@ const handleConfirmFilter = async () => {
   } else {
     await getPeopleOtherList(true)
   }
+}
+const handleRefresh = async () => {
+  isTriggered.value = true
+  await getDataList(true)
+  isTriggered.value = false
+}
+const handleRefresherAbort = () => {
+  isTriggered.value = false
 }
 </script>
 
