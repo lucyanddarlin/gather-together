@@ -52,7 +52,9 @@
       </view>
       <view flex-1>
         <view text-28rpx>{{ paperItem.creator_name }}</view>
-        <view text-20rpx class="text-#979797">{{ paperItem.created_at }}</view>
+        <view text-20rpx class="text-#979797">
+          {{ paperItem.created_at?.toDate().formatData() }}
+        </view>
       </view>
       <view
         flex
@@ -81,8 +83,8 @@ interface PaperItem {
   creator_id: string
   title: string
   content: string
-  created_at: Date
-  last_reply_time: Date
+  created_at: string
+  last_reply_time: string
   picture_urls: string[]
   creator_name: string
   creator_head_url: string

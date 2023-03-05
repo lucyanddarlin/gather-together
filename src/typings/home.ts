@@ -34,8 +34,8 @@ export interface HomeTopicInfo {
   creator_id: string
   title: string
   content: string
-  created_at: Date
-  last_reply_time: Date
+  created_at: string
+  last_reply_time: string
   picture_urls: string[]
   creator_name: string
   creator_head_url: string
@@ -50,8 +50,8 @@ export interface ICommentItem {
   topic_id: string
   user_id: string
   content: string
-  create_at: Date
-  last_reply_time: Date
+  create_at: string
+  last_reply_time: string
   head_url: string
   username: string
   reply_head?: Array<any>

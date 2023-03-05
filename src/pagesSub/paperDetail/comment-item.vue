@@ -12,7 +12,9 @@
       :class="{ '!border-0': top }"
     >
       <view text-24rpx font-medium>{{ commentItem.username }}</view>
-      <view text-20rpx class="text-#797979">{{ commentItem.create_at }}</view>
+      <view text-20rpx class="text-#797979">
+        {{ commentItem.create_at.toDate().formatData() }}
+      </view>
       <view my-24rpx text-28rpx flex flex-col class="text-#4D4D4D">
         <view
           v-if="commentItem.to_reply_username"
@@ -54,8 +56,8 @@ interface ICommentItem {
   topic_id: string
   user_id: string
   content: string
-  create_at: Date
-  last_reply_time: Date
+  create_at: string
+  last_reply_time: string
   head_url: string
   username: string
   reply_head?: Array<any>

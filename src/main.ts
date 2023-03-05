@@ -15,6 +15,7 @@ import FormItem from './components/form-item.vue'
 import App from './App.vue'
 import 'uno.css'
 import '@/styles/index.scss'
+import '@/utils/extends'
 
 export function createApp() {
   const app = createSSRApp(App)

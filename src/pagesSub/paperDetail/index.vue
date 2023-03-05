@@ -19,7 +19,7 @@
               {{ homeTopicInfo.creator_name }}
             </span>
             <span class="text-20rpx text-#979797">
-              {{ homeTopicInfo.created_at }}
+              {{ homeTopicInfo.created_at.toDate().formatData() }}
             </span>
           </view>
         </view>
@@ -51,7 +51,7 @@
           </view>
         </view>
       </view>
-      <view mt-54rpx flex items-center>
+      <view v-if="false" mt-54rpx flex items-center>
         <view class="bottoms-wrap">
           <view flex items-center mr-56rpx>
             <view class="bottom-wrap">
@@ -201,8 +201,8 @@ const homeTopicInfo = ref<HomeTopicInfo>({
   creator_id: '',
   title: '',
   content: '',
-  created_at: new Date(),
-  last_reply_time: new Date(),
+  created_at: '',
+  last_reply_time: '',
   picture_urls: [],
   creator_name: '',
   creator_head_url: '',
