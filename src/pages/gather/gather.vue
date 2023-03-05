@@ -60,7 +60,7 @@
                 #{{
                   peopleLabelList.map[index].list.find(
                     (i) => i.index === item[key]
-                  )?.value || '未知字段'
+                  )?.value || '未知能力'
                 }}
               </view>
             </view></template
