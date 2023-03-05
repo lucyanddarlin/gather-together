@@ -49,7 +49,9 @@
           rounded-12rpx
           h-full
           p-24rpx
+          text-32rpx
           bg-white
+          class="text-#23272E"
           placeholder-style="color:#BDBDBD"
           :maxlength="3000"
         />
