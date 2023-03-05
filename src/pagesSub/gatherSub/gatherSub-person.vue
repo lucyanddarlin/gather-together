@@ -1,48 +1,65 @@
 <template>
   <u-navbar :border-bottom="false"></u-navbar>
-
-  <view v-for="item in UserVita" :key="item.user_id">
+  <view>
     <!-- 顶部名字 和 学校信息 -->
     <GatherSubAvaterSection
-      :name="item.name"
-      :tags="item.tags"
-      :grade="item.grade"
-      :school="item.school"
-      :profession="item.profession"
+      :name="currentPerson.name"
+      :profession="currentPerson.profession"
+      :school="'广州大学'"
+      :grade="currentPerson.grade"
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <GatherSubContentSection
+      v-for="item in currentPerson.certs"
+      :key="item"
       :type="'技能/能力'"
-      :title="'软件/硬件'"
-      :content="'全栈型，前端VUE2/3,后端JAVA SpringBoot'"
+      :title="item.skill_id"
+      :content="item.skill_des"
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 项目/实践 -->
-    <GatherSubContentSection
-      :type="'项目/实践'"
-      :title="'个人博客项目'"
-      :content="'开发了一个个人博客，前端采用VUE3框架，后端采用的是SpringBoot架构，实现博客的创建、编辑、按时间查找的功能.…'"
-    />
+    <view class="p-32rpx text-28rpx text-#4D4D4D">
+      <!-- 种类 -->
+      <view class="text-32rpx font-bold mb-24rpx">技能/类型</view>
+      <view v-for="project in currentPerson.projects" :key="project" mb-36rpx>
+        <!-- tag 类型 -->
+        <view flex mb-20rpx>
+          <GatherContentBlock
+            :content="project.project_name"
+            class="text-#598DF9"
+          />
+        </view>
+        <view> {{ project.project_exp }}</view></view
+      >
+    </view>
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <!-- 证书/荣誉 -->
-    <GatherSubContentSection :type="'证书/荣誉'" :title="'大学英语六级'" />
+    <GatherSubContentSection
+      v-for="item in currentPerson.certs"
+      :key="item"
+      :type="'证书/荣誉'"
+      :title="item.cert_name"
+    />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 个人介绍 -->
     <GatherSubContentSection
       :type="'个人介绍'"
-      :content="'我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们致力于帮助每个人我们 五动十方工都'"
+      :content="currentPerson.profile"
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 联系方式 -->
-    <GatherSubContentSection :type="'联系方式'" :title="'19300231123'" />
+    <GatherSubContentSection
+      :type="'联系方式'"
+      :title="currentPerson.contact"
+    />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
@@ -51,15 +68,24 @@
   </view>
 </template>
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
-import { currentUserVitaStore } from '@/store/UserVitaStore'
+import { onLoad } from '@dcloudio/uni-app'
 import GatherSubContentSection from '@/pagesSub/gatherSub/components/gatherSub-ContentSection.vue'
+import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
 import GatherSubAvaterSection from '@/pagesSub/gatherSub/components/gatherSub-AvaterSection.vue'
 import GatherSubFucntionButton from '@/pagesSub/gatherSub/components/gatherSub-fucntionButton.vue'
-const userStore = currentUserVitaStore()
-// todo 后续接口接入，需要换接口的id请求数据
-const { UserVita } = storeToRefs(userStore)
+import { reqGatherPersonSingle } from '@/api/gather'
+
+const currentPerson = ref()
+onLoad((option: any) => {
+  const getCurrentPagePerson = async () => {
+    const { data } = await reqGatherPersonSingle(String(option.user_id))
+    currentPerson.value = data.body
+  }
+
+  getCurrentPagePerson()
+})
 </script>
 
 <style scoped>

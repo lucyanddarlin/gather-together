@@ -100,3 +100,13 @@ export const projectTypeFilterList = reactive([
     ],
   },
 ])
+// 顶部栏 列表
+export const topNavList = reactive([
+  { title: '项目库', index: 0 },
+  { title: '人才库', index: 1 },
+])
+// 筛选列表
+export const filterNavList = reactive([
+  { title: '本校', index: 0 },
+  { title: '综合', index: 1 },
+])

@@ -42,17 +42,18 @@
       <view class="text-#BDBDBD">
         <textarea
           v-model="publishProject.introduce"
-          auto-height
+          :auto-height="true"
           placeholder="请输入项目介绍内容"
           w-700rpx
-          min-h-200rpx
+          min-h-240rpx
           rounded-12rpx
+          h-full
           p-24rpx
           bg-white
           placeholder-style="color:#BDBDBD"
           :maxlength="3000"
         />
-        <view absolute right-24rpx top-220rpx
+        <view mt-12rpx :class="wordCount === 3000 ? 'text-red' : ''"
           >{{ wordCount }} / 3000</view
         ></view
       ></view
@@ -80,7 +81,7 @@ const publishProject = reactive({
   contact: '',
   introduce: '',
   needs: '',
-  pic_count: '1',
+  pic_count: '0',
   project_mode: '',
   project_name: '',
   project_type: '',
