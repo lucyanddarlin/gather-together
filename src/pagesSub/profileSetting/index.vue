@@ -15,12 +15,14 @@
       </view>
     </settingItem>
     <view w-full h-20rpx class="bg-#C3C3C3/17" />
-    <settingItem
-      v-for="item in settingListB"
-      :key="item.type"
-      :item="item"
-      @tap="item.url && navigate(item.url)"
-    />
+    <view v-if="userProfile.is_admin">
+      <settingItem
+        v-for="item in settingListB"
+        :key="item.type"
+        :item="item"
+        @tap="item.url && navigate(item.url)"
+      />
+    </view>
   </view>
 </template>
 
