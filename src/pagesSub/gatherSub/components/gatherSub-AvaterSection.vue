@@ -2,10 +2,10 @@
   <!-- 顶部名字 和 学校信息 -->
   <view flex mb-24rpx pl-40rpx>
     <view
-      v-show="navActiveIndex === 1"
+      v-show="activeIndex === 1"
       w-124rpx
       h-124rpx
-      bg-red
+      bg-blue
       rounded-50%
       mr-30rpx
       mt-12rpx
@@ -14,14 +14,14 @@
       <view class="text-#534E4E text-52rpx mb-12rpx font-bold">{{
         props.name
       }}</view>
-      <view v-show="navActiveIndex == 1" flex mb-12rpx
+      <view v-show="activeIndex == 1" flex mb-12rpx
         ><GatherContentBlock
           :content="props.school"
           class="text-#598DF9 text-24rpx" />
         <GatherContentBlock
           :content="props.profession"
           class="text-#598DF9 text-24rpx" /><GatherContentBlock
-          :content="props.grade + '级'"
+          :content="realGrade + '级'"
           class="text-#598DF9 text-24rpx"
       /></view>
       <view flex
@@ -37,13 +37,14 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
 // 导入 gatherIndex 的 pinia
 import { gatherIndexStore } from '@/store/gatherIndex'
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()
 // 导入 nav 栏 活动的值 ； 导入是否展示 筛选
-const { navActiveIndex } = storeToRefs(useGatherIndexStore)
+const { activeIndex } = storeToRefs(useGatherIndexStore)
 const props = defineProps({
   name: { type: String, default: '' },
   school: { type: String, default: '' },
@@ -51,6 +52,23 @@ const props = defineProps({
   grade: { type: [String, Number], default: '' },
   tags: { type: Array, default: () => [] },
 })
+const realGrade = ref()
+switch (props.grade) {
+  case 1:
+    realGrade.value = 2022
+    break
+  case 2:
+    realGrade.value = 2021
+    break
+  case 3:
+    realGrade.value = 2020
+    break
+  case 4:
+    realGrade.value = 2019
+    break
+  default:
+    realGrade.value = '未知年'
+}
 </script>
 
 <style lang="less" scoped></style>

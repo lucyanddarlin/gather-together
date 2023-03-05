@@ -4,6 +4,7 @@ import { setupStore } from '@/store'
 
 import NavBar from '@/components/nav-bar.vue'
 import MannerButton from '@/components/manner-button.vue'
+import Empty from '@/components/empty.vue'
 import Popup from './components/popup.vue'
 import TabSection from './components/tab-section.vue'
 import TabItem from './components/tab-item.vue'
@@ -28,6 +29,7 @@ export function createApp() {
   app.component('Float', Float)
   app.component('Popup', Popup)
   app.component('FormItem', FormItem)
+  app.component('Empty', Empty)
   return {
     app,
   }

@@ -166,6 +166,7 @@ const handlePostTopic = async () => {
       showMsg('发布成功~')
     }, 100)
     uni.$emit('postNewTopic')
+    uni.$emit('updateProfileListData')
     setTimeout(() => {
       uni.switchTab({ url: '/pages/index/index' })
     }, 800)

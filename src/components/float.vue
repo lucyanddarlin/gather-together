@@ -30,16 +30,20 @@ import { GATHER, HOME, SHOW_TOP } from '@/utils/constant'
 
 const props = defineProps<{
   type: number
+  home?: boolean
+  gather?: boolean
   scrollValue: number
   isShowPopup?: boolean
   url?: string
 }>()
 const emit = defineEmits(['backToTop'])
 const handleLinkToPublish = () => {
-  if (props.type === HOME) {
+  if (props.home) {
     uni.navigateTo({
       url: '/pagesSub/publishPage/index',
     })
+  } else if (props.gather) {
+    uni.navigateTo({ url: '/pagesSub/gatherSub/gatherSub-publish' })
     return
   }
   if (props.url) {

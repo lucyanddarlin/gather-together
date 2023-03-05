@@ -2,7 +2,7 @@
   <view w-full bg-white>
     <view class="area-1 relative">
       <TabSection
-        :default-active="navActiveIndex"
+        :default-active="activeIndex"
         @tab-switch="handleNavBarSwitch"
       >
         <TabItem
@@ -16,7 +16,7 @@
     </view>
     <view class="area-2 relative">
       <TabSection
-        v-show="navActiveIndex === 0"
+        v-show="activeIndex === PROJECT_LIBRARY"
         :default-active="filterActiveIndex"
         @tab-switch="handleFilterSwitch"
       >
@@ -28,7 +28,9 @@
           <text>{{ item.title }}</text>
         </TabItem>
       </TabSection>
-      <view v-show="navActiveIndex === 1" text-black pl-26rpx>综合</view>
+      <view v-show="activeIndex === PEOPLE_LIBRARY" text-black pl-26rpx
+        >综合</view
+      >
       <view class="text-#598DF9 font-400 flex items-center" @click="handlePopup"
         ><view mr-8rpx>筛选</view><span class="iconfont icon-shaixuan"></span>
       </view>
@@ -39,19 +41,17 @@
 import { storeToRefs } from 'pinia'
 // 引入 gather 主页 的数据
 import { gatherIndexStore } from '@/store/gatherIndex'
+import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
+import { filterNavList, topNavList } from '@/utils/gatherConstant'
 const useGatherIndexStore = gatherIndexStore()
-const {
-  navActiveIndex,
-  filterActiveIndex,
-  topNavList,
-  filterNavList,
-  showPeopleLibraryPopup,
-  showProjectLibraryPopup,
-} = storeToRefs(useGatherIndexStore)
+const { activeIndex, filterActiveIndex, showPopup } =
+  storeToRefs(useGatherIndexStore)
 
 // 切换 页面
 const handleNavBarSwitch = (index: number) => {
-  navActiveIndex.value = index
+  console.log(1)
+
+  activeIndex.value = index
 }
 const handleFilterSwitch = (index: number) => {
   filterActiveIndex.value = index
@@ -59,10 +59,10 @@ const handleFilterSwitch = (index: number) => {
 
 // 判断 横幅 是否显示
 const handlePopup = () => {
-  if (navActiveIndex.value === 1) {
-    showPeopleLibraryPopup.value = !showPeopleLibraryPopup.value
-  } else if (navActiveIndex.value === 0) {
-    showProjectLibraryPopup.value = !showProjectLibraryPopup.value
+  if (activeIndex.value === PEOPLE_LIBRARY) {
+    showPopup.value = !showPopup.value
+  } else if (activeIndex.value === PROJECT_LIBRARY) {
+    showPopup.value = !showPopup.value
   }
 }
 </script>
