@@ -22,50 +22,71 @@
           <text>{{ item.title }}</text>
         </TabItem>
       </TabSection>
-      <view v-show="activeIndex === OWN_TOPIC">
-        <PaperItem
-          v-for="item in profileData['topic'].dataList"
-          :key="item.topic_id"
-          :paper-item="item"
-          :type="HOME"
-        >
-          <template #title>{{ item.title }}</template>
-          <template #content>{{ item.content }}</template>
-        </PaperItem>
-      </view>
-      <view v-show="activeIndex === OWN_PROJECT">
-        <PaperItem
-          v-for="item in profileData['project'].dataList"
-          :key="item.project_id"
-          :type="GATHER"
-          :paper-item="item"
-        >
-          <template #title>{{ item.project_name }}</template>
-          <template #label>
-            <view flex flex-wrap>
-              <view
-                v-for="(key, index) in projectLabelList.labelKey"
-                :key="key"
-                class="label-item text-#FFAF50"
-              >
-                #{{
-                  projectLabelList.map[index].list.find(
-                    (i) => i.index === item[key]
-                  )?.value || '未知字段'
-                }}
-              </view>
-            </view>
-          </template>
-        </PaperItem>
-      </view>
-      <LoadMore :status="profileData[apiKeyMap[activeIndex][0]].status" />
+      <Empty v-if="!isLogin" type="empty" text="登陆查看更多~" />
+      <template v-else>
+        <view v-show="activeIndex === OWN_TOPIC">
+          <Empty
+            v-if="isNull(profileData['topic'].dataList)"
+            type="empty"
+            text="快去发布吧~"
+          />
+          <view v-else>
+            <PaperItem
+              v-for="item in profileData['topic'].dataList"
+              :key="item.topic_id"
+              :paper-item="item"
+              :type="HOME"
+            >
+              <template #title>{{ item.title }}</template>
+              <template #content>{{ item.content }}</template>
+            </PaperItem>
+          </view>
+        </view>
+        <view v-show="activeIndex === OWN_PROJECT">
+          <Empty
+            v-if="isNull(profileData['project'].dataList)"
+            type="empty"
+            text="快去发布吧~"
+          />
+          <view v-else>
+            <PaperItem
+              v-for="item in profileData['project'].dataList"
+              :key="item.project_id"
+              :type="GATHER"
+              :paper-item="item"
+            >
+              <template #title>{{ item.project_name }}</template>
+              <template #label>
+                <view flex flex-wrap>
+                  <view
+                    v-for="(key, index) in projectLabelList.labelKey"
+                    :key="key"
+                    class="label-item text-#FFAF50"
+                  >
+                    #{{
+                      projectLabelList.map[index].list.find(
+                        (i) => i.index === item[key]
+                      )?.value || '未知字段'
+                    }}
+                  </view>
+                </view>
+              </template>
+            </PaperItem>
+          </view>
+        </view>
+        <LoadMore
+          v-if="!isNull(profileData[apiKeyMap[activeIndex][0]].dataList)"
+          :status="profileData[apiKeyMap[activeIndex][0]].status"
+        />
+      </template>
     </scroll-view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
 import {
   DEFAULT_PAGE,
   DEFAULT_SIZE,
@@ -78,10 +99,13 @@ import {
 } from '@/utils/constant'
 import { reqGetOwnProject, reqGetOwnTopic } from '@/api/user'
 import { isNull } from '@/utils/common'
+import { useUserStore } from '@/store/modules/user'
 import ProfileHeader from './profile-header.vue'
 import ProfileCard from './profile-card.vue'
 import type { FilterPopupDataItem, ListMap, TopSection } from '@/typings/home'
 
+const { isLogin } = storeToRefs(useUserStore())
+const { getUserCV } = useUserStore()
 const headerHeight = ref(uni.getStorageSync('PROFILE_HEADER_HEIGHT'))
 const cardHeight = ref(uni.getStorageSync('PROFILE_CARD_HEIGHT'))
 const activeIndex = ref<number>(OWN_TOPIC)
@@ -134,13 +158,28 @@ const projectLabelList: ProjectLabelList = {
 }
 
 onLoad(() => {
+  if (!isLogin.value) return
   getDataList()
+  uni.$on('updateProfileListData', handleRefreshAll)
+})
+onUnload(() => {
+  uni.$off('updateProfileListData')
 })
 watch(
   activeIndex,
   () => {
     if (activeIndex.value === OWN_PROJECT && profileData['project'].page === 0)
       getDataList()
+  },
+  { deep: true }
+)
+watch(
+  isLogin,
+  async () => {
+    if (isLogin.value) {
+      await handleRefresh()
+      await getUserCV()
+    }
   },
   { deep: true }
 )
@@ -181,6 +220,7 @@ const handleTabSwitch = (value: number) => {
   activeIndex.value = value
 }
 const handleScrollToLower = async () => {
+  if (!isLogin.value) return
   await getDataList()
 }
 const handleRefresh = async () => {
@@ -190,6 +230,14 @@ const handleRefresh = async () => {
 }
 const handleRefresherAbort = () => {
   isTriggered.value = false
+}
+const handleRefreshAll = () => {
+  console.log('emit')
+  topSectionList.forEach(async (item) => {
+    activeIndex.value = item.index
+    await handleRefresh()
+  })
+  activeIndex.value = OWN_TOPIC
 }
 </script>
 

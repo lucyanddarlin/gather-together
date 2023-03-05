@@ -23,102 +23,128 @@
             <text>{{ item.title }}</text>
           </TabItem>
         </TabSection>
-        <view v-show="activeIndex === HOME">
-          <Home @more="handleShowMoreOptions" />
-        </view>
-        <view v-show="activeIndex === RACE">
-          <ChangeFilter @filter="handleShowFilter" />
-          <PaperItem
-            v-for="item in homeOtherListMap['race'].dataList"
-            :key="item.post_id"
-            :paper-item="item"
-            :type="RACE"
-          >
-            <template #title>{{ item.title }}</template>
-            <template #label>
-              <view class="label-item text-main">
-                {{ item.start_time }} 至 {{ item.end_time }}
-              </view>
-              <view class="label-item text-main">{{ item.location }}</view>
-              <view flex flex-wrap>
-                <view class="label-item text-#56C28E">进行中</view>
-                <view
-                  v-for="(key, index) in filterPopupData['race'].resultKey"
-                  :key="key"
-                  class="label-item text-#FFAF50"
-                >
-                  #{{
-                    filterPopupData['race'].map[index].list.find(
-                      (i) => i.index === item[key]
-                    )?.value || '未知字段'
-                  }}
-                </view>
-              </view>
-            </template>
-          </PaperItem>
-        </view>
-        <view v-show="activeIndex === LECTURE">
-          <ChangeFilter @filter="handleShowFilter" />
-          <PaperItem
-            v-for="item in homeOtherListMap['lecture'].dataList"
-            :key="item.post_id"
-            :paper-item="item"
-            :type="LECTURE"
-          >
-            <template #title>{{ item.title }}</template>
-            <template #label>
-              <view class="label-item text-main">
-                {{ item.start_time }} 至 {{ item.end_time }}
-              </view>
-              <view class="label-item text-main">{{ item.location }}</view>
-              <view flex flex-wrap>
-                <view class="label-item text-#56C28E">进行中</view>
-                <view
-                  v-for="(key, index) in filterPopupData['lecture'].resultKey"
-                  :key="key"
-                  class="label-item text-#FFAF50"
-                >
-                  #{{
-                    filterPopupData['lecture'].map[index].list.find(
-                      (i) => i.index === item[key]
-                    )?.value || '未知字段'
-                  }}
-                </view>
-              </view>
-            </template>
-          </PaperItem>
-        </view>
-        <view v-show="activeIndex === ACTIVITY">
-          <ChangeFilter @filter="handleShowFilter" />
-          <PaperItem
-            v-for="item in homeOtherListMap['activity'].dataList"
-            :key="item.post_id"
-            :paper-item="item"
-            :type="ACTIVITY"
-          >
-            <template #title>{{ item.title }}</template>
-            <template #label>
-              <view class="label-item text-main">
-                {{ item.start_time }} 至 {{ item.end_time }}
-              </view>
-              <view class="label-item text-main">{{ item.location }}</view>
-              <view flex flex-wrap>
-                <view class="label-item text-#56C28E">进行中</view>
-                <view
-                  v-for="(key, index) in filterPopupData['activity'].resultKey"
-                  :key="key"
-                  class="label-item text-#FFAF50"
-                >
-                  #{{
-                    filterPopupData['activity'].map[index].list.find(
-                      (i) => i.index === item[key]
-                    )?.value || '未知字段'
-                  }}
-                </view>
-              </view>
-            </template>
-          </PaperItem>
-        </view>
+        <Empty v-if="!isLogin" type="empty" text="登陆查看更多~" />
+        <template v-else>
+          <view v-show="activeIndex === HOME">
+            <Home @more="handleShowMoreOptions" />
+          </view>
+          <view v-show="activeIndex === RACE">
+            <ChangeFilter @filter="handleShowFilter" />
+            <Empty
+              v-if="isNull(homeOtherListMap['race'].dataList)"
+              type="empty"
+              text="暂无数据"
+            />
+            <view v-else>
+              <PaperItem
+                v-for="item in homeOtherListMap['race'].dataList"
+                :key="item.post_id"
+                :paper-item="item"
+                :type="RACE"
+              >
+                <template #title>{{ item.title }}</template>
+                <template #label>
+                  <view class="label-item text-main">
+                    {{ item.start_time }} 至 {{ item.end_time }}
+                  </view>
+                  <view class="label-item text-main">{{ item.location }}</view>
+                  <view flex flex-wrap>
+                    <view class="label-item text-#56C28E">进行中</view>
+                    <view
+                      v-for="(key, index) in filterPopupData['race'].resultKey"
+                      :key="key"
+                      class="label-item text-#FFAF50"
+                    >
+                      #{{
+                        filterPopupData['race'].map[index].list.find(
+                          (i) => i.index === item[key]
+                        )?.value || '未知字段'
+                      }}
+                    </view>
+                  </view>
+                </template>
+              </PaperItem>
+            </view>
+          </view>
+          <view v-show="activeIndex === LECTURE">
+            <ChangeFilter @filter="handleShowFilter" />
+            <Empty
+              v-if="isNull(homeOtherListMap['lecture'].dataList)"
+              type="empty"
+              text="暂无数据"
+            />
+            <view v-else>
+              <PaperItem
+                v-for="item in homeOtherListMap['lecture'].dataList"
+                :key="item.post_id"
+                :paper-item="item"
+                :type="LECTURE"
+              >
+                <template #title>{{ item.title }}</template>
+                <template #label>
+                  <view class="label-item text-main">
+                    {{ item.start_time }} 至 {{ item.end_time }}
+                  </view>
+                  <view class="label-item text-main">{{ item.location }}</view>
+                  <view flex flex-wrap>
+                    <view class="label-item text-#56C28E">进行中</view>
+                    <view
+                      v-for="(key, index) in filterPopupData['lecture']
+                        .resultKey"
+                      :key="key"
+                      class="label-item text-#FFAF50"
+                    >
+                      #{{
+                        filterPopupData['lecture'].map[index].list.find(
+                          (i) => i.index === item[key]
+                        )?.value || '未知字段'
+                      }}
+                    </view>
+                  </view>
+                </template>
+              </PaperItem>
+            </view>
+          </view>
+          <view v-show="activeIndex === ACTIVITY">
+            <ChangeFilter @filter="handleShowFilter" />
+            <Empty
+              v-if="isNull(homeOtherListMap['activity'].dataList)"
+              type="empty"
+              text="暂无数据"
+            />
+            <view v-else>
+              <PaperItem
+                v-for="item in homeOtherListMap['activity'].dataList"
+                :key="item.post_id"
+                :paper-item="item"
+                :type="ACTIVITY"
+              >
+                <template #title>{{ item.title }}</template>
+                <template #label>
+                  <view class="label-item text-main">
+                    {{ item.start_time }} 至 {{ item.end_time }}
+                  </view>
+                  <view class="label-item text-main">{{ item.location }}</view>
+                  <view flex flex-wrap>
+                    <view class="label-item text-#56C28E">进行中</view>
+                    <view
+                      v-for="(key, index) in filterPopupData['activity']
+                        .resultKey"
+                      :key="key"
+                      class="label-item text-#FFAF50"
+                    >
+                      #{{
+                        filterPopupData['activity'].map[index].list.find(
+                          (i) => i.index === item[key]
+                        )?.value || '未知字段'
+                      }}
+                    </view>
+                  </view>
+                </template>
+              </PaperItem>
+            </view>
+          </view>
+        </template>
       </view>
     </scroll-view>
     <Float
@@ -196,7 +222,8 @@ import {
   SPONSOR_LIST,
 } from '@/utils/constant'
 import { useHomeStore } from '@/store/modules/home'
-import { deepClone } from '@/utils/common'
+import { deepClone, isNull } from '@/utils/common'
+import { useUserStore } from '@/store/modules/user'
 import ChangeFilter from './change-filter.vue'
 import Home from './home.vue'
 import type {
@@ -223,9 +250,10 @@ const topSectionList: TopSection[] = [
   { index: LECTURE, title: '讲座' },
   { index: ACTIVITY, title: '活动' },
 ]
-const activeIndex = ref<number>(RACE)
+const activeIndex = ref<number>(HOME)
 const { getHomePaperList, getHomeOtherList } = useHomeStore()
 const { homeOtherListMap } = storeToRefs(useHomeStore())
+const { isLogin } = storeToRefs(useUserStore())
 const scrollTop = ref<number>(0)
 const oldScrollTop = ref<number>(0)
 const isTriggered = ref<boolean>(false)
@@ -264,7 +292,9 @@ const filterPopupData = reactive<FilterPopupData>({
 const currentListKey = computed<string>(() => INDEX_LIST_KEY[activeIndex.value])
 
 onLoad(() => {
-  getHomePaperList()
+  if (isLogin.value) {
+    getHomePaperList()
+  }
   uni.$on('postNewTopic', handleRefresh)
 })
 onUnload(() => {
@@ -273,6 +303,7 @@ onUnload(() => {
 watch(
   activeIndex,
   (value) => {
+    if (!isLogin.value) return
     if (
       value &&
       homeOtherListMap.value[currentListKey.value].page === DEFAULT_PAGE
@@ -283,6 +314,15 @@ watch(
       )
   },
   { deep: true, immediate: true }
+)
+watch(
+  isLogin,
+  () => {
+    if (isLogin.value) {
+      handleRefresh()
+    }
+  },
+  { deep: true }
 )
 const handleTabSwitch = (index: number) => {
   activeIndex.value = index

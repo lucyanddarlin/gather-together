@@ -44,9 +44,12 @@
 <script setup lang="ts">
 import { onReady } from '@dcloudio/uni-app'
 import { type Ref, ref, watchEffect } from 'vue'
+import { storeToRefs } from 'pinia'
 import { showMsg, useScrollHeight } from '@/utils/common'
 import { PROFILE } from '@/utils/constant'
+import { useUserStore } from '@/store/modules/user'
 
+const { isLogin } = storeToRefs(useUserStore())
 interface IButton {
   icon: string
   url: string
@@ -85,6 +88,10 @@ const buttonList: IButton[] = [
   },
 ]
 const handleClickBtn = (url: string, index: number) => {
+  if (!isLogin.value) {
+    showMsg('请先登陆')
+    return
+  }
   const blackList = [PROFILE.FOLLOW, PROFILE.FAVOUR]
   if (blackList.includes(index)) {
     showMsg('即将开放', 'none', 700)
