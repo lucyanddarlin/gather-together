@@ -21,27 +21,11 @@
       class="iconfont icon-gengduo"
       @click.stop="handleShowOptions"
     ></span>
-    <view v-if="type === GATHER" flex my-20rpx>
-      <view
-        px-12rpx
-        py-8rpx
-        mr-12rpx
-        rounded-8rpx
-        text-24rpx
-        class="bg-#F5F5F5 text-#FFAF50"
-      >
-        #互联网+
-      </view>
+    <view mt-20rpx>
+      <slot name="label"></slot>
     </view>
-    <view
-      my-20rpx
-      p-16rpx
-      rounded-12rpx
-      text-28rpx
-      text-justify
-      class="paper-desc bg-#F5F5F5 text-#A4A4A4"
-    >
-      <slot name="content"></slot>
+    <view class="paper-desc">
+      {{ commonObj.content }}
     </view>
     <view
       v-if="type === HOME && !isNull(paperItem.picture_urls)"
@@ -88,7 +72,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { GATHER, HOME } from '@/utils/constant'
+import { ACTIVITY, GATHER, HOME, LECTURE, RACE } from '@/utils/constant'
 import { isNull } from '@/utils/common'
 
 interface PaperItem {
@@ -121,9 +105,27 @@ interface IGatherItem {
   race_name: any
   state: Number
 }
+
+interface OtherListItem {
+  post_id: string
+  post_type: number
+  race_level: number
+  state: number
+  second_type: number
+  zone_id: string
+  detail: string
+  sponsor_type: number
+  sponsor_name: string
+  start_time: string
+  end_time: string
+  title: string
+  regist_info: string
+  location: string
+  creator_id: string
+}
 const props = defineProps<{
   type?: number
-  paperItem: Partial<PaperItem & IGatherItem>
+  paperItem: Partial<PaperItem & IGatherItem & OtherListItem>
 }>()
 const emit = defineEmits(['moreOptions'])
 const overflowLength = 100
@@ -144,6 +146,14 @@ watch(
     } else if (props.type === GATHER) {
       newContent = props.paperItem.introduce!
       url = `/pagesSub/gatherSub/gatherSub-project?project_id=${props.paperItem.project_id}`
+    } else if (
+      props.type === RACE ||
+      props.type === LECTURE ||
+      props.type === ACTIVITY
+    ) {
+      newContent = props.paperItem.detail!
+      //  TODO: link to other list
+      url = ''
     }
     commonObj.content =
       newContent.length > overflowLength
@@ -213,6 +223,18 @@ const handleClickImage = (url: string) => {
         padding-bottom: calc(33.3% - 8rpx);
       }
     }
+  }
+  .paper-desc {
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    margin-bottom: 20rpx;
+    padding: 16rpx;
+    border-radius: 16rpx;
+    font-size: 28rpx;
+    text-align: justify;
+    background-color: #f5f5f5;
+    color: #a4a4a4;
   }
 }
 </style>
