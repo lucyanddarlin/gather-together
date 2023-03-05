@@ -1,23 +1,9 @@
 <template>
   <view class="bg" pt-12rpx>
-    <view flex items-center justify-between>
-      <view flex justify-start h-72rpx w-584rpx pl-28rpx class="bar">
-        <view h-72rpx>
-          <u-icon mt-16rpx name="map" size="46rpx" color="#598DF9" />
-        </view>
-        <view h-72rpx>
-          <div mt-12rpx ml-24rpx>{{ cur_area }}</div>
-        </view>
-      </view>
-      <view class="bar filter" @tap="handleFilter">
-        <span mb-4rpx>筛选</span>
-        <span
-          class="iconfont icon-shaixuan"
-          :style="{ fontSize: '44rpx' }"
-          color="#598DF9"
-        ></span>
-      </view>
-    </view>
+    <PublisherFilter
+      :cur_area="cur_area"
+      @show-filter="handleFilter"
+    ></PublisherFilter>
     <scroll-view
       class="main-page"
       :scroll-y="true"
@@ -102,6 +88,7 @@ import {
 import PublishManageCardItem from './components/publish-manage-card-item.vue'
 import PublishButton from './components/publish-button.vue'
 import PublishRadioGroup from './components/publish-radio-group.vue'
+import PublisherFilter from './components/publisher-filter.vue'
 import type { BodyFilter, FilterPopupData, Type } from '@/typings/publisher'
 
 const isTriggered = ref<boolean>(false)
@@ -269,21 +256,6 @@ function handleBackToTop() {
 .bg {
   background-color: #f7f7f7;
   min-height: 96rpx;
-}
-.bar {
-  background-color: white;
-  color: #598df9;
-  font-size: 36rpx;
-  border-radius: 12rpx;
-}
-
-.filter {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  height: 72rpx;
-  width: 158rpx;
-  padding-right: 20rpx;
 }
 
 .main-page {

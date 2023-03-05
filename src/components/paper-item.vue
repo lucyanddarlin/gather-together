@@ -13,6 +13,7 @@
       <slot name="title"></slot>
     </view>
     <span
+      v-if="props.dots"
       absolute
       w-50rpx
       h-50rpx
@@ -124,7 +125,10 @@ interface OtherListItem {
   creator_id: string
 }
 const props = defineProps<{
+  desc?: string
+  url?: string
   type?: number
+  dots?: boolean
   paperItem: Partial<PaperItem & IGatherItem & OtherListItem>
 }>()
 const emit = defineEmits(['moreOptions'])
@@ -151,9 +155,8 @@ watch(
       props.type === LECTURE ||
       props.type === ACTIVITY
     ) {
-      newContent = props.paperItem.detail!
-      //  TODO: link to other list
-      url = ''
+      newContent = props.desc || props.paperItem.detail!
+      url = props.url || ''
     }
     commonObj.content =
       newContent.length > overflowLength

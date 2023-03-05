@@ -309,6 +309,9 @@ export interface GetPublish {
   creator_name: null
   is_fav: null
   time_state: null
+  lecture_type: number
+  race_type: number
+  event_type: number
 }
 
 export interface ChangeBody {

@@ -133,9 +133,18 @@ export function GetPublishToDesc(p: GetPublish) {
     description: p.detail,
     access: p.regist_info,
     imgs: p.picture_urls,
-    score_type: p.second_type, // 注意这里是临时应用，希望后面能改成更规范的命名
+    score_type: p.second_type,
   }
   if (p.race_level !== undefined) desc.race_level = p.race_level
+  if (p.post_type === Type.比赛) {
+    desc.score_type = p.race_type
+  }
+  if (p.post_type === Type.活动) {
+    desc.score_type = p.event_type
+  }
+  if (p.post_type === Type.讲座) {
+    desc.score_type = p.lecture_type
+  }
   return desc
 }
 
