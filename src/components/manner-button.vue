@@ -34,6 +34,7 @@ const toPublishApi = () => {
       icon: 'success',
       duration: 2000,
     })
+    uni.navigateBack()
   } else {
     uni.showToast({
       title: '您还未填写完整',

@@ -49,7 +49,9 @@
           rounded-12rpx
           h-full
           p-24rpx
+          text-32rpx
           bg-white
+          class="text-#23272E"
           placeholder-style="color:#BDBDBD"
           :maxlength="3000"
         />
@@ -59,7 +61,7 @@
       ></view
     >
     <!-- 上传图片 -->
-    <GatherSubUpload />
+    <!-- <GatherSubUpload /> -->
 
     <MannerButton
       :value="'发布'"
@@ -70,7 +72,8 @@
 </template>
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import GatherSubUpload from '@/pagesSub/gatherSub/components/gatherSub-upload.vue'
+// todo 隐藏发布图片的组件，后续接入接口
+// import GatherSubUpload from '@/pagesSub/gatherSub/components/gatherSub-upload.vue'
 import MannerButton from '@/components/manner-button.vue'
 const formDataFulled = ref(false)
 const wordCount = computed(() => {

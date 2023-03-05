@@ -1,15 +1,14 @@
 <template>
   <!-- 顶部名字 和 学校信息 -->
   <view flex mb-24rpx pl-40rpx>
-    <view
+    <img
       v-show="activeIndex === 1"
-      w-124rpx
-      h-124rpx
-      bg-blue
-      rounded-50%
+      src="@/static/avater_default.png"
+      w-130rpx
+      h-130rpx
       mr-30rpx
       mt-12rpx
-    ></view>
+    />
     <view>
       <view class="text-#534E4E text-52rpx mb-12rpx font-bold">{{
         props.name
