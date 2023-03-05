@@ -53,3 +53,9 @@ export const reqModifyCVCert = (data: {
 
 export const reqRemoveCVCert = (cert_id: string) =>
   post<{ [key: string]: string }>(`/user/vita/remove/cert?cert_id=${cert_id}`)
+
+export const reqGetOwnTopic = (page: number, size: number) =>
+  get('/user/forum/list', { page, size })
+
+export const reqGetOwnProject = (page: number, size: number) =>
+  get('/gather/list/created/project', { page, size })

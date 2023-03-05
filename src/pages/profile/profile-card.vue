@@ -1,5 +1,11 @@
 <template>
-  <view class="profile-card" px-30rpx overflow-hidden -mt-60rpx>
+  <view
+    id="profileCard"
+    class="profile-card"
+    px-30rpx
+    overflow-hidden
+    -mt-60rpx
+  >
     <view
       rounded-t-14rpx
       p-30rpx
@@ -36,7 +42,9 @@
 </template>
 
 <script setup lang="ts">
-import { showMsg } from '@/utils/common'
+import { onReady } from '@dcloudio/uni-app'
+import { type Ref, ref, watchEffect } from 'vue'
+import { showMsg, useScrollHeight } from '@/utils/common'
 import { PROFILE } from '@/utils/constant'
 
 interface IButton {
@@ -86,6 +94,16 @@ const handleClickBtn = (url: string, index: number) => {
     url,
   })
 }
+const inputH = ref<number>(0)
+onReady(() => {
+  let inputHeight: Ref<number>
+  // eslint-disable-next-line prefer-const
+  inputHeight = useScrollHeight('#profileCard')
+  watchEffect(() => {
+    inputH.value = inputHeight.value
+    uni.setStorageSync('PROFILE_CARD_HEIGHT', inputH.value)
+  })
+})
 </script>
 
 <style lang="scss">
