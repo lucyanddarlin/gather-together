@@ -3,17 +3,17 @@
     :style="{
       color: tag.color,
       backgroundColor: '#F5F5F5',
-      height: tag.singleLine ? '24px' : 'auto',
-      marginTop: '4px',
-      marginRight: tag.inline ? '6px' : '18px',
-      paddingLeft: '6px',
-      paddingRight: '6px',
-      paddingTop: '3px',
-      paddingBottom: '2px',
+      height: tag.singleLine ? '48rpx' : 'auto',
+      marginTop: '8rpx',
+      marginRight: tag.inline ? '12rpx' : '36rpx',
+      paddingLeft: '12rpx',
+      paddingRight: '12rpx',
+      paddingTop: '6rpx',
+      paddingBottom: '4rpx',
       width: tag.longTag ? 'auto' : 'fit-content',
       display: tag.inline ? 'inline-block' : 'block',
-      borderRadius: '4px',
-      fontSize: tag.fontSize ? tag.fontSize : '12px',
+      borderRadius: '8rpx',
+      fontSize: tag.fontSize ? tag.fontSize : '32rpx',
       overflow: 'hidden',
       whiteSpace: 'nowrap',
     }"
@@ -23,7 +23,14 @@
       {{ format(Number(tag.date.end), 'yyyy-MM-dd HH:mm') }}
     </div>
     <div v-else-if="tag.filter"># {{ tag.title }}</div>
-    <div v-else>{{ tag.title }}</div>
+    <div
+      v-else
+      :class="{
+        'text-ellipsis': tag.longTag,
+      }"
+    >
+      {{ tag.title }}
+    </div>
   </div>
 </template>
 
@@ -41,4 +48,9 @@ const tag = defineProps<{
 }>()
 </script>
 
-<style scoped></style>
+<style scoped>
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>

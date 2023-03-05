@@ -41,11 +41,21 @@
                 :key="item.post_id"
                 :paper-item="item"
                 :type="RACE"
+                :dots="true"
               >
                 <template #title>{{ item.title }}</template>
                 <template #label>
                   <view class="label-item text-main">
-                    {{ item.start_time }} 至 {{ item.end_time }}
+                    {{
+                      format(
+                        Number(toDate(item.start_time)),
+                        'yyyy-MM-dd HH:mm'
+                      )
+                    }}
+                    至
+                    {{
+                      format(Number(toDate(item.end_time)), 'yyyy-MM-dd HH:mm')
+                    }}
                   </view>
                   <view class="label-item text-main">{{ item.location }}</view>
                   <view flex flex-wrap>
@@ -83,7 +93,16 @@
                 <template #title>{{ item.title }}</template>
                 <template #label>
                   <view class="label-item text-main">
-                    {{ item.start_time }} 至 {{ item.end_time }}
+                    {{
+                      format(
+                        Number(toDate(item.start_time)),
+                        'yyyy-MM-dd HH:mm'
+                      )
+                    }}
+                    至
+                    {{
+                      format(Number(toDate(item.end_time)), 'yyyy-MM-dd HH:mm')
+                    }}
                   </view>
                   <view class="label-item text-main">{{ item.location }}</view>
                   <view flex flex-wrap>
@@ -122,7 +141,16 @@
                 <template #title>{{ item.title }}</template>
                 <template #label>
                   <view class="label-item text-main">
-                    {{ item.start_time }} 至 {{ item.end_time }}
+                    {{
+                      format(
+                        Number(toDate(item.start_time)),
+                        'yyyy-MM-dd HH:mm'
+                      )
+                    }}
+                    至
+                    {{
+                      format(Number(toDate(item.end_time)), 'yyyy-MM-dd HH:mm')
+                    }}
                   </view>
                   <view class="label-item text-main">{{ item.location }}</view>
                   <view flex flex-wrap>
@@ -207,6 +235,7 @@
 <script setup lang="ts">
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { format } from 'date-fns'
 import { storeToRefs } from 'pinia'
 import {
   ACTIVITY,
@@ -223,7 +252,7 @@ import {
   SPONSOR_LIST,
 } from '@/utils/constant'
 import { useHomeStore } from '@/store/modules/home'
-import { deepClone, isNull } from '@/utils/common'
+import { deepClone, isNull, toDate } from '@/utils/common'
 import { useUserStore } from '@/store/modules/user'
 import ChangeFilter from './change-filter.vue'
 import Home from './home.vue'

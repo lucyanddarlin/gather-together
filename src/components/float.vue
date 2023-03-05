@@ -34,6 +34,7 @@ const props = defineProps<{
   gather?: boolean
   scrollValue: number
   isShowPopup?: boolean
+  url?: string
 }>()
 const emit = defineEmits(['backToTop'])
 const handleLinkToPublish = () => {
@@ -43,6 +44,12 @@ const handleLinkToPublish = () => {
     })
   } else if (props.gather) {
     uni.navigateTo({ url: '/pagesSub/gatherSub/gatherSub-publish' })
+    return
+  }
+  if (props.url) {
+    uni.navigateTo({
+      url: props.url,
+    })
   }
 }
 const handleBackToTop = () => {

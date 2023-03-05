@@ -90,19 +90,19 @@
         {
           "path": "publisherSub/publisher-manage",
           "style": {
-            "navigationStyle": "custom"
+            "navigationBarTitleText": ""
           }
         },
         {
           "path": "publisherSub/publisher-detail",
           "style": {
-            "navigationStyle": "custom"
+            "navigationBarTitleText": ""
           }
         },
         {
           "path": "publisherSub/publisher-publish",
           "style": {
-            "navigationStyle": "custom"
+            "navigationBarTitleText": ""
           }
         },
         {

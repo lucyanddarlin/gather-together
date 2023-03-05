@@ -101,3 +101,27 @@ export const chooseImages = (count: number): Promise<string[]> => {
     })
   )
 }
+
+export function toDate(s: string) {
+  const toNumber = (str: string) => Number.parseInt(str)
+  const y = toNumber(s.slice(0, 4))
+  const d = toNumber(s.slice(5, 7))
+  const m = toNumber(s.slice(8, 10))
+  const h = toNumber(s.slice(11, 13))
+  const min = toNumber(s.slice(14, 16))
+  const sec = toNumber(s.slice(17, 19))
+  return new Date(y, d, m, h, min, sec)
+}
+
+export function hash(s: string): number {
+  let hash = 0,
+    i,
+    chr
+  if (s.length === 0) return hash
+  for (i = 0; i < s.length; i++) {
+    chr = s.charCodeAt(i)
+    hash = (hash << 5) - hash + chr
+    hash = Math.trunc(hash)
+  }
+  return hash
+}

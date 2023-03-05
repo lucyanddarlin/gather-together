@@ -1,21 +1,20 @@
 <template>
   <view>
-    <view mt-38rpx mb-24rpx text-32rpx :style="{ color: `#4F82F3` }"
+    <view class="title"
       >{{ props.title }}
-      <span text-32rpx :style="{ color: `#A4A4A4` }"> 单选 </span>
+      <span class="sub-title"> 单选 </span>
     </view>
     <view grid grid-cols-3 gap-x-40rpx gap-y-12rpx>
-      <view v-for="option in options" :key="props.title + option.name" ml-20rpx>
+      <view v-for="(label, index) in options" :key="index" ml-20rpx>
         <view
-          w-188rpx
-          h-74rpx
-          text-24rpx
-          flex-center
-          :class="option.value === selected ? 'selected' : 'unselected'"
-          @tap="handleClick(props.title, option.value)"
+          class="btn"
+          :class="label.isSelected ? 'selected' : 'unselected'"
+          transition-color
+          duration-300
+          @tap="handleClickLabel(label, options)"
         >
           <view>
-            {{ option.name }}
+            {{ label.value }}
           </view>
         </view>
       </view>
@@ -24,25 +23,48 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import type { LabelItem } from '@/typings/publisher'
 
 const props = defineProps<{
   title: string
-  options: Array<{ name: string; value: number }>
-  func: Function
+  options: Array<LabelItem>
+  multiSelect?: boolean
 }>()
-const selected = ref()
 
-const handleClick = (title: string, value: number) => {
-  selected.value = value
-  props.func(title, value)
+const handleClickLabel = (label: LabelItem, list: LabelItem[]) => {
+  console.log(props.multiSelect, label.isSelected)
+  const isSelected = label.isSelected
+  if (!props.multiSelect) list.forEach((item) => (item.isSelected = false))
+  label.isSelected = !isSelected
+  console.log('label.isSelected', label.isSelected)
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../style/color';
+.title {
+  margin-top: 38rpx;
+  margin-bottom: 24rpx;
+  font-size: 36rpx;
+  color: $b-2;
+}
+.sub-title {
+  font-size: 36rpx;
+  color: $g-tag;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 188rpx;
+  height: 74rpx;
+  font-size: 28rpx;
+}
+
 .selected {
-  color: #f5f5f5;
-  background-color: #4f82f3;
+  color: $bg;
+  background-color: $b-2;
   border-radius: 18rpx;
   font-weight: 600;
 }

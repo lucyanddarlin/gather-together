@@ -1,18 +1,8 @@
 <template>
-  <u-navbar :back-text="'编辑' + publisherStore.cur_type">
-    <template #left>
-      <div>GG</div>
-    </template>
-  </u-navbar>
-  <view v-if="!publish">该{{ post_type }}不存在</view>
-  <view v-else relative class="bg">
-    <view
-      v-for="[key, value] in Object.entries(publish)"
-      :key="key + value.title"
-      pl-38rpx
-    >
-      <view v-if="value.type">
-        <view pt-48rpx pb-32rpx v-if="key === 'start_time'" class="title"
+  <view v-if="publish" relative class="bg">
+    <view v-for="[key, value] in publish.entries" :key="hash(key)" pl-38rpx>
+      <view v-if="value instanceof Object && value.type">
+        <view v-if="key === 'start_time'" pt-48rpx pb-32rpx class="title"
           >报名日期</view
         >
         <view
@@ -25,65 +15,91 @@
           class="title"
         >
           {{ value.title }}
+          <view v-if="key === 'host'" float-right mr-46rpx>
+            <view
+              relative
+              flex
+              justify-center
+              items-center
+              class="text-option"
+              w-210rpx
+              h-54rpx
+              fw-500
+              :style="{
+                backgroundColor: '#598DF9',
+                color: '#fff',
+                fontSize: '28rpx',
+                borderRadius: '9rpx',
+              }"
+              @tap="options['host_type'].isShow = true"
+            >
+              <view pr-10rpx> {{ options['host_type'].value }} </view>
+              <view absolute right-10rpx class="iconfont icon-qianwang" />
+            </view>
+            <u-picker
+              v-model="options['host_type'].isShow"
+              mode="selector"
+              :range="options['host_type'].range"
+              @confirm="setOptions($event, 'host_type')"
+              @cancel="options['host_type'].isShow = false"
+              @close="options['host_type'].isShow = false"
+            ></u-picker>
+          </view>
         </view>
-        <!-- 不渲染标题，且伴随文字的选项（主办方类型）-->
-        <view
-          v-else-if="
-            key !== 'race_level' && key !== 'start_time' && key !== 'end_time'
-          "
-          absolute
-          flex
-          justify-center
-          items-center
-          class="text-option"
-          w-210rpx
-          h-54rpx
-          right-46rpx
-          top-790rpx
-          fw-500
-          :style="{
-            backgroundColor: '#598DF9',
-            color: '#fff',
-            fontSize: '24rpx',
-            borderRadius: '9rpx',
-          }"
-          @tap="options[key as keyof Options].isShow = true"
-        >
-          <view pr-10rpx> {{ options[key as keyof Options].value }} </view>
-          <view absolute right-10rpx class="iconfont icon-qianwang" />
-          <u-picker
-            v-model="options[key as keyof Options].isShow"
-            mode="selector"
-            :range="options[key as keyof Options].range"
-            @confirm="setOptions($event, key)"
-          ></u-picker>
-        </view>
+
         <view v-if="value.type === 'text'" mt-36rpx>
           <input
-            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :value="(value.value as string)"
             type="text"
             :placeholder="value.placeholder"
+            placeholder-style="font-weight: 500;font-size: 32rpx;color: #bdbdbd"
             class="input-text"
             :maxlength="value.limit"
-            @input="change($event, key)"
+            @input="value.limit && change($event, key, value.limit)"
           />
         </view>
+
+        <view v-if="value.type === 'text_elastic'" relative>
+          <textarea
+            :value="(value.value as string)"
+            :placeholder="value.placeholder"
+            placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
+            class="input-elastic"
+            auto-height
+            :maxlength="value.limit"
+            @input="value.limit && change($event, key, value.limit)"
+          ></textarea>
+        </view>
+
+        <view v-if="value.type === 'text_no_enter'" relative>
+          <textarea
+            :value="(value.value as string)"
+            :placeholder="value.placeholder"
+            placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
+            auto-height
+            rows="1"
+            class="input-elastic"
+            :maxlength="value.limit"
+            @input="value.limit && change($event, key, value.limit, true)"
+          ></textarea>
+        </view>
+
         <view v-if="value.type === 'textarea'" relative>
           <textarea
-            :value="((publish[key as keyof Publish] as IField).value as string)"
+            :value="(value.value as string)"
             :placeholder="value.placeholder"
+            placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
             class="input-textarea"
             :maxlength="value.limit"
-            @input="change($event, key)"
+            @input="value.limit && change($event, key, value.limit)"
           ></textarea>
           <PublishTextCounter
             absolute
             right-54rpx
             bottom-12rpx
-            :cur="((publish[key as keyof Publish] as IField).value as string).length"
+            :cur="(value.value as string).length"
             :max="2000"
           />
-          <!-- TODO: 字数显示 -->
         </view>
         <!-- 时间选择器 -->
         <view v-if="value.type === 'time'">
@@ -91,16 +107,19 @@
             v-model="picker[key as keyof Picker].isShow"
             :params="params"
             @confirm="setDate($event, key)"
+            @cancel="picker[key as keyof Picker].isShow = false"
+            @close="picker[key as keyof Picker].isShow = false"
           ></u-picker>
           <view>
             <PublishItem
               font-weight="500"
               width="674rpx"
               height="112rpx"
-              font-size="28rpx"
+              font-size="32rpx"
               color="#4C89FF"
               bg-color="#ffffff"
               border-radius="12rpx"
+              class="picker-date"
               :title="picker[key as keyof Picker].value"
               @tap="picker[key as keyof Picker].isShow = true"
             ></PublishItem>
@@ -118,13 +137,15 @@
             mode="selector"
             :range="options[key as keyof Options].range"
             @confirm="setOptions($event, key)"
+            @cancel="options[key as keyof Options].isShow = false"
+            @close="options[key as keyof Options].isShow = false"
           ></u-picker>
           <view mt-32rpx>
             <PublishItem
               font-weight="500"
               width="674rpx"
               height="88rpx"
-              font-size="28rpx"
+              font-size="32rpx"
               :color="value.value !== undefined ? '#FEA651' : '#C8C9CC'"
               bg-color="#ffffff"
               border-radius="12rpx"
@@ -134,9 +155,9 @@
           </view>
         </view>
         <!-- 图片 -->
-        <view v-if="value.type === 'img'">
+        <view v-if="value.type === 'imgs'">
           <u-upload
-            :file-list="getList((publish[key as keyof Publish] as IField).value as string[]) || []"
+            :file-list="getList(value.value as string[] || [])"
             width="162rpx"
             height="162rpx"
             max-count="9"
@@ -153,8 +174,8 @@
           title="发布"
           width="694rpx"
           height="96rpx"
-          text-32rpx
-          :bg-color="isAllFilled ? '#578DF7' : '#DFDFDF'"
+          text-36rpx
+          :bg-color="publish.getWhatToFill(post_type) ? '#DFDFDF' : '#578DF7'"
           color="#fff"
           rounded="24rpx"
           @tap="save"
@@ -166,7 +187,7 @@
             title="保存"
             width="694rpx"
             height="96rpx"
-            text-32rpx
+            text-36rpx
             bg-color="#578DF7"
             color="#fff"
             rounded="24rpx"
@@ -178,7 +199,7 @@
             title="删除"
             width="694rpx"
             height="96rpx"
-            text-32rpx
+            text-36rpx
             :bg-color="
               description && description.state !== State.Delete
                 ? '#FF6969'
@@ -199,28 +220,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { addMonths, format } from 'date-fns'
 import { usePublisherStore } from '@/store/modules/publisher'
 import {
-  HostType,
-  HostTypeList,
-  HostTypeMap,
   type IDescription,
   type IField,
   Level,
-  LevelMap,
   type Publish,
-  type ScoreType,
   State,
   type Type,
-  TypeMap,
-  getEnum,
-  getMap,
-  getScoreConstant,
-  PubToDesc,
 } from '@/typings/publisher'
+import { HOST, LEVEL, TYPE_LIST, TYPE_NAMES } from '@/utils/publishConstant'
+import { DescToPub, PubToDesc } from '@/typings/publisher/resolve'
+import { hash, showMsg } from '@/utils/common'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
 import PublishTextCounter from './components/publish-text-counter.vue'
@@ -228,8 +242,8 @@ import PublishTextCounter from './components/publish-text-counter.vue'
 const id = ref('')
 const publisherStore = usePublisherStore()
 
-type PostType = keyof typeof Type
-const post_type = publisherStore.cur_type as PostType
+const type: Type = publisherStore.cur_type
+const post_type: string = TYPE_LIST[type]
 const description = ref<IDescription | undefined>()
 const publish = ref<Publish>()
 const params = {
@@ -240,6 +254,31 @@ const params = {
   minute: true,
   second: false,
 }
+// 判断是否是新的发布
+const isPublish = computed(() => {
+  return (
+    description.value &&
+    description.value.state === State.Create &&
+    description.value.post_id === 0
+  )
+})
+
+if (!publish.value) {
+  uni.showLoading({
+    title: '加载中',
+    mask: true,
+  })
+}
+
+// 显示加载
+watch(
+  () => publish.value,
+  (newVal: Publish | undefined) => {
+    if (newVal) {
+      uni.hideLoading()
+    }
+  }
+)
 
 onLoad((options) => {
   if (!options) {
@@ -249,13 +288,17 @@ onLoad((options) => {
   console.log('options', options)
 
   id.value = options.id
-  description.value = publisherStore.descriptions[TypeMap[post_type]]?.find(
+  description.value = publisherStore.descriptions[type]?.find(
     (item) => `${item.post_id}` === id.value
   )
-  publish.value = publisherStore.getPubFromDesc(description.value, post_type)
+  publish.value = DescToPub(description.value, post_type)
   if (description.value === undefined) {
-    description.value = PubToDesc(publish.value, post_type)
+    description.value = PubToDesc(publish.value, type)
   }
+  // 设置标题
+  uni.setNavigationBarTitle({
+    title: (isPublish.value ? '发布' : '编辑') + post_type,
+  })
   console.log('publish.value', publish.value)
   console.log('description.value', description.value)
 })
@@ -279,7 +322,7 @@ const pickerObj = {
   end_time: {
     isShow: false,
     value: computed(() => {
-      if (!publish.value?.start_time) return `请选择${post_type}结束时间`
+      if (!publish.value?.end_time) return `请选择${post_type}结束时间`
 
       return format(publish.value.end_time.value as Date, 'yyyy-MM-dd HH:mm')
     }),
@@ -294,23 +337,18 @@ const optionsObj = {
     isShow: false,
     value: computed(() => {
       if (publish.value?.host_type.value === undefined) return `主办方类型`
-      const host_type: HostType = publish.value.host_type.value as HostType
-      return HostTypeList[host_type]
+      return HOST[publish.value.host_type.value as number]
     }),
-    range: Object.values(HostTypeMap),
-    enummer: HostTypeMap,
-    map: HostType,
+    range: HOST,
   },
   score_type: {
     isShow: false,
     value: computed(() => {
       if (publish.value?.score_type.value === undefined)
         return `请选择${post_type}类型`
-      return getEnum(post_type)[publish.value.score_type.value as ScoreType]
+      return TYPE_NAMES[type][publish.value.score_type.value as number]
     }),
-    range: Object.values(getScoreConstant(post_type)),
-    enummer: getEnum(post_type),
-    map: getMap(post_type),
+    range: TYPE_NAMES[type],
   },
   race_level: {
     isShow: false,
@@ -320,46 +358,44 @@ const optionsObj = {
         return `请选择${post_type}级别`
       return Level[race_level.value as Level]
     }),
-    range: Object.values(LevelMap),
-    enummer: Level,
-    map: LevelMap,
+    range: LEVEL,
   },
 }
 type Options = typeof optionsObj
 const options = ref(optionsObj)
 
-// 判断是否是新的发布
-const isPublish = computed(() => {
-  return (
-    description.value &&
-    description.value.state === State.Create &&
-    description.value.post_id === 0
-  )
-})
-
-const isAllFilled = computed(() => {
-  return publish.value?.isAllFilled() || false
-})
-
-function change(event: any, key: string) {
+function change(event: any, key: string, limit: number, removeEnter = false) {
+  if (removeEnter) {
+    event.target.value = event.target.value.replace(/\n/g, '')
+  }
+  if (event.target.value.length === limit) {
+    showMsg(`最多输入${limit}个字符`)
+  }
   publish.value &&
     ((publish.value[key as keyof Publish] as IField).value =
       event.target.value.trim())
 }
 
 function setDate(result: any, key: string) {
+  const newDate: Date = addMonths(
+    new Date(result.year, result.month, result.day, result.hour, result.minute),
+    -1
+  )
+  if (key === 'start_time') {
+    const end_time: Date = publish.value?.end_time.value as Date
+    if (end_time && end_time < newDate) {
+      showMsg('晚于结束时间', 'error', 2000)
+      return
+    }
+  } else if (key === 'end_time') {
+    const start_time: Date = publish.value?.start_time.value as Date
+    if (start_time && start_time > newDate) {
+      showMsg('早于开始时间', 'error', 2000)
+      return
+    }
+  }
   publish.value &&
-    ((publish.value[key as keyof Publish] as IField).value = addMonths(
-      new Date(
-        result.year,
-        result.month,
-        result.day,
-        result.hour,
-        result.minute
-      ),
-      -1
-    ))
-  // picker.value[key as keyof Picker].value = dateForm
+    ((publish.value[key as keyof Publish] as IField).value = newDate)
 }
 function setOptions(result: any, key: string) {
   publish.value &&
@@ -376,14 +412,18 @@ function chooseImage(lists: Object, key: string) {
 }
 
 function save() {
-  if (!isAllFilled.value) {
+  if (!publish.value) return
+  const not_filled: string | undefined =
+    publish.value && publish.value.getWhatToFill(post_type)
+  // 有未填写的字段（即返回值不为''）
+  if (not_filled) {
     uni.showToast({
-      title: '请填写完整信息',
+      title: `请填写${not_filled}`,
       icon: 'none',
     })
     return
   }
-  publisherStore.update(publish.value as Publish, post_type)
+  publisherStore.update(publish.value)
 }
 
 function getList(urls: Array<string> | undefined) {
@@ -403,14 +443,14 @@ function getList(urls: Array<string> | undefined) {
 
 .title {
   font-weight: 600;
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #8c99a0;
 }
 .input-text {
   font-weight: 500;
   width: 674rpx;
   height: 86rpx;
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #000;
   background-color: #ffffff;
   padding-left: 26rpx;
@@ -422,11 +462,23 @@ function getList(urls: Array<string> | undefined) {
   height: 170rpx;
   border-radius: 12rpx;
   margin-top: 30rpx;
-  font-size: 28rpx;
+  font-size: 32rpx;
   font-weight: 500;
   background-color: white;
   line-height: 28rpx;
   padding: 24rpx;
-  padding-bottom: 44rpx;
+  padding-bottom: 48rpx;
+}
+
+.input-elastic {
+  width: 626rpx;
+  height: auto;
+  border-radius: 12rpx;
+  margin-top: 30rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  background-color: white;
+  line-height: 28rpx;
+  padding: 24rpx;
 }
 </style>
