@@ -25,6 +25,7 @@
         :key="item.topic_id"
         :paper-item="item"
         :type="HOME"
+        dots
         @more-options="handleShowMoreOptions"
       >
         <template #title>{{ item.title }}</template>

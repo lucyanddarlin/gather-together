@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
   <view class="discovery-page bg-#f7f7f7">
-    <div h-178rpx class="bg-#4380FF"></div>
+    <NavBar />
     <GatherSelectPage w-full />
     <scroll-view
       class="main-page"
@@ -478,7 +478,7 @@ const handleConfirmFilter = async () => {
   height: 100vh;
 }
 .main-page {
-  height: calc(100% - 350rpx);
+  height: calc(100% - 372rpx);
   background-color: #f7f7f7;
 }
 .filter-btn {

@@ -38,7 +38,7 @@
       >
         <!-- <span v-if="!child">2</span> -->
         <span>回复</span>
-        <view class="iconfont icon-sousuo" />
+        <view class="iconfont icon-qianwang !text-24rpx" />
       </view>
     </view>
   </view>

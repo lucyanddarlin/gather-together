@@ -1,6 +1,6 @@
 <template>
   <view class="discovery-page">
-    <div h-178rpx class="bg-#598DF9"></div>
+    <NavBar />
     <scroll-view
       class="main-page"
       :scroll-y="true"
@@ -455,7 +455,7 @@ const handleResetFilter = async () => {
 .discovery-page {
   height: 100vh;
   .main-page {
-    height: calc(100% - 178rpx);
+    height: calc(100% - 200rpx);
     background-color: #f7f7f7;
     .tab-section {
       position: sticky;

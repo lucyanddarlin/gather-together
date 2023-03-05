@@ -23,7 +23,7 @@
             </span>
           </view>
         </view>
-        <view class="iconfont icon-sousuo" @click="handleShowMoreOptions" />
+        <view class="iconfont icon-gengduo" @click="handleShowMoreOptions" />
       </view>
       <view class="content-wrap">
         <span>{{ homeTopicInfo.content }}</span>
@@ -55,13 +55,13 @@
         <view class="bottoms-wrap">
           <view flex items-center mr-56rpx>
             <view class="bottom-wrap">
-              <view class="iconfont icon-sousuo" />
+              <view class="iconfont icon-shoucang" />
             </view>
             <view> {{ homeTopicInfo.like_count }}</view>
           </view>
           <view flex items-center class="text-#4380FF">
             <view class="bottom-wrap">
-              <view class="iconfont icon-sousuo" />
+              <view class="iconfont icon-fenxiang" />
             </view>
             <view>分享</view>
           </view>
@@ -396,7 +396,7 @@ const handleShowMoreOptions = () => {
     word-wrap: break-word;
     white-space: pre-wrap;
     margin-top: 26rpx;
-    font-size: 28rpx;
+    font-size: 32rpx;
     color: #575757;
     line-height: 40rpx;
     text-align: justify;
@@ -451,6 +451,9 @@ const handleShowMoreOptions = () => {
       align-items: center;
       background-color: #fff;
       box-shadow: 0px 1px 4px 0px rgba(67, 128, 255, 0.2);
+      .iconfont {
+        font-size: 40rpx !important;
+      }
     }
   }
   .input-wrap {

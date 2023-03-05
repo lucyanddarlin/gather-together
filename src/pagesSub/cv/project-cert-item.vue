@@ -11,13 +11,13 @@
     <template v-if="isProject">
       <view w-full h-full flex items-center>
         <view
-          class="iconfont icon-sousuo text-#FF6969"
+          class="iconfont icon-cancel text-#FF6969 !text-40rpx"
           @click.stop="handleRemove"
         ></view>
         <view flex-1 flex-center text-32rpx font-bold>
           {{ item.project_name }}
         </view>
-        <view class="iconfont icon-sousuo text-main"></view>
+        <view class="iconfont icon-qianwang text-main !text-40rpx"></view>
       </view>
     </template>
     <template v-if="isCert">
@@ -27,7 +27,7 @@
         </view>
         <view
           v-if="isCert"
-          class="iconfont icon-sousuo text-#FF6969"
+          class="iconfont icon-cancel text-#FF6969 !text-40rpx"
           @click.stop="handleRemove"
         />
         <view v-else class="iconfont icon-sousuo text-main"></view>

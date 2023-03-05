@@ -71,7 +71,7 @@
         </template>
         <template v-else-if="add">
           <view flex-center text-main @click="handleLinkToAdd">
-            <view class="iconfont icon-sousuo mr-20rpx" />
+            <view class="iconfont icon-add mr-20rpx" />
             <view>添加内容</view>
           </view>
         </template>

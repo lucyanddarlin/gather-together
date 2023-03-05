@@ -18,21 +18,21 @@
       <view flex p-30rpx>
         <view class="button-wrap" @click="handleClickCopy(TITLE)">
           <view class="button">
-            <text class="iconfont icon-sousuo"></text>
+            <text class="iconfont icon-copy"></text>
           </view>
           <view class="notice">复制标题</view>
         </view>
         <view class="button-wrap" @click="handleClickCopy(CONTENT)">
           <view class="button">
-            <text class="iconfont icon-sousuo"></text>
+            <text class="iconfont icon-copy"></text>
           </view>
           <view class="notice">复制内容</view>
         </view>
-        <view class="button-wrap">
+        <view v-if="false" class="button-wrap">
           <view class="button">
-            <text class="iconfont icon-sousuo"></text>
+            <text class="iconfont icon-delete"></text>
           </view>
-          <view class="notice">复制</view>
+          <view class="notice">删除</view>
         </view>
       </view>
     </view>

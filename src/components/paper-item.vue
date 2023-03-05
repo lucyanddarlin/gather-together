@@ -64,7 +64,7 @@
         text-white
         class="bg-#598DF9"
       >
-        <span class="iconfont icon-sousuo"></span>
+        <span class="iconfont icon-weizhi"></span>
         <span text-22rpx ml-8rpx>广州大学</span>
       </view>
     </view>

@@ -16,7 +16,6 @@ interface UploadQuery {
 const dispatchUpload = (filePath: string, query: UploadQuery, host: string) => {
   console.log('query', query)
   console.log('host', host)
-
   return new Promise((resolve, reject) => {
     uni.uploadFile({
       url: host,
@@ -52,10 +51,14 @@ const imageUpload = (
   })
   const { accessKeyId, dir, host, callback, policy, signature } = data
   const imagePromise = []
+  console.log('fsfsdfs', image)
+
   // eslint-disable-next-line no-restricted-syntax
   for (const index in image) {
+    console.log('index 测试', index)
     const filePath = image[index]
     const key = `${dir}_${index}${Date.now()}${Math.trunc(Math.random() * 150)}`
+    console.log('key 测试', key)
     const query: UploadQuery = {
       key,
       dir,
@@ -65,13 +68,11 @@ const imageUpload = (
       callback,
       [types[type][0]]: data[types[type][1] as keyof typeof data],
     }
-    console.log(query)
     imagePromise.push(dispatchUpload(filePath, query, host))
-    console.log(imagePromise)
-    return Promise.all(imagePromise).finally(() => {
-      uni.hideLoading()
-    })
   }
+  return Promise.all(imagePromise).finally(() => {
+    uni.hideLoading()
+  })
 }
 
 const onResolve = () => {
