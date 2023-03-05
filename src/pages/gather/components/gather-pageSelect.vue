@@ -42,8 +42,9 @@ import { storeToRefs } from 'pinia'
 // 引入 gather 主页 的数据
 import { gatherIndexStore } from '@/store/gatherIndex'
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
+import { filterNavList, topNavList } from '@/utils/gatherConstant'
 const useGatherIndexStore = gatherIndexStore()
-const { activeIndex, filterActiveIndex, topNavList, filterNavList, showPopup } =
+const { activeIndex, filterActiveIndex, showPopup } =
   storeToRefs(useGatherIndexStore)
 
 // 切换 页面

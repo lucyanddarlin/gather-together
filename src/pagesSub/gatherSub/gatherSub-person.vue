@@ -21,13 +21,20 @@
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 项目/实践 -->
-    <GatherSubContentSection
-      v-for="item in currentPerson.projects"
-      :key="item"
-      :type="'项目/实践'"
-      :title="item.project_name"
-      :content="item.project_exp"
-    />
+    <view class="p-32rpx text-28rpx text-#4D4D4D">
+      <!-- 种类 -->
+      <view class="text-32rpx font-bold mb-24rpx">技能/类型</view>
+      <view v-for="project in currentPerson.projects" :key="project" mb-36rpx>
+        <!-- tag 类型 -->
+        <view flex mb-20rpx>
+          <GatherContentBlock
+            :content="project.project_name"
+            class="text-#598DF9"
+          />
+        </view>
+        <view> {{ project.project_exp }}</view></view
+      >
+    </view>
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <!-- 证书/荣誉 -->
@@ -65,6 +72,7 @@ import { ref } from 'vue'
 
 import { onLoad } from '@dcloudio/uni-app'
 import GatherSubContentSection from '@/pagesSub/gatherSub/components/gatherSub-ContentSection.vue'
+import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
 import GatherSubAvaterSection from '@/pagesSub/gatherSub/components/gatherSub-AvaterSection.vue'
 import GatherSubFucntionButton from '@/pagesSub/gatherSub/components/gatherSub-fucntionButton.vue'
 import { reqGatherPersonSingle } from '@/api/gather'

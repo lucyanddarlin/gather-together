@@ -18,7 +18,10 @@
           :key="project.project_id"
           :type="GATHER"
           :paper-item="project"
-      /></view>
+          ><template #title>{{ project.project_name }}</template>
+          <template #content>{{ project.introduce }}</template></PaperItem
+        ></view
+      >
       <view v-show="activeIndex == PEOPLE_LIBRARY" pt-20rpx>
         <GatherPeople
           v-for="item in GatherPersonList"
@@ -90,7 +93,6 @@ import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
 import { computed, reactive, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import { currentUserVitaStore } from '@/store/UserVitaStore'
 // 切换页面
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
 import {
@@ -124,20 +126,19 @@ import GatherPeople from '@/pages/gather/components/gather-people.vue'
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()
 // 实例化 当前页面的 数据
-const userStore = currentUserVitaStore()
+
 // 导入 nav 栏 活动的值 ； 导入是否展示 筛选
 const { activeIndex, scrollTop, oldScrollTop, showPopup } =
   storeToRefs(useGatherIndexStore)
 // 导入选中的 人才库 id；人才库数据
-const { currentUserVitaId } = storeToRefs(userStore)
+
 const userGatherProjectStore = gatherProjectStore()
-// todo 后续接口接入，需要换接口的id请求数据
+
 const { GatherProjectList, GatherPersonList } = storeToRefs(
   userGatherProjectStore
 )
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: any) => {
-  currentUserVitaId.value = id
   uni.navigateTo({
     url: `/pagesSub/gatherSub/gatherSub-person?user_id=${id}`,
   })
