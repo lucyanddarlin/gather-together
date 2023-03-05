@@ -115,7 +115,7 @@ export const enum ADD {
   CERTS,
 }
 
-export const PROJECTMODE_LIST = [
+export const PROJECT_MODE_LIST = [
   { index: PROJECT_MODE.IT, value: 'IT/软件', isSelected: false },
   { index: PROJECT_MODE.ELEC, value: '硬件/电子', isSelected: false },
   { index: PROJECT_MODE.NET, value: '互联网+', isSelected: false },
@@ -124,7 +124,7 @@ export const PROJECTMODE_LIST = [
   { index: PROJECT_MODE.DISCOVER, value: '调研/探究', isSelected: false },
 ]
 
-export const PROJECTTYPE_LIST = [
+export const PROJECT_TYPE_LIST = [
   { index: PROJECT_TYPE.CREATE, value: '创新创业', isSelected: false },
   { index: PROJECT_TYPE.TECH, value: '科技学术', isSelected: false },
   { index: PROJECT_TYPE.SOCIAL, value: '人文社科', isSelected: false },
@@ -139,7 +139,7 @@ export const enum MANNER_TYPE {
   SCIENCE,
 }
 
-export const MANNERTYPE_LIST = [
+export const MANNERp_TYPE_LIST = [
   { index: MANNER_TYPE.OPERATION, value: '运营/规划', isSelected: false },
   { index: MANNER_TYPE.APP, value: '软件/硬件', isSelected: false },
   { index: MANNER_TYPE.MONEY, value: '财务/法律', isSelected: false },
@@ -160,7 +160,7 @@ export const enum LEARNING_DIRECTION {
   SPECIAL,
 }
 
-export const LEARNINGDIRECTION_LIST = [
+export const LEARNING_DIRECTION_LIST = [
   { index: LEARNING_DIRECTION.TECHNOLOGY, value: '理工类' },
   { index: LEARNING_DIRECTION.MANAGEMENT, value: '经管类' },
   { index: LEARNING_DIRECTION.LAW, value: '法学类' },

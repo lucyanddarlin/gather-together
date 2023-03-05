@@ -94,8 +94,8 @@ import {
   HOME,
   OWN_PROJECT,
   OWN_TOPIC,
-  PROJECTMODE_LIST,
-  PROJECTTYPE_LIST,
+  PROJECT_MODE_LIST,
+  PROJECT_TYPE_LIST,
 } from '@/utils/constant'
 import { reqGetOwnProject, reqGetOwnTopic } from '@/api/user'
 import { isNull } from '@/utils/common'
@@ -151,8 +151,8 @@ interface ProjectLabelList {
 }
 const projectLabelList: ProjectLabelList = {
   map: [
-    { title: '项目模式', list: PROJECTMODE_LIST },
-    { title: '项目类型', list: PROJECTTYPE_LIST },
+    { title: '项目模式', list: PROJECT_MODE_LIST },
+    { title: '项目类型', list: PROJECT_TYPE_LIST },
   ],
   labelKey: ['project_mode', 'project_type'],
 }

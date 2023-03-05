@@ -149,6 +149,7 @@
     </scroll-view>
     <Float
       :type="activeIndex"
+      home
       :scroll-value="oldScrollTop"
       :is-show-popup="isShowPopup"
       @back-to-top="handleBackToTop"

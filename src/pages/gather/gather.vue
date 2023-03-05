@@ -51,14 +51,12 @@
     </scroll-view>
   </view>
   <!-- 发布 和 返回顶部的按钮 -->
-  <GatherPublishButton
-    v-show="activeIndex === PROJECT_LIBRARY"
-    fixed
-    top-1000rpx
-    right-40rpx
+  <Float
+    :type="activeIndex"
+    :scroll-value="oldScrollTop"
+    gather
+    @back-to-top="handleBackToTop"
   />
-  <GatherBackTopButton fixed top-1130rpx right-40rpx />
-
   <u-popup v-model="showPopup" mode="bottom" height="60%" border-radius="30">
     <view px-32rpx py-52rpx>
       <view
@@ -105,7 +103,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
-import { computed, reactive, watch } from 'vue'
+import { computed, nextTick, reactive, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 
 // 切换页面
@@ -115,21 +113,15 @@ import {
   DEFAULT_SIZE,
   GATHER,
   GATHER_LIST_KEY,
-  LEARNINGDIRECTION_LIST,
-  MANNERTYPE_LIST,
-  PROJECTMODE_LIST,
-  PROJECTTYPE_LIST,
+  LEARNING_DIRECTION_LIST,
+  MANNERp_TYPE_LIST,
+  PROJECT_MODE_LIST,
+  PROJECT_TYPE_LIST,
 } from '@/utils/constant'
 // 导入 gatherIndex 的 pinia
 import { gatherIndexStore } from '@/store/gatherIndex'
 // 引入组件
 import GatherSelectPage from '@/pages/gather/components/gather-pageSelect.vue'
-
-import GatherPublishButton from '@/pages/gather/components/gather-publishButton.vue'
-import GatherBackTopButton from '@/pages/gather/components/gather-backTopButton.vue'
-// 引入项目库组件
-import PaperItem from '@/components/paper-item.vue'
-
 import GatherPeople from '@/pages/gather/components/gather-people.vue'
 import {
   reqGatherPersonList,
@@ -145,8 +137,8 @@ interface ProjectLabelList {
 }
 const projectLabelList: ProjectLabelList = {
   map: [
-    { title: '项目模式', list: PROJECTMODE_LIST },
-    { title: '项目类型', list: PROJECTTYPE_LIST },
+    { title: '项目模式', list: PROJECT_MODE_LIST },
+    { title: '项目类型', list: PROJECT_TYPE_LIST },
   ],
   labelKey: ['project_mode', 'project_type'],
 }
@@ -342,20 +334,26 @@ const handleScrollToLower = async () => {
 const handleScroll = (options: any) => {
   oldScrollTop.value = options.target.scrollTop as number
 }
+const handleBackToTop = () => {
+  scrollTop.value = oldScrollTop.value
+  nextTick(() => {
+    scrollTop.value = 0
+  })
+}
 // 项目筛选菜单
 const ProjectFilterPopupData: any = reactive({
   project: {
     map: [
-      { title: '项目模式', list: PROJECTMODE_LIST },
-      { title: '项目类型', list: PROJECTTYPE_LIST },
+      { title: '项目模式', list: PROJECT_MODE_LIST },
+      { title: '项目类型', list: PROJECT_TYPE_LIST },
     ],
     resultKey: ['project_mode', 'project_type'],
     result: {},
   },
   people: {
     map: [
-      { title: '能力类型', list: MANNERTYPE_LIST },
-      { title: '学习方向', list: LEARNINGDIRECTION_LIST },
+      { title: '能力类型', list: MANNERp_TYPE_LIST },
+      { title: '学习方向', list: LEARNING_DIRECTION_LIST },
     ],
     resultKey: ['manner_type', 'learning_direction'],
     result: {},
