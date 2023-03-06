@@ -72,3 +72,24 @@ export interface CreateCV {
   zone_id: any
   year: any
 }
+
+export enum MODIFY_PROFILE {
+  username,
+  avatar,
+}
+
+export interface ModifyUserProfile {
+  nickname: string
+}
+
+export interface PostOSSResult {
+  accessKeyId: string
+  policy: string
+  signature: string
+  dir: string
+  host: string
+  callback: string
+  userId?: string
+  topicId?: string
+  postId?: string
+}

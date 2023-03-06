@@ -35,6 +35,7 @@
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/modules/user'
 import { SETTING } from '@/utils/constant'
+import { MODIFY_PROFILE } from '@/typings/user'
 import settingItem from './setting-item.vue'
 const { userProfile } = storeToRefs(useUserStore())
 
@@ -47,12 +48,12 @@ interface SettingItem {
 const settingListA: SettingItem[] = [
   {
     type: SETTING.avatar,
-    url: '',
+    url: `/pagesSub/editing-page?type=${MODIFY_PROFILE.avatar}`,
     title: '头像',
   },
   {
     type: SETTING.username,
-    url: '',
+    url: `/pagesSub/editing-page?type=${MODIFY_PROFILE.username}`,
     title: '用户名',
   },
   {

@@ -53,7 +53,7 @@
       <view flex-1>
         <view text-28rpx>{{ paperItem.creator_name }}</view>
         <view text-20rpx class="text-#979797">
-          {{ paperItem.created_at?.toDate().formatData() }}
+          {{ paperItem.created_at?.toDate().formatDate() }}
         </view>
       </view>
       <view

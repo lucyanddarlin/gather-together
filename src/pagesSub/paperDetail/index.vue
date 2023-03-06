@@ -19,7 +19,7 @@
               {{ homeTopicInfo.creator_name }}
             </span>
             <span class="text-20rpx text-#979797">
-              {{ homeTopicInfo.created_at.toDate().formatData() }}
+              {{ homeTopicInfo.created_at.toDate().formatDate() }}
             </span>
           </view>
         </view>
