@@ -116,7 +116,6 @@
         color="#fff"
         bg-color="#73B297"
         rounded="12rpx"
-        box-shadow="4rpx"
         @tap="handlePublish(id)"
       ></PublishButton>
       <PublishButton
@@ -127,7 +126,6 @@
         color="#fff"
         bg-color="#FF6969"
         rounded="12rpx"
-        box-shadow="4rpx"
         icon="share-o"
       ></PublishButton>
     </div>

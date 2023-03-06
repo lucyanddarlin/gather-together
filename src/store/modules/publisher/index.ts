@@ -128,6 +128,7 @@ export const usePublisherStore = defineStore('publisher', () => {
           showMsg('删除成功', 'success')
           d.state = State.Delete
           uni.navigateBack()
+          uni.redirectTo({ url: './publisher-manage' })
         }
       },
     })
