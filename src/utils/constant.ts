@@ -47,6 +47,7 @@ export const enum SETTING {
   id,
   contact,
   about,
+  policy,
   admin,
   publish,
 }
