@@ -1,6 +1,11 @@
 <template>
   <view class="profile-setting">
-    <settingItem v-for="item in settingListA" :key="item.type" :item="item">
+    <settingItem
+      v-for="item in settingListA"
+      :key="item.type"
+      :item="item"
+      @tap="item.url && navigate(item.url)"
+    >
       <view v-if="item.type === SETTING.avatar">
         <image w-120rpx h-120rpx rounded-full :src="userProfile.head_url" />
       </view>
@@ -64,6 +69,11 @@ const settingListA: SettingItem[] = [
     type: SETTING.contact,
     url: '',
     title: '联系客服',
+  },
+  {
+    type: SETTING.policy,
+    url: '/pagesSub/profileSetting/setting-policy',
+    title: '荟聚通用户协议与隐私政策',
   },
   {
     type: SETTING.about,

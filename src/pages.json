@@ -70,6 +70,12 @@
           }
         },
         {
+          "path": "profileSetting/setting-policy",
+          "style": {
+            "navigationBarTitleText": "用户协议与隐私政策"
+          }
+        },
+        {
           "path": "publishPage/index",
           "style": {
             "navigationBarTitleText": "发布"

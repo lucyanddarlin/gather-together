@@ -1,6 +1,6 @@
 <template>
   <u-navbar :border-bottom="false"></u-navbar>
-  <view>
+  <view v-if="!isNull(currentPerson)">
     <!-- 顶部名字 和 学校信息 -->
     <GatherSubAvaterSection
       :name="currentPerson.name"
@@ -11,11 +11,9 @@
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <GatherSubContentSection
-      v-for="item in currentPerson.certs"
-      :key="item"
       :type="'技能/能力'"
-      :title="item.skill_id"
-      :content="item.skill_des"
+      :title="realMannerType"
+      :content="currentPerson.skill_des"
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
@@ -68,23 +66,32 @@
   </view>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { onLoad } from '@dcloudio/uni-app'
+import { isNull } from '@/utils/common'
 import GatherSubContentSection from '@/pagesSub/gatherSub/components/gatherSub-ContentSection.vue'
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
 import GatherSubAvaterSection from '@/pagesSub/gatherSub/components/gatherSub-AvaterSection.vue'
 import GatherSubFucntionButton from '@/pagesSub/gatherSub/components/gatherSub-fucntionButton.vue'
 import { reqGatherPersonSingle } from '@/api/gather'
+import { MANNERp_TYPE_LIST } from '@/utils/constant'
 
 const currentPerson = ref()
 onLoad((option: any) => {
+  const user_id = option.user_id
   const getCurrentPagePerson = async () => {
-    const { data } = await reqGatherPersonSingle(String(option.user_id))
+    const { data } = await reqGatherPersonSingle(String(user_id))
     currentPerson.value = data.body
   }
 
   getCurrentPagePerson()
+})
+const realMannerType = computed(() => {
+  return (
+    MANNERp_TYPE_LIST.find((index) => index === currentPerson.value.skill_id)
+      ?.value || '未知能力'
+  )
 })
 </script>
 
