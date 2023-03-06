@@ -33,7 +33,6 @@
       @back-to-top="handleBackToTop"
     >
     </Float>
-    <!-- <GatherPublishButton fixed top-1000rpx right-40rpx @tap="handleCreate" /> -->
   </view>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
@@ -239,18 +238,6 @@ function handleBackToTop() {
     width: 188.5rpx;
     height: 74rpx;
   }
-}
-
-.publish {
-  position: fixed;
-  background-color: white;
-  bottom: 428rpx;
-  right: 66rpx;
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  border: 2rpx solid #e5e5e5;
-  box-shadow: 0rpx 0rpx 10rpx 0rpx rgba(0, 0, 0, 0.25);
 }
 
 .bg {
