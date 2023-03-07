@@ -358,7 +358,6 @@ type Options = typeof optionsObj
 const options = ref(optionsObj)
 
 function change(event: any, key: string, field: IField, removeEnter = false) {
-  console.log('change', event.target.value)
   if (removeEnter) {
     event.target.value = event.target.value.replace(/\n/g, '')
   }
@@ -368,7 +367,6 @@ function change(event: any, key: string, field: IField, removeEnter = false) {
   publish.value &&
     ((publish.value[key as keyof Publish] as IField).value =
       event.target.value.trim())
-  console.log('publish.value', publish.value)
 }
 
 function setDate(result: any, key: string) {

@@ -107,7 +107,7 @@
       <div h-160rpx></div>
     </div>
   </div>
-  <div fixed bottom-26rpx left-40rpx>
+  <div v-if="isManagerMode" fixed bottom-26rpx left-40rpx>
     <div grid grid-cols-2 gap-x-22rpx>
       <PublishButton
         w-324rpx
@@ -127,7 +127,33 @@
         color="#fff"
         bg-color="#FF6969"
         rounded="12rpx"
-        icon="share-o"
+        icon="icon-fenxiang"
+      ></PublishButton>
+    </div>
+  </div>
+  <!-- 非管理员 -->
+  <div v-else fixed bottom-26rpx left-40rpx>
+    <div grid grid-cols-2 gap-x-22rpx>
+      <PublishButton
+        w-324rpx
+        height="78rpx"
+        text-36rpx
+        :title="`收藏`"
+        color="#fff"
+        bg-color="#598DF9"
+        rounded="12rpx"
+        icon="icon-shoucang"
+        @tap="handleFav(id)"
+      ></PublishButton>
+      <PublishButton
+        w-324rpx
+        height="78rpx"
+        text-36rpx
+        title="分享"
+        color="#fff"
+        bg-color="#FF6969"
+        rounded="12rpx"
+        icon="icon-fenxiang"
       ></PublishButton>
     </div>
   </div>
@@ -136,10 +162,11 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-// import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { usePublisherStore } from '@/store/modules/publisher'
+import { useUserStore } from '@/store/modules/user'
 import { type IDescription, Type } from '@/typings/publisher'
-import { hash } from '@/utils/common'
+import { hash, showMsg } from '@/utils/common'
 
 import {
   HOST,
@@ -148,13 +175,18 @@ import {
   TYPE_LIST,
   TYPE_NAMES,
 } from '@/utils/publishConstant'
+import { reqGetDetail } from '@/api/publisher'
+import { GetPublishToDesc } from '@/typings/publisher/resolve'
 import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
 
 const id = ref('')
 const description = ref<IDescription | undefined>()
 const isOmitted = ref(true)
+const isManagerMode = ref<boolean>(false)
 const publisherStore = usePublisherStore()
+const { userProfile } = storeToRefs(useUserStore())
+
 const type: Type = publisherStore.cur_type
 const post_type: string = TYPE_LIST[type]
 
@@ -182,9 +214,16 @@ onLoad((options) => {
     return
   }
   id.value = options.id
-  description.value = publisherStore.descriptions[type]?.find(
-    (item) => `${item.post_id}` === id.value
-  )
+  // 从路径进入的不一定是管理员，从首页查看的也不一定不是管理员
+  // 因此只有从发布者路径进入的管理员，才能编辑发布
+  if (options.from === 'publisher_mode' && userProfile.value.is_admin) {
+    isManagerMode.value = true
+  }
+  reqGetDetail(id.value).then((res) => {
+    if (res.code !== 200) description.value = undefined
+    description.value = GetPublishToDesc(res.data.body)
+  })
+
   // 设置标题
   uni.setNavigationBarTitle({
     title: `${post_type}管理`,
@@ -212,6 +251,11 @@ function copyAccess() {
 
 function handlePublish(id: string) {
   uni.redirectTo({ url: `./publisher-publish?id=${id}` })
+}
+
+function handleFav(id: string) {
+  showMsg('暂未开放，敬请期待', 'none', 2000)
+  console.log('收藏', id)
 }
 
 function previewImg(url: string) {

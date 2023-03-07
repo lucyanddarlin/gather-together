@@ -17,6 +17,7 @@ import {
 } from '@/typings/publisher/resolve'
 import {
   reqDeletePublish,
+  reqGetDetail,
   reqGetPublish,
   reqPostChange,
   reqPostPublish,
@@ -218,6 +219,11 @@ export const usePublisherStore = defineStore('publisher', () => {
     publish[cur_type.value].splice(0)
   }
 
+  async function reqDetail(post_id: string) {
+    const result = await reqGetDetail(post_id)
+    return result
+  }
+
   return {
     types,
     cur_type,
@@ -230,5 +236,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     reqCreatePublish,
     deletePost,
     resetPage,
+    reqDetail,
   }
 })

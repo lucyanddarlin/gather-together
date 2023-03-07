@@ -11,7 +11,12 @@
       width: Width,
     }"
   >
-    <u-icon v-if="props.icon" :name="props.icon" size="32rpx" />
+    <span
+      class="iconfont"
+      :class="props.icon"
+      :style="{ fontSize: '44rpx' }"
+      color="#598DF9"
+    ></span>
     <span>{{ props.title }}</span>
   </button>
 </template>

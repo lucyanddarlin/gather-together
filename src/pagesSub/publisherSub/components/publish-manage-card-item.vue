@@ -3,6 +3,7 @@
     <PaperItem
       :type="props.description.post_type + 1"
       :paper-item="props.description"
+      from="publisher_mode"
     >
       <template #title> {{ props.description.title }} </template>
       <template #label>

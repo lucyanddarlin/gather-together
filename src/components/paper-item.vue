@@ -128,6 +128,7 @@ interface OtherListItem {
   creator_id: string
 }
 const props = defineProps<{
+  from?: string
   type?: number
   dots?: boolean
   paperItem: Partial<PaperItem & IGatherItem & OtherListItem>
@@ -157,7 +158,9 @@ watch(
       props.type === ACTIVITY
     ) {
       newContent = props.paperItem.detail!
-      url = `/pagesSub/publisherSub/publisher-detail?id=${props.paperItem.post_id}`
+      // 用来鉴定用户是否由管理员模式进入
+      const fromWhere = props.from ? `&from=${props.from}` : ''
+      url = `/pagesSub/publisherSub/publisher-detail?id=${props.paperItem.post_id}${fromWhere}`
     }
     commonObj.content =
       newContent.length > overflowLength
