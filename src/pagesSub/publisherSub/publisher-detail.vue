@@ -2,7 +2,7 @@
   <div>
     <div v-if="description" relative>
       <u-icon absolute right-24rpx size="40rpx" name="more-dot-fill"></u-icon>
-      <div mt-4rpx ml-36rpx text-56rpx fw-600 select-text>
+      <div mt-4rpx ml-36rpx mr-60rpx text-56rpx fw-600 select-text>
         {{ description.title }}
       </div>
       <div ml-36rpx>
@@ -117,7 +117,7 @@
         color="#fff"
         bg-color="#73B297"
         rounded="12rpx"
-        @tap="handlePublish(id)"
+        @tap="handlePublish"
       ></PublishButton>
       <PublishButton
         w-324rpx
@@ -143,7 +143,7 @@
         bg-color="#598DF9"
         rounded="12rpx"
         icon="icon-shoucang"
-        @tap="handleFav(id)"
+        @tap="handleFav()"
       ></PublishButton>
       <PublishButton
         w-324rpx
@@ -154,6 +154,7 @@
         bg-color="#FF6969"
         rounded="12rpx"
         icon="icon-fenxiang"
+        @tap="handleShare"
       ></PublishButton>
     </div>
   </div>
@@ -253,9 +254,29 @@ function handlePublish(id: string) {
   uni.redirectTo({ url: `./publisher-publish?id=${id}` })
 }
 
-function handleFav(id: string) {
+function handleFav() {
   showMsg('暂未开放，敬请期待', 'none', 2000)
-  console.log('收藏', id)
+  console.log('收藏', id.value)
+}
+
+function handleShare() {
+  uni.share({
+    provider: 'weixin',
+    scene: 'WXSceneSession',
+    type: 1,
+    summary:
+      (description.value &&
+        `【荟聚通】${TIME_STATE[description.value.time_state].value} - ${
+          description.value.title
+        }`) ||
+      '【荟聚通】分享高校活动',
+    success(res) {
+      console.log(`success: ${JSON.stringify(res)}`)
+    },
+    fail(err) {
+      console.log(`fail: ${JSON.stringify(err)}`)
+    },
+  })
 }
 
 function previewImg(url: string) {
