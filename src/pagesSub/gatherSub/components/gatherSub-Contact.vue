@@ -6,6 +6,7 @@
       <view class="text-32rpx font-bold">{{ props.type }}</view>
       <view
         class="px-24rpx py-6rpx flex-center rounded-8rpx bg-#f7f7f7 text-#4380FF"
+        @click="copy(props.title)"
         >复制</view
       >
     </view>
@@ -20,8 +21,19 @@ import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vu
 const props = defineProps({
   type: { type: String, default: '' },
   title: { type: String, default: '' },
-  content: { type: String, default: '' },
 })
+const copy = (value: string) => {
+  uni.setClipboardData({
+    data: value,
+    success() {
+      uni.showToast({
+        title: '复制成功',
+        icon: 'success',
+        duration: 1000,
+      })
+    },
+  })
+}
 </script>
 
 <style scoped></style>

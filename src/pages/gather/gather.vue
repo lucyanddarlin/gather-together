@@ -45,7 +45,7 @@
           v-for="item in gatherPaperListMap['people'].dataList"
           :key="item.user_id"
           :name="item.name"
-          :school="'广州大学'"
+          :school="item.school"
           :profession="item.profession"
           :content="item.profile"
           @toPeopleDetail="toPeopleDetail(item.user_id)"
