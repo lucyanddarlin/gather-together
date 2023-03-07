@@ -4,11 +4,13 @@ import type { PostOSSResult } from '@/typings/user'
 const enum UploadType {
   topic,
   user,
+  post,
 }
 const uploadTimeout = 1200000
 const types = [
   ['x:topicid', 'topicId'],
   ['x:userid', 'userId'],
+  ['x:postid', 'postId'],
 ]
 interface UploadQuery {
   key: string
@@ -92,4 +94,8 @@ export const reqUploadTopicImage = (image: string[], data: PostOSSResult) => {
 
 export const reqUploadUserAvatar = (image: string[], data: PostOSSResult) => {
   return imageUpload(image, data, UploadType.user)!.then(onResolve, onReject)
+}
+
+export const reqUploadPostImages = (image: string[], data: PostOSSResult) => {
+  return imageUpload(image, data, UploadType.post)!.then(onResolve, onReject)
 }

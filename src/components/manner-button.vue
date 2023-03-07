@@ -10,17 +10,19 @@
 </template>
 <script setup lang="ts">
 import { reqPublishProject } from '@/api/gather'
+import { isNull } from '@/utils/common'
 
 const props = defineProps<{
   value: String | Number
   url?: String
   publishData?: any
   formStatus?: boolean
+  publishImage?: Array<string>
 }>()
 
-const toPublishApi = () => {
+const toPublishApi = async () => {
   if (props.formStatus) {
-    reqPublishProject({
+    const { data } = await reqPublishProject({
       contact: props.publishData.contact,
       introduce: props.publishData.introduce,
       needs: props.publishData.needs,
@@ -29,12 +31,18 @@ const toPublishApi = () => {
       project_name: props.publishData.project_name,
       project_type: props.publishData.project_type,
     })
-    uni.showToast({
-      title: '发布成功！',
-      icon: 'success',
-      duration: 2000,
-    })
-    uni.navigateBack()
+    if (!isNull(data)) {
+      if (!isNull(props.publishImage)) {
+        // TODO: upload images
+        console.log(props.publishImage)
+      }
+      uni.showToast({
+        title: '发布成功！',
+        icon: 'success',
+        duration: 2000,
+      })
+      uni.navigateBack()
+    }
   } else {
     uni.showToast({
       title: '您还未填写完整',

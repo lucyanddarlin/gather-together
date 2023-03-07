@@ -364,6 +364,6 @@ export interface OSSPostPolicyResult {
   dir: string
   host: string
   policy: string
-  postId: number
+  postId: string
   signature: string
 }

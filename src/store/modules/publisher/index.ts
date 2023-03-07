@@ -22,8 +22,10 @@ import {
   reqPostChange,
   reqPostPublish,
 } from '@/api/publisher'
-import { showMsg } from '@/utils/common'
+import { isNull, showMsg } from '@/utils/common'
 import { TYPE_LIST } from '@/utils/publishConstant'
+import { reqUploadPostImages } from '@/api/imageUpload'
+import type { PostOSSResult } from '@/typings/user'
 export const usePublisherStore = defineStore('publisher', () => {
   const LOAD_PAGES_SIZE = 8
   const current_desc = ref<IDescription>()
@@ -85,9 +87,17 @@ export const usePublisherStore = defineStore('publisher', () => {
   // 创建发布
   async function reqCreatePublish(p: Publish) {
     const desc = PubToDesc(p, cur_type.value)
-    const response = await reqPostPublish(DescToPostBody(desc))
-    console.log('response', response)
-    if (response.code === 200) return response.data.body.postId
+    const { data } = await reqPostPublish(DescToPostBody(desc))
+    if (!isNull(data)) {
+      if (!isNull(p.imgs?.value)) {
+        const { error } = await reqUploadPostImages(
+          p.imgs?.value as Array<string>,
+          data.body as PostOSSResult
+        )
+        if (error) return 0
+      }
+      return Number(data.body.postId)
+    }
     return 0
   }
 
@@ -153,7 +163,7 @@ export const usePublisherStore = defineStore('publisher', () => {
             return
           }
           // 更新收到的post_id
-          description.post_id = post_id
+          description.post_id = Number(post_id)
           // 更新帖子的状态，后面可根据返回信息定义帖子状态，如有图片则进入审核状态等等
           description.state = State.Publish
           descriptions[description.post_type].unshift(description)
