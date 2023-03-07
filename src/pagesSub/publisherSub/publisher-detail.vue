@@ -34,8 +34,8 @@
         ></PublishTag>
         <!-- 进行状态 -->
         <PublishTag
-          :title="StateMap[description.state]"
-          color="#56C28E"
+          :title="TIME_STATE[description.time_state!].value"
+          :color="TIME_STATE[description.time_state!].color"
           font-size="32rpx"
         ></PublishTag>
         <!-- 时间 -->
@@ -72,10 +72,11 @@
           text-32rpx
           :class="isOmitted ? 'ellipsis' : 'normal'"
         >
-          {{ description.description }}
+          {{ description.detail }}
         </div>
         <div ml-18rpx>
           <PublishTag
+            v-if="description.detail.length > 100"
             text-28rpx
             color="#598DF9"
             bg-color="#F5F5F5"
@@ -137,10 +138,16 @@ import { onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 // import { useRoute, useRouter } from 'vue-router'
 import { usePublisherStore } from '@/store/modules/publisher'
-import { type IDescription, StateMap, Type } from '@/typings/publisher'
+import { type IDescription, Type } from '@/typings/publisher'
 import { hash } from '@/utils/common'
 
-import { HOST, LEVEL, TYPE_LIST, TYPE_NAMES } from '@/utils/publishConstant'
+import {
+  HOST,
+  LEVEL,
+  TIME_STATE,
+  TYPE_LIST,
+  TYPE_NAMES,
+} from '@/utils/publishConstant'
 import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
 

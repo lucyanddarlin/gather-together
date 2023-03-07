@@ -22,7 +22,6 @@
           :key="item.post_id"
           :description="item"
           cursor-pointer
-          @tap="handleClick(item.post_id)"
       /></view>
     </scroll-view>
     <Float
@@ -117,7 +116,6 @@ const filterData = reactive<FilterPopupData>({
 console.log('description', publisherStore.descriptions[publisherStore.cur_type])
 console.log('list', list.value)
 console.log('publish', publisherStore.publish[publisherStore.cur_type])
-
 onLoad(() => {
   // 设置标题
   uni.setNavigationBarTitle({
@@ -131,10 +129,6 @@ onUnload(() => {
 })
 
 const cur_area = ref('广州大学分区')
-
-const handleClick = (id: number) => {
-  uni.navigateTo({ url: `./publisher-detail?id=${id}` })
-}
 
 const show = ref(false)
 
@@ -246,6 +240,7 @@ function handleBackToTop() {
 }
 
 .main-page {
+  background-color: #f7f7f7;
   position: absolute;
   top: 96rpx;
   bottom: 0;

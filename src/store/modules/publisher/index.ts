@@ -5,14 +5,13 @@ import {
   type GetPublish,
   type IDescription,
   type IPublish,
-  type Publish,
+  Publish,
   State,
   Type,
 } from '@/typings/publisher'
 import {
   DescToChangeBody,
   DescToPostBody,
-  DescToPub,
   GetPublishToDesc,
   PubToDesc,
 } from '@/typings/publisher/resolve'
@@ -80,7 +79,7 @@ export const usePublisherStore = defineStore('publisher', () => {
       .filter((item) => item.state !== State.Delete)
     descriptions[cur_type.value].push(...arr_desc)
     publish[cur_type.value] = descriptions[cur_type.value].map((item) =>
-      DescToPub(item, TYPE_LIST[cur_type.value])
+      Publish.DescToPub(item, TYPE_LIST[cur_type.value])
     )
   }
 
@@ -103,6 +102,7 @@ export const usePublisherStore = defineStore('publisher', () => {
 
   // 修改发布
   async function reqUpdatePublish(p: Publish) {
+    console.log('reqUpdatePublish', p)
     const desc = PubToDesc(p, cur_type.value)
     const response = await reqPostChange(DescToChangeBody(desc), p.post_id)
     console.log('response', response)
@@ -138,7 +138,7 @@ export const usePublisherStore = defineStore('publisher', () => {
     desc.forEach((d) => {
       const type: Type = d.post_type
       descriptions[type].push(d)
-      const p: Publish = DescToPub(
+      const p: Publish = Publish.DescToPub(
         d,
         types.find((t) => t.id === Type[type])?.type || ''
       )

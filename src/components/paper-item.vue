@@ -114,6 +114,7 @@ interface OtherListItem {
   post_type: number
   race_level: number
   state: number
+  time_state: number
   second_type: number
   zone_id: string
   detail: string
@@ -127,8 +128,6 @@ interface OtherListItem {
   creator_id: string
 }
 const props = defineProps<{
-  desc?: string
-  url?: string
   type?: number
   dots?: boolean
   paperItem: Partial<PaperItem & IGatherItem & OtherListItem>
@@ -157,8 +156,8 @@ watch(
       props.type === LECTURE ||
       props.type === ACTIVITY
     ) {
-      newContent = props.desc || props.paperItem.detail!
-      url = props.url || ''
+      newContent = props.paperItem.detail!
+      url = `/pagesSub/publisherSub/publisher-detail?id=${props.paperItem.post_id}`
     }
     commonObj.content =
       newContent.length > overflowLength
