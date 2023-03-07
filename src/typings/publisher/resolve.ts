@@ -95,6 +95,7 @@ export function DescToPostBody(d: IDescription) {
 }
 
 export function DescToChangeBody(d: IDescription) {
+  console.log('DescToPostBody', d)
   const p: ChangeBody = {
     zone_id: 1,
     sponsor_type: d.host_type,
