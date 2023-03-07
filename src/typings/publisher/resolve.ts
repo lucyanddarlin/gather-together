@@ -13,92 +13,6 @@ import type {
   ScoreType,
 } from '.'
 
-// export function DescToPub(
-//   description: IDescription | undefined,
-//   post_type: string
-// ) {
-//   if (!description) return new Publish(post_type)
-//   const type = Type[description.post_type]
-//   const ipublish: IPublish = {
-//     post_id: description.post_id,
-//     title: {
-//       title: '标题',
-//       value: description.title,
-//       type: 'text',
-//       placeholder: `请输入${type}标题`,
-//       limit: 20,
-//     },
-//     start_time: {
-//       title: type === '比赛' ? '报名开始' : type,
-//       value: description.start_time,
-//       type: 'time',
-//       placeholder: `请输入${type === '比赛' ? '报名开始' : type}时间`,
-//     },
-//     end_time: {
-//       title: type === '比赛' ? '报名结束' : type,
-//       value: description.end_time,
-//       type: 'time',
-//       placeholder: `请输入${type === '比赛' ? '报名结束' : type}时间`,
-//     },
-//     // location: '各学校分会场',
-//     host: {
-//       title: '主办方',
-//       value: description.host,
-//       type: 'text_no_enter',
-//       placeholder: `请输入主办方名称，多个主办方请以顿号隔开`,
-//       limit: 50,
-//     },
-//     host_type: {
-//       title: '主办方类型',
-//       value: description.host_type,
-//       type: 'text_option',
-//     },
-//     location: {
-//       title: `${type}地点`,
-//       value: description.location,
-//       type: 'text_no_enter',
-//       placeholder: `请输入${type}举办地点`,
-//       limit: 30,
-//     },
-//     score_type: {
-//       title: `${type}类型`,
-//       value: description.score_type,
-//       type: 'option',
-//       placeholder: `请选择${type}类型`,
-//     },
-//     access: {
-//       title: '报名方式',
-//       value: description.access,
-//       type: 'text_elastic',
-//       placeholder: `请输入报名途径指引或者报名链接`,
-//       limit: 50,
-//     },
-//     detail: {
-//       title: `${type}详情`,
-//       value: description.detail,
-//       type: 'textarea',
-//       placeholder: `请输入${type}介绍内容`,
-//       limit: 2000,
-//     },
-//     state: description.state,
-//     imgs: {
-//       title: '上传图片（可选）',
-//       value: description.imgs,
-//       type: 'imgs',
-//     },
-//   }
-//   const p: Publish = Publish.createPublish(ipublish, post_type)
-//   if (description.post_type === Type.比赛) {
-//     p['race_level'] = {
-//       title: '比赛级别',
-//       type: 'option',
-//       placeholder: '请选择比赛级别',
-//       value: description.race_level,
-//     }
-//   }
-//   return p
-// }
-
 export function PubToDesc(publish: Publish, post_type: Type): IDescription {
   // 将发布的信息转换为描述信息
   const description: IDescription = {
@@ -106,6 +20,7 @@ export function PubToDesc(publish: Publish, post_type: Type): IDescription {
     start_time: publish.start_time.value as Date,
     end_time: publish.end_time.value as Date,
     state: publish.state,
+    time_state: publish.time_state,
     post_id: publish.post_id,
     post_type,
     location: publish.location.value as string,
@@ -180,7 +95,6 @@ export function DescToPostBody(d: IDescription) {
 }
 
 export function DescToChangeBody(d: IDescription) {
-  console.log('DescToPostBody', d)
   const p: ChangeBody = {
     zone_id: 1,
     sponsor_type: d.host_type,

@@ -191,6 +191,8 @@ function handleResetFilter() {
   })
   // 以防万一后来维护没有调用getBody
   filterData.result = {}
+  // 重置后重新加载
+  handleConfirmFilter()
 }
 
 function handleScroll(options: any) {

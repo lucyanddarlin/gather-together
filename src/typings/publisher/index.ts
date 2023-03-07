@@ -120,7 +120,7 @@ export interface IDescription {
   score_type: ScoreType
   access: string
   detail: string
-  time_state?: TimeState
+  time_state: TimeState
   // 其他标签，自定义，暂保留
   tags?: Array<ITag>
   imgs?: Array<string>
@@ -131,6 +131,7 @@ export interface IPublish {
   start_time: IField
   end_time: IField
   state: State
+  time_state: TimeState
   post_id: number
   location: IField
   host: IField
@@ -148,6 +149,7 @@ export class Publish implements IPublish {
   start_time: IField
   end_time: IField
   state: State
+  time_state: TimeState
   post_id: number
   location: IField
   host: IField
@@ -165,6 +167,7 @@ export class Publish implements IPublish {
   }
   constructor(type: string) {
     this.state = State.Create
+    this.time_state = TimeState.NotStarted
     this.post_id = 0
     this.title = {
       title: `${type}名称`,
@@ -237,6 +240,8 @@ export class Publish implements IPublish {
 
   public static createPublish(i: IPublish, post_type: string): Publish {
     const publish = new Publish(post_type)
+    publish.state = i.state
+    publish.time_state = i.time_state
     publish.post_id = i.post_id
     publish.title.value = i.title.value
     publish.start_time.value = i.start_time.value
@@ -258,6 +263,8 @@ export class Publish implements IPublish {
   ): Publish {
     const publish = new Publish(post_type)
     if (!d) return publish
+    publish.state = d.state
+    publish.time_state = d.time_state
     publish.title.value = d.title
     publish.start_time.value = d.start_time
     publish.end_time.value = d.end_time
