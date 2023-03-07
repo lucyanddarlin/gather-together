@@ -46,6 +46,12 @@
           }
         },
         {
+          "path": "editing-page",
+          "style": {
+            "navigationBarTitleText": "修改个人资料"
+          }
+        },
+        {
           "path": "cv/add-page",
           "style": {
             "navigationBarTitleText": "添加/编辑"

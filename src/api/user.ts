@@ -1,7 +1,9 @@
 import { get, post } from './request'
 import type {
   GetUserProfileResult,
+  ModifyUserProfile,
   PostLoginResult,
+  PostOSSResult,
   RawUserCv,
 } from '@/typings/user'
 
@@ -59,3 +61,9 @@ export const reqGetOwnTopic = (page: number, size: number) =>
 
 export const reqGetOwnProject = (page: number, size: number) =>
   get('/gather/list/created/project', { page, size })
+
+export const reqModifyUserProfile = (data: Partial<ModifyUserProfile>) =>
+  post<{ [key: string]: string }>('/user/info/modify/', data)
+
+export const reqModifyUserAvatar = (data: any = {}) =>
+  post<{ code: number; body: PostOSSResult }>('/user/info/avatar/modify', data)

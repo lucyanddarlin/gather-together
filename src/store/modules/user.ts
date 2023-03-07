@@ -6,12 +6,15 @@ import {
   reqCreateUserCV,
   reqGetUserCV,
   reqGetUserProfile,
+  reqModifyUserAvatar,
+  reqModifyUserProfile,
   reqRemoveUserCV,
   reqUpdateUserCV,
   reqUserLogin,
 } from '@/api/user'
 import { GENDER, PROFILE_KEY, TOKEN_KEY } from '@/utils/constant'
-import type { RawUserCv, UserProfile } from '@/typings/user'
+import { reqUploadUserAvatar } from '@/api/imageUpload'
+import type { ModifyUserProfile, RawUserCv, UserProfile } from '@/typings/user'
 
 const getUserCode = () => {
   return new Promise((resolve) => {
@@ -149,6 +152,25 @@ export const useUserStore = defineStore('user', () => {
       showMsg('修改成功')
     }
   }
+  const modifyUserProfile = async (info: Partial<ModifyUserProfile>) => {
+    const { data } = await reqModifyUserProfile(info)
+    if (!isNull(data)) {
+      userProfile.value = Object.assign({}, userProfile.value, {
+        name: info.nickname,
+      })
+      showMsg('修改成功')
+      setTimeout(() => {
+        uni.navigateBack()
+      }, 800)
+    }
+  }
+  const modifyUserAvatar = async (imageUrl: string) => {
+    const { data } = await reqModifyUserAvatar()
+    if (!isNull(data)) {
+      const { error } = await reqUploadUserAvatar([imageUrl], data.body)
+      return isNull(error) ? true : false
+    }
+  }
   return {
     isLogin,
     userProfile,
@@ -160,5 +182,7 @@ export const useUserStore = defineStore('user', () => {
     removeUserCV,
     createUserCV,
     updateUserCV,
+    modifyUserProfile,
+    modifyUserAvatar,
   }
 })

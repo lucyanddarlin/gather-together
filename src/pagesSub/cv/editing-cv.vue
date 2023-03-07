@@ -238,6 +238,7 @@ const handleSelectPopupItem = (index: number) => {
     item.isSelected = false
   })
   popupData[popupDataKey.value].list[index].isSelected = true
+  showPopup.value = false
 }
 const handleClickConfirm = () => {
   if (!checkCV.value) {

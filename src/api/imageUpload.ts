@@ -1,8 +1,17 @@
 import { showMsg } from '@/utils/common'
-import type { PostTopicResult } from '@/typings/home'
+import type { PostOSSResult } from '@/typings/user'
 
+const enum UploadType {
+  topic,
+  user,
+  post,
+}
 const uploadTimeout = 1200000
-const types = [['x:topicid', 'topicId']]
+const types = [
+  ['x:topicid', 'topicId'],
+  ['x:userid', 'userId'],
+  ['x:postid', 'postId'],
+]
 interface UploadQuery {
   key: string
   dir: string
@@ -41,7 +50,7 @@ const dispatchUpload = (filePath: string, query: UploadQuery, host: string) => {
 
 const imageUpload = (
   image: Array<string>,
-  data: PostTopicResult,
+  data: PostOSSResult,
   type: number
 ) => {
   if (!types[type]) return
@@ -51,14 +60,10 @@ const imageUpload = (
   })
   const { accessKeyId, dir, host, callback, policy, signature } = data
   const imagePromise = []
-  console.log('fsfsdfs', image)
-
   // eslint-disable-next-line no-restricted-syntax
   for (const index in image) {
-    console.log('index 测试', index)
     const filePath = image[index]
     const key = `${dir}_${index}${Date.now()}${Math.trunc(Math.random() * 150)}`
-    console.log('key 测试', key)
     const query: UploadQuery = {
       key,
       dir,
@@ -83,6 +88,14 @@ const onReject = () => {
   return { error: { message: '图片上传错误' } }
 }
 
-export const reqUploadTopicImage = (image: string[], data: PostTopicResult) => {
-  return imageUpload(image, data, 0)!.then(onResolve, onReject)
+export const reqUploadTopicImage = (image: string[], data: PostOSSResult) => {
+  return imageUpload(image, data, UploadType.topic)!.then(onResolve, onReject)
+}
+
+export const reqUploadUserAvatar = (image: string[], data: PostOSSResult) => {
+  return imageUpload(image, data, UploadType.user)!.then(onResolve, onReject)
+}
+
+export const reqUploadPostImages = (image: string[], data: PostOSSResult) => {
+  return imageUpload(image, data, UploadType.post)!.then(onResolve, onReject)
 }

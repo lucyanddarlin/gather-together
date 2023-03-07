@@ -13,7 +13,7 @@
     >
       <view text-24rpx font-medium>{{ commentItem.username }}</view>
       <view text-20rpx class="text-#797979">
-        {{ commentItem.create_at.toDate().formatData() }}
+        {{ commentItem.create_at.toDate().formatDate() }}
       </view>
       <view my-24rpx text-28rpx flex flex-col class="text-#4D4D4D">
         <view
