@@ -5,103 +5,113 @@
       <div mt-4rpx ml-36rpx mr-60rpx text-56rpx fw-600 select-text>
         {{ description.title }}
       </div>
-      <div ml-36rpx>
-        <!-- 活动类型 -->
-        <PublishTag
-          filter
-          inline
-          :title="TYPE_NAMES[description.post_type][description.score_type]"
-          color="#FFAF50"
-        ></PublishTag>
-        <!-- 主办方类型 -->
-        <PublishTag
-          filter
-          inline
-          :title="HOST[description.host_type]"
-          color="#FFAF50"
-        ></PublishTag>
-        <!-- 比赛级别（比赛特有） -->
-        <PublishTag
-          v-if="description.post_type === Type.比赛"
-          filter
-          inline
-          :title="
-            description.race_level !== undefined
-              ? LEVEL[description.race_level]
-              : '未分级'
-          "
-          color="#FFAF50"
-        ></PublishTag>
-        <!-- 进行状态 -->
-        <PublishTag
-          :title="TIME_STATE[description.time_state!].value"
-          :color="TIME_STATE[description.time_state!].color"
-          font-size="32rpx"
-        ></PublishTag>
-        <!-- 时间 -->
-        <div class="title" text-36rpx mt-32rpx>报名时间：</div>
-        <PublishTag
-          :date="{ start: description.start_time, end: description.end_time }"
-          color="#598DF9"
-        ></PublishTag>
-        <!-- 地点 -->
-        <div class="title" text-36rpx mt-32rpx>{{ post_type }}地点：</div>
-        <PublishTag color="#598DF9" :title="description.location"></PublishTag>
-        <!-- 主办方 -->
-        <div class="title" text-36rpx mt-32rpx>主办方：</div>
-        <PublishTag color="#598DF9" :title="description.host"></PublishTag>
-        <!-- 详情描述 -->
-        <div text-36rpx mt-52rpx fw-600>{{ post_type }}详情</div>
-        <!-- TODO: 插入图片 -->
-        <div grid grid-cols-3 gap-x-20rpx color="#A4A4A4" pl-36rpx mt-36rpx>
-          <div v-for="img in description.imgs" :key="hash(img)">
-            <img
-              :src="img"
-              rounded-10rpx
-              w-162rpx
-              h-162rpx
-              @tap="previewImg(img)"
-            />
-          </div>
-        </div>
-        <div
-          color="#A4A4A4"
-          pl-4rpx
-          pr-36rpx
-          mt-36rpx
-          text-32rpx
-          :class="isOmitted ? 'ellipsis' : 'normal'"
-        >
-          {{ description.detail }}
-        </div>
-        <div ml-18rpx>
+      <div>
+        <!-- 分割线上部 -->
+        <div ml-36rpx>
+          <!-- 活动类型 -->
           <PublishTag
-            v-if="description.detail.length > 100"
-            text-28rpx
-            color="#598DF9"
-            bg-color="#F5F5F5"
-            :title="isOmitted ? '查看全部' : '收起'"
-            @tap="isOmitted = !isOmitted"
+            filter
+            inline
+            :title="TYPE_NAMES[description.post_type][description.score_type]"
+            color="#FFAF50"
           ></PublishTag>
-        </div>
-
-        <!-- 报名方式 -->
-        <div relative>
-          <div color="#4D4D4D" text-36rpx mt-52rpx fw-600>报名方式</div>
-          <div color="#A4A4A4" text-32rpx px-36rpx mt-36rpx select-text>
-            {{ description.access }}
-          </div>
+          <!-- 主办方类型 -->
           <PublishTag
-            absolute
-            top-0
-            right-32rpx
-            title="复制"
+            filter
+            inline
+            :title="HOST[description.host_type]"
+            color="#FFAF50"
+          ></PublishTag>
+          <!-- 比赛级别（比赛特有） -->
+          <PublishTag
+            v-if="description.post_type === Type.比赛"
+            filter
+            inline
+            :title="
+              description.race_level !== undefined
+                ? LEVEL[description.race_level]
+                : '未分级'
+            "
+            color="#FFAF50"
+          ></PublishTag>
+          <!-- 进行状态 -->
+          <PublishTag
+            :title="TIME_STATE[description.time_state!].value"
+            :color="TIME_STATE[description.time_state!].color"
+            font-size="32rpx"
+          ></PublishTag>
+          <!-- 时间 -->
+          <div class="title" text-36rpx mt-32rpx>报名时间：</div>
+          <PublishTag
+            :date="{ start: description.start_time, end: description.end_time }"
             color="#598DF9"
+          ></PublishTag>
+          <!-- 地点 -->
+          <div class="title" text-36rpx mt-32rpx>{{ post_type }}地点：</div>
+          <PublishTag
+            color="#598DF9"
+            :title="description.location"
+          ></PublishTag>
+          <!-- 主办方 -->
+          <div class="title" text-36rpx mt-32rpx>主办方：</div>
+          <PublishTag color="#598DF9" :title="description.host"></PublishTag>
+        </div>
+        <!-- 分割线 -->
+        <view class="line" mt-26rpx></view>
+        <div ml-36rpx>
+          <!-- 详情描述 -->
+          <div text-36rpx mt-24rpx fw-600>{{ post_type }}详情</div>
+          <!-- TODO: 插入图片 -->
+          <div grid grid-cols-3 gap-x-20rpx color="#A4A4A4" pl-36rpx mt-36rpx>
+            <div v-for="img in description.imgs" :key="hash(img)">
+              <img
+                :src="img"
+                rounded-10rpx
+                w-162rpx
+                h-162rpx
+                @tap="previewImg(img)"
+              />
+            </div>
+          </div>
+          <div
+            color="#A4A4A4"
+            pl-4rpx
+            pr-36rpx
+            mt-36rpx
             text-32rpx
-            bg-color="#F5F5F5"
-            @tap="copyAccess"
-          ></PublishTag>
+            :class="isOmitted ? 'ellipsis' : 'normal'"
+          >
+            {{ description.detail }}
+          </div>
+          <div ml-18rpx>
+            <PublishTag
+              v-if="description.detail.length > 100"
+              text-28rpx
+              color="#598DF9"
+              bg-color="#F5F5F5"
+              :title="isOmitted ? '查看全部' : '收起'"
+              @tap="isOmitted = !isOmitted"
+            ></PublishTag>
+          </div>
         </div>
+        <!-- 分割线 -->
+        <view class="line" mt-26rpx></view>
+        <div ml-36rpx>
+          <!-- 报名方式 -->
+          <div relative>
+            <div color="#4D4D4D" text-36rpx mt-52rpx fw-600>
+              报名方式
+              <div class="copy-button" float-right mr-40rpx @tap="copyAccess">
+                <span>复制</span>
+              </div>
+            </div>
+            <div color="#A4A4A4" text-32rpx pr-36rpx mt-36rpx select-text>
+              {{ description.access }}
+            </div>
+          </div>
+        </div>
+        <!-- 分割线 -->
+        <view class="line" mt-26rpx></view>
       </div>
       <!-- 占位，以便用户能够在fixed遮挡的情况划下去 -->
       <div h-160rpx></div>
@@ -137,7 +147,7 @@
       <PublishButton
         w-324rpx
         height="78rpx"
-        text-36rpx
+        font-size="36rpx"
         :title="`收藏`"
         color="#fff"
         bg-color="#598DF9"
@@ -250,8 +260,8 @@ function copyAccess() {
   })
 }
 
-function handlePublish(id: string) {
-  uni.redirectTo({ url: `./publisher-publish?id=${id}` })
+function handlePublish() {
+  uni.redirectTo({ url: `./publisher-publish?id=${id.value}` })
 }
 
 function handleFav() {
@@ -305,5 +315,23 @@ function previewImg(url: string) {
 
 .title {
   color: #598df9;
+}
+
+.line {
+  background-color: #f6f6f6;
+  height: 4rpx;
+}
+
+.copy-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  font-weight: 400;
+  width: 96rpx;
+  height: 46rpx;
+  background-color: #f5f5f5;
+  color: #598df9;
+  border-radius: 8rpx;
 }
 </style>

@@ -6,18 +6,27 @@
       borderRadius: borderRadius,
       color: isReversed ? props.bgColor : props.color,
       backgroundColor: isReversed ? props.color : props.bgColor,
-      border: '2rpx solid ' + (isReversed ? props.bgColor : 'transparent'),
+      borderColor: isReversed ? props.bgColor : 'transparent',
       boxShadow: `0rpx ${props.boxShadow} ${props.boxShadow} rgba(0, 0, 0, 0.2)`,
       width: Width,
     }"
   >
-    <span
-      class="iconfont"
-      :class="props.icon"
-      :style="{ fontSize: '44rpx' }"
-      color="#598DF9"
-    ></span>
-    <span>{{ props.title }}</span>
+    <!-- 内容 -->
+    <view flex justify-center items-center>
+      <view
+        class="iconfont"
+        :class="props.icon"
+        :style="{ fontSize: '48rpx' }"
+        color="#598DF9"
+      ></view>
+      <view
+        :style="{
+          fontSize: props.fontSize ? props.fontSize : '36rpx',
+          marginLeft: '8rpx',
+        }"
+        >{{ props.title }}</view
+      >
+    </view>
   </button>
 </template>
 
@@ -34,6 +43,7 @@ const props = defineProps<{
   icon?: string
   height?: string
   width?: string
+  fontSize?: string
 }>()
 const isReversed = computed(() => (isNull(props.reverse) ? false : true))
 const borderRadius = computed(() => (isNull(props.rounded) ? 0 : props.rounded))
