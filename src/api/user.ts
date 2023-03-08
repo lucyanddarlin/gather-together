@@ -67,3 +67,14 @@ export const reqModifyUserProfile = (data: Partial<ModifyUserProfile>) =>
 
 export const reqModifyUserAvatar = (data: any = {}) =>
   post<{ code: number; body: PostOSSResult }>('/user/info/avatar/modify', data)
+
+export const reqRemoveTopic = (topic_id: string) =>
+  get<{ [key: string]: string }>(`/user/forum/remove?topic_id=${topic_id}`)
+
+export const reqRemoveComment = (commentId: string) =>
+  post<{ [key: string]: string }>(
+    `/home/remove/forum/comment?commentId=${commentId}`
+  )
+
+export const reqRemoveReply = (replyId: string) =>
+  post<{ [key: string]: string }>(`/home/remove/forum/reply?replyId=${replyId}`)

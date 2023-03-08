@@ -93,6 +93,7 @@ const RequestMethod: request = (
         console.log('response', { resultData, url })
         const resultCode = Number.parseInt(resultData!.code)
         if (resultCode > 300) {
+          console.log('error request', res)
           resolve({ code: resultCode, data: null as any })
         }
         resolve({

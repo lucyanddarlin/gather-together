@@ -13,7 +13,7 @@
     >
       <view text-24rpx font-medium>{{ commentItem.username }}</view>
       <view text-20rpx class="text-#797979">
-        {{ commentItem.create_at.toDate().formatDate() }}
+        {{ commentItem.create_at?.toDate().formatDate() }}
       </view>
       <view my-24rpx text-28rpx flex flex-col class="text-#4D4D4D">
         <view
@@ -43,14 +43,13 @@
         <view class="iconfont icon-qianwang !text-24rpx" />
       </view>
     </view>
+    <view>
+      <view class="iconfont icon-gengduo" @click.stop="handleShowMore"></view>
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
-// import { onReady } from '@dcloudio/uni-app'
-// import { type Ref, watchEffect } from 'vue'
-// import { useScrollHeight } from '@/utils/common'
-
 interface ICommentItem {
   comment_id: string
   topic_id: string
@@ -72,7 +71,7 @@ const props = defineProps<{
   top?: boolean
 }>()
 
-const emit = defineEmits(['showReply', 'sendHeight', 'setReplyTarget'])
+const emit = defineEmits(['showReply', 'sendHeight', 'setReplyTarget', 'more'])
 const handleClickReply = () => {
   if (!props.child) {
     emit('showReply', true, props.index)
@@ -83,14 +82,9 @@ const handleClickReply = () => {
     })
   }
 }
-// onReady(() => {
-//   let commentHeight: Ref<number>
-//   // eslint-disable-next-line prefer-const
-//   commentHeight = useScrollHeight('#commentEl')
-//   watchEffect(() => {
-//     emit('sendHeight', commentHeight.value)
-//   })
-// })
+const handleShowMore = () => {
+  emit('more')
+}
 </script>
 
 <style scoped></style>

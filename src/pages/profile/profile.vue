@@ -7,7 +7,7 @@
       :scroll-y="true"
       :style="{ height: `calc(100% - ${headerHeight + cardHeight - 30}px)` }"
       :scroll-with-animation="true"
-      :refresher-enabled="true"
+      :refresher-enabled="false"
       :refresher-triggered="isTriggered"
       @scrolltolower="handleScrollToLower"
       @refresherrefresh="handleRefresh"
