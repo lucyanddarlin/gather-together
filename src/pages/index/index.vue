@@ -59,7 +59,11 @@
                   </view>
                   <view class="label-item text-main">{{ item.location }}</view>
                   <view flex flex-wrap>
-                    <view class="label-item text-#56C28E">进行中</view>
+                    <view
+                      class="label-item"
+                      :style="{ color: TIME_STATE[item.time_state].color }"
+                      >{{ TIME_STATE[item.time_state].value }}</view
+                    >
                     <view
                       v-for="(key, index) in filterPopupData['race'].resultKey"
                       :key="key"
@@ -106,7 +110,11 @@
                   </view>
                   <view class="label-item text-main">{{ item.location }}</view>
                   <view flex flex-wrap>
-                    <view class="label-item text-#56C28E">进行中</view>
+                    <view
+                      class="label-item"
+                      :style="{ color: TIME_STATE[item.time_state].color }"
+                      >{{ TIME_STATE[item.time_state].value }}</view
+                    >
                     <view
                       v-for="(key, index) in filterPopupData['lecture']
                         .resultKey"
@@ -154,7 +162,11 @@
                   </view>
                   <view class="label-item text-main">{{ item.location }}</view>
                   <view flex flex-wrap>
-                    <view class="label-item text-#56C28E">进行中</view>
+                    <view
+                      class="label-item"
+                      :style="{ color: TIME_STATE[item.time_state].color }"
+                      >{{ TIME_STATE[item.time_state].value }}</view
+                    >
                     <view
                       v-for="(key, index) in filterPopupData['activity']
                         .resultKey"
@@ -254,6 +266,7 @@ import {
 import { useHomeStore } from '@/store/modules/home'
 import { deepClone, isNull, toDate } from '@/utils/common'
 import { useUserStore } from '@/store/modules/user'
+import { TIME_STATE } from '@/utils/publishConstant'
 import ChangeFilter from './change-filter.vue'
 import Home from './home.vue'
 import type {

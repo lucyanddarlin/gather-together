@@ -1,3 +1,5 @@
+import { TimeState } from '@/typings/publisher'
+
 export const HOST = ['政府', '组织机构', '学校']
 export const LEVEL = ['院/校级', '地方级', '国家级']
 
@@ -33,3 +35,21 @@ export const TYPE_NAMES = [
 ]
 
 export const TYPE_LIST = ['比赛', '讲座', '活动']
+
+export const TIME_STATE = [
+  {
+    index: TimeState.NotStarted,
+    value: '未开始',
+    color: '#FFAF50',
+  },
+  {
+    index: TimeState.Ongoing,
+    value: '进行中',
+    color: '#56C28E',
+  },
+  {
+    index: TimeState.Ended,
+    value: '已结束',
+    color: '#a4a4a4',
+  },
+]

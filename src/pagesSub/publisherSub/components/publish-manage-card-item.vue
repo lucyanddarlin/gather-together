@@ -2,8 +2,8 @@
   <div bg-white relative mt-12rpx min-h-346rpx>
     <PaperItem
       :type="props.description.post_type + 1"
-      :url="`/pagesSub/publisherSub/publisher-detail?id=${props.description.post_id}`"
-      :desc="props.description.description"
+      :paper-item="props.description"
+      from="publisher_mode"
     >
       <template #title> {{ props.description.title }} </template>
       <template #label>
@@ -20,8 +20,8 @@
         ></PublishTag>
         <PublishTag
           inline
-          :title="StateMap[props.description.state]"
-          :color="getColor(props.description.state)"
+          :title="TIME_STATE[props.description.time_state!].value"
+          :color="TIME_STATE[props.description.time_state!].color"
         ></PublishTag>
         <!-- 活动类型 -->
         <PublishTag
@@ -61,30 +61,12 @@
 </template>
 
 <script setup lang="ts">
-import {
-  type IDescription,
-  type State,
-  StateMap,
-  Type,
-} from '@/typings/publisher'
-import { HOST, LEVEL, TYPE_NAMES } from '@/utils/publishConstant'
+import { type IDescription, Type } from '@/typings/publisher'
+import { HOST, LEVEL, TIME_STATE, TYPE_NAMES } from '@/utils/publishConstant'
 import PublishTag from './publish-tag.vue'
 const props = defineProps<{
   description: IDescription
 }>()
-
-const getColor = (state: State) => {
-  const colorMap = [
-    '#FFAF50',
-    '#FFAF50',
-    '#56C28E',
-    '#FF6969',
-    '#FF6969',
-    '#FF6969',
-  ]
-
-  return colorMap[state]
-}
 </script>
 
 <style scoped></style>

@@ -5,19 +5,19 @@ import {
   type GetPublish,
   type IDescription,
   type IPublish,
-  type Publish,
+  Publish,
   State,
   Type,
 } from '@/typings/publisher'
 import {
   DescToChangeBody,
   DescToPostBody,
-  DescToPub,
   GetPublishToDesc,
   PubToDesc,
 } from '@/typings/publisher/resolve'
 import {
   reqDeletePublish,
+  reqGetDetail,
   reqGetPublish,
   reqPostChange,
   reqPostPublish,
@@ -80,7 +80,7 @@ export const usePublisherStore = defineStore('publisher', () => {
       .filter((item) => item.state !== State.Delete)
     descriptions[cur_type.value].push(...arr_desc)
     publish[cur_type.value] = descriptions[cur_type.value].map((item) =>
-      DescToPub(item, TYPE_LIST[cur_type.value])
+      Publish.DescToPub(item, TYPE_LIST[cur_type.value])
     )
   }
 
@@ -103,6 +103,7 @@ export const usePublisherStore = defineStore('publisher', () => {
 
   // 修改发布
   async function reqUpdatePublish(p: Publish) {
+    console.log('reqUpdatePublish', p)
     const desc = PubToDesc(p, cur_type.value)
     const response = await reqPostChange(DescToChangeBody(desc), p.post_id)
     console.log('response', response)
@@ -128,6 +129,7 @@ export const usePublisherStore = defineStore('publisher', () => {
           showMsg('删除成功', 'success')
           d.state = State.Delete
           uni.navigateBack()
+          uni.redirectTo({ url: './publisher-manage' })
         }
       },
     })
@@ -137,7 +139,7 @@ export const usePublisherStore = defineStore('publisher', () => {
     desc.forEach((d) => {
       const type: Type = d.post_type
       descriptions[type].push(d)
-      const p: Publish = DescToPub(
+      const p: Publish = Publish.DescToPub(
         d,
         types.find((t) => t.id === Type[type])?.type || ''
       )
@@ -164,13 +166,21 @@ export const usePublisherStore = defineStore('publisher', () => {
           }
           // 更新收到的post_id
           description.post_id = Number(post_id)
-          // 更新帖子的状态，后面可根据返回信息定义帖子状态，如有图片则进入审核状态等等
-          description.state = State.Publish
+          // // TODO: 更新帖子的时间状态，建议丢给后端计算后随post_id一并返回
+          // if (description.start_time > new Date()) {
+          //   description.time_state = TimeState.NotStarted
+          // } else if (description.end_time < new Date()) {
+          //   description.time_state = TimeState.Ended
+          // } else {
+          //   description.time_state = TimeState.Ongoing
+          // }
+          // p.time_state = description.time_state
           descriptions[description.post_type].unshift(description)
           publish[description.post_type].unshift(p)
           console.log('publish', publish[description.post_type])
           console.log('description', descriptions[description.post_type])
           uni.navigateBack()
+          uni.redirectTo({ url: './publisher-manage' })
           showMsg('发布成功', 'success')
         })
         .catch((e) => {
@@ -190,7 +200,8 @@ export const usePublisherStore = defineStore('publisher', () => {
         console.log('publish', publish[description.post_type])
         console.log('description', descriptions[description.post_type])
         uni.navigateBack()
-        showMsg('发布成功', 'success')
+        uni.redirectTo({ url: './publisher-manage' })
+        showMsg('修改成功', 'success')
       })
     }
   }
@@ -208,6 +219,11 @@ export const usePublisherStore = defineStore('publisher', () => {
     publish[cur_type.value].splice(0)
   }
 
+  async function reqDetail(post_id: string) {
+    const result = await reqGetDetail(post_id)
+    return result
+  }
+
   return {
     types,
     cur_type,
@@ -220,5 +236,6 @@ export const usePublisherStore = defineStore('publisher', () => {
     reqCreatePublish,
     deletePost,
     resetPage,
+    reqDetail,
   }
 })

@@ -2,7 +2,7 @@
   <div>
     <div v-if="description" relative>
       <u-icon absolute right-24rpx size="40rpx" name="more-dot-fill"></u-icon>
-      <div mt-4rpx ml-36rpx text-56rpx fw-600 select-text>
+      <div mt-4rpx ml-36rpx mr-60rpx text-56rpx fw-600 select-text>
         {{ description.title }}
       </div>
       <div ml-36rpx>
@@ -34,8 +34,8 @@
         ></PublishTag>
         <!-- 进行状态 -->
         <PublishTag
-          :title="StateMap[description.state]"
-          color="#56C28E"
+          :title="TIME_STATE[description.time_state!].value"
+          :color="TIME_STATE[description.time_state!].color"
           font-size="32rpx"
         ></PublishTag>
         <!-- 时间 -->
@@ -72,10 +72,11 @@
           text-32rpx
           :class="isOmitted ? 'ellipsis' : 'normal'"
         >
-          {{ description.description }}
+          {{ description.detail }}
         </div>
         <div ml-18rpx>
           <PublishTag
+            v-if="description.detail.length > 100"
             text-28rpx
             color="#598DF9"
             bg-color="#F5F5F5"
@@ -106,7 +107,7 @@
       <div h-160rpx></div>
     </div>
   </div>
-  <div fixed bottom-26rpx left-40rpx>
+  <div v-if="isManagerMode" fixed bottom-26rpx left-40rpx>
     <div grid grid-cols-2 gap-x-22rpx>
       <PublishButton
         w-324rpx
@@ -116,8 +117,7 @@
         color="#fff"
         bg-color="#73B297"
         rounded="12rpx"
-        box-shadow="4rpx"
-        @tap="handlePublish(id)"
+        @tap="handlePublish"
       ></PublishButton>
       <PublishButton
         w-324rpx
@@ -127,8 +127,34 @@
         color="#fff"
         bg-color="#FF6969"
         rounded="12rpx"
-        box-shadow="4rpx"
-        icon="share-o"
+        icon="icon-fenxiang"
+      ></PublishButton>
+    </div>
+  </div>
+  <!-- 非管理员 -->
+  <div v-else fixed bottom-26rpx left-40rpx>
+    <div grid grid-cols-2 gap-x-22rpx>
+      <PublishButton
+        w-324rpx
+        height="78rpx"
+        text-36rpx
+        :title="`收藏`"
+        color="#fff"
+        bg-color="#598DF9"
+        rounded="12rpx"
+        icon="icon-shoucang"
+        @tap="handleFav()"
+      ></PublishButton>
+      <PublishButton
+        w-324rpx
+        height="78rpx"
+        text-36rpx
+        title="分享"
+        color="#fff"
+        bg-color="#FF6969"
+        rounded="12rpx"
+        icon="icon-fenxiang"
+        @tap="handleShare"
       ></PublishButton>
     </div>
   </div>
@@ -137,19 +163,31 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-// import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { usePublisherStore } from '@/store/modules/publisher'
-import { type IDescription, StateMap, Type } from '@/typings/publisher'
-import { hash } from '@/utils/common'
+import { useUserStore } from '@/store/modules/user'
+import { type IDescription, Type } from '@/typings/publisher'
+import { hash, showMsg } from '@/utils/common'
 
-import { HOST, LEVEL, TYPE_LIST, TYPE_NAMES } from '@/utils/publishConstant'
+import {
+  HOST,
+  LEVEL,
+  TIME_STATE,
+  TYPE_LIST,
+  TYPE_NAMES,
+} from '@/utils/publishConstant'
+import { reqGetDetail } from '@/api/publisher'
+import { GetPublishToDesc } from '@/typings/publisher/resolve'
 import PublishButton from './components/publish-button.vue'
 import PublishTag from './components/publish-tag.vue'
 
 const id = ref('')
 const description = ref<IDescription | undefined>()
 const isOmitted = ref(true)
+const isManagerMode = ref<boolean>(false)
 const publisherStore = usePublisherStore()
+const { userProfile } = storeToRefs(useUserStore())
+
 const type: Type = publisherStore.cur_type
 const post_type: string = TYPE_LIST[type]
 
@@ -177,9 +215,16 @@ onLoad((options) => {
     return
   }
   id.value = options.id
-  description.value = publisherStore.descriptions[type]?.find(
-    (item) => `${item.post_id}` === id.value
-  )
+  // 从路径进入的不一定是管理员，从首页查看的也不一定不是管理员
+  // 因此只有从发布者路径进入的管理员，才能编辑发布
+  if (options.from === 'publisher_mode' && userProfile.value.is_admin) {
+    isManagerMode.value = true
+  }
+  reqGetDetail(id.value).then((res) => {
+    if (res.code !== 200) description.value = undefined
+    description.value = GetPublishToDesc(res.data.body)
+  })
+
   // 设置标题
   uni.setNavigationBarTitle({
     title: `${post_type}管理`,
@@ -207,6 +252,31 @@ function copyAccess() {
 
 function handlePublish(id: string) {
   uni.redirectTo({ url: `./publisher-publish?id=${id}` })
+}
+
+function handleFav() {
+  showMsg('暂未开放，敬请期待', 'none', 2000)
+  console.log('收藏', id.value)
+}
+
+function handleShare() {
+  uni.share({
+    provider: 'weixin',
+    scene: 'WXSceneSession',
+    type: 1,
+    summary:
+      (description.value &&
+        `【荟聚通】${TIME_STATE[description.value.time_state].value} - ${
+          description.value.title
+        }`) ||
+      '【荟聚通】分享高校活动',
+    success(res) {
+      console.log(`success: ${JSON.stringify(res)}`)
+    },
+    fail(err) {
+      console.log(`fail: ${JSON.stringify(err)}`)
+    },
+  })
 }
 
 function previewImg(url: string) {

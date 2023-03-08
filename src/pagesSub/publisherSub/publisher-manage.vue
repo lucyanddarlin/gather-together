@@ -22,7 +22,6 @@
           :key="item.post_id"
           :description="item"
           cursor-pointer
-          @tap="handleClick(item.post_id)"
       /></view>
     </scroll-view>
     <Float
@@ -33,7 +32,6 @@
       @back-to-top="handleBackToTop"
     >
     </Float>
-    <!-- <GatherPublishButton fixed top-1000rpx right-40rpx @tap="handleCreate" /> -->
   </view>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
@@ -118,7 +116,6 @@ const filterData = reactive<FilterPopupData>({
 console.log('description', publisherStore.descriptions[publisherStore.cur_type])
 console.log('list', list.value)
 console.log('publish', publisherStore.publish[publisherStore.cur_type])
-
 onLoad(() => {
   // 设置标题
   uni.setNavigationBarTitle({
@@ -132,10 +129,6 @@ onUnload(() => {
 })
 
 const cur_area = ref('广州大学分区')
-
-const handleClick = (id: number) => {
-  uni.navigateTo({ url: `./publisher-detail?id=${id}` })
-}
 
 const show = ref(false)
 
@@ -198,6 +191,8 @@ function handleResetFilter() {
   })
   // 以防万一后来维护没有调用getBody
   filterData.result = {}
+  // 重置后重新加载
+  handleConfirmFilter()
 }
 
 function handleScroll(options: any) {
@@ -241,24 +236,13 @@ function handleBackToTop() {
   }
 }
 
-.publish {
-  position: fixed;
-  background-color: white;
-  bottom: 428rpx;
-  right: 66rpx;
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  border: 2rpx solid #e5e5e5;
-  box-shadow: 0rpx 0rpx 10rpx 0rpx rgba(0, 0, 0, 0.25);
-}
-
 .bg {
   background-color: #f7f7f7;
   min-height: 96rpx;
 }
 
 .main-page {
+  background-color: #f7f7f7;
   position: absolute;
   top: 96rpx;
   bottom: 0;

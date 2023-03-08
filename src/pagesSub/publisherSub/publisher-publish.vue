@@ -55,7 +55,7 @@
             placeholder-style="font-weight: 500;font-size: 32rpx;color: #bdbdbd"
             class="input-text"
             :maxlength="value.limit"
-            @input="value.limit && change($event, key, value.limit)"
+            @input="change($event, key, value)"
           />
         </view>
 
@@ -67,7 +67,7 @@
             class="input-elastic"
             auto-height
             :maxlength="value.limit"
-            @input="value.limit && change($event, key, value.limit)"
+            @input="change($event, key, value)"
           ></textarea>
         </view>
 
@@ -80,7 +80,7 @@
             rows="1"
             class="input-elastic"
             :maxlength="value.limit"
-            @input="value.limit && change($event, key, value.limit, true)"
+            @input="change($event, key, value)"
           ></textarea>
         </view>
 
@@ -91,7 +91,7 @@
             placeholder-style="font-weight: 400;font-size: 32rpx;color: #bdbdbd"
             class="input-textarea"
             :maxlength="value.limit"
-            @input="value.limit && change($event, key, value.limit)"
+            @input="change($event, key, value)"
           ></textarea>
           <PublishTextCounter
             absolute
@@ -228,12 +228,11 @@ import {
   type IDescription,
   type IField,
   Level,
-  type Publish,
+  Publish,
   State,
   type Type,
 } from '@/typings/publisher'
 import { HOST, LEVEL, TYPE_LIST, TYPE_NAMES } from '@/utils/publishConstant'
-import { DescToPub, PubToDesc } from '@/typings/publisher/resolve'
 import { hash, showMsg } from '@/utils/common'
 import PublishButton from './components/publish-button.vue'
 import PublishItem from './components/publish-item.vue'
@@ -246,6 +245,8 @@ const type: Type = publisherStore.cur_type
 const post_type: string = TYPE_LIST[type]
 const description = ref<IDescription | undefined>()
 const publish = ref<Publish>()
+// 判断是发布还是修改，以此确定标题
+const isPublish = ref<boolean>(false)
 const params = {
   year: true,
   month: true,
@@ -254,14 +255,6 @@ const params = {
   minute: true,
   second: false,
 }
-// 判断是否是新的发布
-const isPublish = computed(() => {
-  return (
-    description.value &&
-    description.value.state === State.Create &&
-    description.value.post_id === 0
-  )
-})
 
 if (!publish.value) {
   uni.showLoading({
@@ -291,10 +284,10 @@ onLoad((options) => {
   description.value = publisherStore.descriptions[type]?.find(
     (item) => `${item.post_id}` === id.value
   )
-  publish.value = DescToPub(description.value, post_type)
-  if (description.value === undefined) {
-    description.value = PubToDesc(publish.value, type)
-  }
+  // 若未曾在列表中，则是新帖
+  // 更准确的方法可能是请求一下后端，再确定是否存在，但是需要发送网络请求
+  if (!description.value) isPublish.value = true
+  publish.value = Publish.DescToPub(description.value, post_type)
   // 设置标题
   uni.setNavigationBarTitle({
     title: (isPublish.value ? '发布' : '编辑') + post_type,
@@ -364,12 +357,12 @@ const optionsObj = {
 type Options = typeof optionsObj
 const options = ref(optionsObj)
 
-function change(event: any, key: string, limit: number, removeEnter = false) {
+function change(event: any, key: string, field: IField, removeEnter = false) {
   if (removeEnter) {
     event.target.value = event.target.value.replace(/\n/g, '')
   }
-  if (event.target.value.length === limit) {
-    showMsg(`最多输入${limit}个字符`)
+  if (field.limit && event.target.value.length === field.limit) {
+    showMsg(`最多输入${field.limit}个字符`)
   }
   publish.value &&
     ((publish.value[key as keyof Publish] as IField).value =

@@ -18,6 +18,12 @@ export const StateMap = {
   [State.Banned]: '已封禁',
 }
 
+export enum TimeState {
+  NotStarted,
+  Ongoing,
+  Ended,
+}
+
 export enum Type {
   比赛,
   讲座,
@@ -113,7 +119,8 @@ export interface IDescription {
   post_type: Type
   score_type: ScoreType
   access: string
-  description: string
+  detail: string
+  time_state: TimeState
   // 其他标签，自定义，暂保留
   tags?: Array<ITag>
   imgs?: Array<string>
@@ -124,6 +131,7 @@ export interface IPublish {
   start_time: IField
   end_time: IField
   state: State
+  time_state: TimeState
   post_id: number
   location: IField
   host: IField
@@ -132,7 +140,7 @@ export interface IPublish {
   // TODO: 比赛类型，后期需更改
   score_type: IField
   access: IField
-  description: IField
+  detail: IField
   imgs?: IField
 }
 
@@ -141,6 +149,7 @@ export class Publish implements IPublish {
   start_time: IField
   end_time: IField
   state: State
+  time_state: TimeState
   post_id: number
   location: IField
   host: IField
@@ -148,7 +157,7 @@ export class Publish implements IPublish {
   race_level?: IField
   score_type: IField
   access: IField
-  description: IField
+  detail: IField
   imgs?: IField
   get entries(): [keyof IPublish, IField | State | number | undefined][] {
     return Object.entries(this) as [
@@ -157,6 +166,9 @@ export class Publish implements IPublish {
     ][]
   }
   constructor(type: string) {
+    this.state = State.Create
+    this.time_state = TimeState.NotStarted
+    this.post_id = 0
     this.title = {
       title: `${type}名称`,
       value: '',
@@ -176,8 +188,6 @@ export class Publish implements IPublish {
       type: 'time',
       placeholder: `请输入${type === '比赛' ? '报名结束' : type}时间`,
     }
-    this.state = State.Create
-    this.post_id = 0
     this.location = {
       title: `${type}地点`,
       value: '',
@@ -214,7 +224,7 @@ export class Publish implements IPublish {
       placeholder: `请输入${type === '比赛' ? '比赛' : type}报名方式`,
       limit: 50,
     }
-    this.description = {
+    this.detail = {
       title: `${type}简介`,
       value: '',
       type: 'textarea',
@@ -226,24 +236,49 @@ export class Publish implements IPublish {
       value: [],
       type: 'imgs',
     }
-    this.state = State.Create
   }
 
-  public static createPublish(ipublish: IPublish, post_type: string) {
+  public static createPublish(i: IPublish, post_type: string): Publish {
     const publish = new Publish(post_type)
-    publish.title = ipublish.title
-    publish.start_time = ipublish.start_time
-    publish.end_time = ipublish.end_time
-    publish.post_id = ipublish.post_id
-    publish.location = ipublish.location
-    publish.score_type = ipublish.score_type
-    publish.post_id = ipublish.post_id
-    publish.host = ipublish.host
-    publish.host_type = ipublish.host_type
-    publish.description = ipublish.description
-    if (ipublish.access) publish.access = ipublish.access
-    if (ipublish.imgs) publish.imgs = ipublish.imgs
-    if (ipublish.race_level) publish.race_level = ipublish.race_level
+    publish.state = i.state
+    publish.time_state = i.time_state
+    publish.post_id = i.post_id
+    publish.title.value = i.title.value
+    publish.start_time.value = i.start_time.value
+    publish.end_time.value = i.end_time.value
+    publish.location.value = i.location.value
+    publish.score_type.value = i.score_type.value
+    publish.host.value = i.host.value
+    publish.host_type.value = i.host_type.value
+    publish.detail.value = i.detail.value
+    if (i.access) publish.access.value = i.access.value
+    if (i.imgs && publish.imgs) publish.imgs.value = i.imgs.value
+    if (i.race_level && publish.race_level)
+      publish.race_level.value = i.race_level.value
+    return publish
+  }
+  public static DescToPub(
+    d: IDescription | undefined,
+    post_type: string
+  ): Publish {
+    const publish = new Publish(post_type)
+    if (!d) return publish
+    publish.state = d.state
+    publish.time_state = d.time_state
+    publish.title.value = d.title
+    publish.start_time.value = d.start_time
+    publish.end_time.value = d.end_time
+    publish.post_id = d.post_id
+    publish.location.value = d.location
+    publish.score_type.value = d.score_type
+    publish.host.value = d.host
+    publish.host_type.value = d.host_type
+    publish.detail.value = d.detail
+    publish.access.value = d.access
+    if (d.imgs && publish.imgs) publish.imgs.value = d.imgs
+    // 数字和字符需要注意一下，!0 === !'' === true
+    if (d.race_level !== undefined && publish.race_level)
+      publish.race_level.value = d.race_level
     return publish
   }
 
@@ -308,7 +343,7 @@ export interface GetPublish {
   race_level: number
   creator_name: null
   is_fav: null
-  time_state: null
+  time_state: number
   lecture_type: number
   race_type: number
   event_type: number
