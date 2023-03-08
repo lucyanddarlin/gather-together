@@ -5,7 +5,7 @@
     <GatherSubAvaterSection
       :name="currentPerson.name"
       :profession="currentPerson.profession"
-      :school="'广州大学'"
+      :school="currentPerson.school"
       :grade="currentPerson.grade"
     />
     <!-- 分割线 -->
@@ -36,12 +36,16 @@
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <!-- 证书/荣誉 -->
-    <GatherSubContentSection
-      v-for="item in currentPerson.certs"
-      :key="item"
-      :type="'证书/荣誉'"
-      :title="item.cert_name"
-    />
+    <view class="p-32rpx text-28rpx text-#4D4D4D">
+      <!-- 种类 -->
+      <view class="text-32rpx font-bold mb-24rpx">证书/荣誉</view>
+      <view v-for="cert in currentPerson.certs" :key="cert" mb-36rpx>
+        <!-- tag 类型 -->
+        <view flex mb-20rpx>
+          <GatherContentBlock :content="cert.cert_name" class="text-#598DF9" />
+        </view>
+      </view>
+    </view>
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
@@ -54,10 +58,7 @@
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 联系方式 -->
-    <GatherSubContentSection
-      :type="'联系方式'"
-      :title="currentPerson.contact"
-    />
+    <GatherSubContact :type="'联系方式'" :title="currentPerson.contact" />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
@@ -74,6 +75,7 @@ import GatherSubContentSection from '@/pagesSub/gatherSub/components/gatherSub-C
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
 import GatherSubAvaterSection from '@/pagesSub/gatherSub/components/gatherSub-AvaterSection.vue'
 import GatherSubFucntionButton from '@/pagesSub/gatherSub/components/gatherSub-fucntionButton.vue'
+import GatherSubContact from '@/pagesSub/gatherSub/components/gatherSub-Contact.vue'
 import { reqGatherPersonSingle } from '@/api/gather'
 import { MANNERp_TYPE_LIST } from '@/utils/constant'
 

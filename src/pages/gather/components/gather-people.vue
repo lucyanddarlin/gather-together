@@ -34,7 +34,10 @@
     </view>
     <!-- 简介类 -->
     <view text-28rpx>
-      <GatherContentBlock :content="props.content" class="text-#A4A4A4" />
+      <GatherContentBlock
+        :content="props.content === null || '' ? '未填写' : props.content"
+        class="text-#A4A4A4"
+      />
     </view>
   </view>
 </template>

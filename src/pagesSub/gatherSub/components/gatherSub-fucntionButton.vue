@@ -7,7 +7,7 @@
     >
     <view
       class="w-324rpx h-80rpx flex items-center justify-center bg-#FF6969 rounded-12rpx mr-24rpx"
-      ><i class="iconfont icon-fenxiang"></i><view>收藏</view></view
+      ><i class="iconfont icon-fenxiang"></i><view>分享</view></view
     >
   </view>
 </template>
