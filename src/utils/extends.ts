@@ -15,6 +15,7 @@ String.prototype.toInt = function (this: string): number {
   return Number.parseInt(this)
 }
 String.prototype.toDate = function (this: string) {
+  if (!this) return new Date()
   return new Date(this)
 }
 Date.prototype.formatDate = function (this: Date, type = 'MM-dd HH:mm') {

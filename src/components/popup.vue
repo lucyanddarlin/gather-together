@@ -16,7 +16,11 @@
         <text>我想....</text>
       </view>
       <view flex p-30rpx>
-        <view class="button-wrap" @click="handleClickCopy(TITLE)">
+        <view
+          v-if="isNull(props.selectItem.comment_id)"
+          class="button-wrap"
+          @click="handleClickCopy(TITLE)"
+        >
           <view class="button">
             <text class="iconfont icon-copy"></text>
           </view>
@@ -28,7 +32,7 @@
           </view>
           <view class="notice">复制内容</view>
         </view>
-        <view v-if="false" class="button-wrap">
+        <view v-if="isOwn" class="button-wrap" @click="handleDelete">
           <view class="button">
             <text class="iconfont icon-delete"></text>
           </view>
@@ -40,9 +44,12 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { CONTENT, TITLE } from '@/utils/constant'
-import { showMsg } from '@/utils/common'
+import { isNull, showMsg } from '@/utils/common'
+import { useUserStore } from '@/store/modules/user'
+import { reqRemoveComment, reqRemoveReply, reqRemoveTopic } from '@/api/user'
 interface IPaperItem {
   topic_id: string
   creator_id: string
@@ -59,13 +66,44 @@ interface IPaperItem {
   like: boolean
 }
 interface IGatherItem {
+  college_id: Number
+  college_name: string
+  create_time: string
+  creator_id: string
+  introduce: string
+  member_num: Number
+  members: any
+  needs: string
   project_id: string
   project_name: string
-  introduce: string
+  race_id: Number
+  race_name: any
+  state: Number
 }
 
-const props = defineProps<{ selectItem: Partial<IPaperItem & IGatherItem> }>()
-const emit = defineEmits(['popup'])
+interface ICommentItem {
+  comment_id: string
+  topic_id: string
+  user_id: string
+  content: string
+  create_at: string
+  last_reply_time: string
+  head_url: string
+  username: string
+  reply_head?: Array<any>
+  reply_id?: string
+  to_reply_username?: string
+  to_reply_id: string
+}
+
+const props = defineProps<{
+  selectItem: Partial<IPaperItem & IGatherItem & ICommentItem>
+}>()
+const emit = defineEmits(['popup', 'delete'])
+const { userProfile } = storeToRefs(useUserStore())
+const isOwn = computed(
+  () => userProfile.value.user_id === props.selectItem.creator_id
+)
 
 const showPopup = ref<boolean>(false)
 const shouldHide = ref<boolean>(true)
@@ -111,6 +149,32 @@ const handleClickCopy = (type: number) => {
     },
   })
 }
+const handleDelete = async () => {
+  if (props.selectItem.topic_id && !props.selectItem.comment_id) {
+    const { data } = await reqRemoveTopic(props.selectItem.topic_id!)
+    if (!isNull(data)) {
+      uni.$emit('updateHomeTopic')
+      uni.$emit('updateProfileListData')
+      await showMsg('删除成功')
+      emit('delete', { topic: true })
+    }
+  } else if (props.selectItem.comment_id && !props.selectItem.reply_id) {
+    const { data } = await reqRemoveComment(props.selectItem.comment_id)
+    if (!isNull(data)) {
+      await showMsg('删除成功')
+      uni.$emit('refreshComment')
+      emit('delete', { comment: true })
+    }
+  } else if (props.selectItem.reply_id) {
+    const { data } = await reqRemoveReply(props.selectItem.reply_id)
+    if (!isNull(data)) {
+      await showMsg('删除成功')
+      uni.$emit('refreshReply')
+      emit('delete', { comment: true })
+    }
+  }
+  hide()
+}
 defineExpose({
   show,
   hide,
@@ -129,7 +193,7 @@ defineExpose({
     border-top-right-radius: 40rpx;
     background-color: #f8f8f8;
     transition: all 0.2s linear;
-    z-index: 100;
+    z-index: 9999;
     &.hide {
       height: 0;
     }

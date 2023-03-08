@@ -19,11 +19,14 @@
               {{ homeTopicInfo.creator_name }}
             </span>
             <span class="text-20rpx text-#979797">
-              {{ homeTopicInfo.created_at.toDate().formatDate() }}
+              {{ homeTopicInfo?.created_at?.toDate().formatDate() }}
             </span>
           </view>
         </view>
-        <view class="iconfont icon-gengduo" @click="handleShowMoreOptions" />
+        <view
+          class="iconfont icon-gengduo"
+          @click="handleShowMoreOptions(homeTopicInfo)"
+        />
       </view>
       <view class="content-wrap">
         <span>{{ homeTopicInfo.content }}</span>
@@ -90,6 +93,7 @@
           :index="index"
           :comment-item="comment"
           @show-reply="handleShowReply"
+          @more="handleShowMoreOptions(comment)"
         />
       </view>
       <LoadMore :status="commentStatus" @load-more="getComment()" />
@@ -129,12 +133,14 @@
       mode="bottom"
       height="80%"
       border-radius="30"
+      z-index="998"
       @close="handlePopupClose"
     >
       <scroll-view
         class="reply-wrap"
         scroll-y
         :style="{ height: `calc(100% - ${inputH}px)` }"
+        @click="popup.hide()"
       >
         <CommentItem :comment-item="currentComment" top />
         <view class="w-full h-20rpx bg-#f5f5f5" />
@@ -144,6 +150,7 @@
           :comment-item="reply"
           child
           @set-reply-target="handleSetReplyTarget"
+          @more="handleShowMoreOptions(reply)"
         />
         <LoadMore :status="replyStatus" @load-more="getReply()" />
       </scroll-view>
@@ -178,7 +185,7 @@
         </view>
       </view>
     </u-popup>
-    <Popup ref="popup" :select-item="homeTopicInfo" />
+    <Popup ref="popup" :select-item="selectItem" topic @delete="handleDelete" />
   </view>
 </template>
 
@@ -193,6 +200,7 @@ import {
   reqSendReply,
 } from '@/api'
 import { isNull, useScrollHeight } from '@/utils/common'
+import { DEFAULT_PAGE } from '@/utils/constant'
 import CommentItem from './comment-item.vue'
 import type { HomeTopicInfo, ICommentItem } from '@/typings/home'
 const topic_id = ref<string | number>('')
@@ -235,6 +243,7 @@ const placeholder = computed(() =>
     : '发表你都想法吧'
 )
 const popup = ref<any>()
+const selectItem = ref<any>({})
 
 watch(
   replyList,
@@ -256,17 +265,22 @@ onLoad(async (options) => {
   topic_id.value = options!.topic_id
   await getPaper()
   getComment()
+  uni.$on('refreshComment', handleRefreshComment)
+  uni.$on('refreshReply', handleRefreshReply)
 })
-
 const getPaper = async () => {
   const { data } = await reqGetHomeTopicInfo(topic_id.value)
   if (!isNull(data)) {
     homeTopicInfo.value = data.body
   }
-  console.log('topic_info', homeTopicInfo.value)
 }
-const getComment = async () => {
+// TODO: 合并评论和回复获取
+const getComment = async (isClear?: boolean) => {
   if (isNull(homeTopicInfo.value.topic_id)) return
+  if (isClear) {
+    commentPage.value = DEFAULT_PAGE
+    commentStatus.value = 'more'
+  }
   if (commentStatus.value === 'noMore') return
   if (commentStatus.value === 'loading' && commentPage.value) return
   const { data } = await reqGetTopicComments(
@@ -274,6 +288,10 @@ const getComment = async () => {
     size,
     homeTopicInfo.value.topic_id
   )
+  if (isClear) {
+    commentList.value = []
+    commentListMap.value = {}
+  }
   if (!isNull(data)) {
     commentStatus.value = data.body.length < size ? 'noMore' : 'more'
     data.body.forEach((comment) => {
@@ -286,8 +304,12 @@ const getComment = async () => {
     return
   }
 }
-const getReply = async () => {
+const getReply = async (isClear?: boolean) => {
   if (isNull(currentComment.value.comment_id)) return
+  if (isClear) {
+    replyPage.value = DEFAULT_PAGE
+    replyStatus.value = 'more'
+  }
   if (replyStatus.value === 'noMore') return
   if (replyStatus.value === 'loading' && replyPage.value) return
   const { data } = await reqGetCommentReply(
@@ -295,6 +317,10 @@ const getReply = async () => {
     size,
     currentComment.value.comment_id
   )
+  if (isClear) {
+    replyList.value = []
+    replyListMap.value = {}
+  }
   if (!isNull(data)) {
     replyStatus.value = data.body.length < size ? 'noMore' : 'more'
     data.body.forEach((reply) => {
@@ -310,7 +336,6 @@ const getReply = async () => {
 const handleSendReply = async () => {
   console.log(content.value)
   if (isNull(content.value)) {
-    console.log('no content')
     return
   }
   if (!replyFlag.value) {
@@ -381,11 +406,26 @@ onReady(() => {
     inputH.value = inputHeight.value
   })
 })
-// const handleSendHeight = (height: any) => {
-//   commentH.value = height
-// }
-const handleShowMoreOptions = () => {
+const handleShowMoreOptions = (item: any) => {
+  selectItem.value = item
+  console.log(selectItem.value)
+
   popup.value.show()
+}
+const handleDelete = (value: any) => {
+  if (value.topic) {
+    setTimeout(() => {
+      uni.navigateBack()
+    }, 800)
+  } else if (value.comment) {
+    homeTopicInfo.value.reply_count--
+  }
+}
+const handleRefreshComment = () => {
+  getComment(true)
+}
+const handleRefreshReply = () => {
+  getReply(true)
 }
 </script>
 

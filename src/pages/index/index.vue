@@ -194,7 +194,7 @@
       :is-show-popup="isShowPopup"
       @back-to-top="handleBackToTop"
     />
-    <Popup ref="popup" :select-item="selectItem" @popup="handlePopup" />
+    <Popup ref="popup" :select-item="selectItem" topic @popup="handlePopup" />
     <u-popup
       v-model="isShowFilter"
       mode="bottom"
@@ -338,10 +338,10 @@ onLoad(() => {
   if (isLogin.value) {
     getHomePaperList()
   }
-  uni.$on('postNewTopic', handleRefresh)
+  uni.$on('updateHomeTopic', handleRefresh)
 })
 onUnload(() => {
-  uni.$off('postNewTopic')
+  uni.$off('updateHomeTopic')
 })
 watch(
   activeIndex,
