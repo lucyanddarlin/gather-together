@@ -492,7 +492,7 @@ const handleResetFilter = async () => {
     }
   }
   .home_section {
-    padding-top: 40rpx;
+    padding-top: 28rpx;
     .tab-section {
       z-index: 1 !important;
       .tab-item {

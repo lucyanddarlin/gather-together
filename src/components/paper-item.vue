@@ -25,8 +25,10 @@
     <view mt-20rpx>
       <slot name="label"></slot>
     </view>
-    <view class="content-wrap ellipsis">
-      {{ commonObj.content }}
+    <view p-16rpx mb-20rpx rounded-16rpx class="bg-#f5f5f5">
+      <view class="content-wrap ellipsis">
+        {{ commonObj.content }}
+      </view>
     </view>
     <view
       v-if="type === HOME && !isNull(paperItem.picture_urls)"
@@ -134,7 +136,6 @@ const props = defineProps<{
   paperItem: Partial<PaperItem & IGatherItem & OtherListItem>
 }>()
 const emit = defineEmits(['moreOptions'])
-const overflowLength = 100
 const commonObj = reactive<{ content: string; url: string }>({
   content: '',
   url: '',
@@ -162,10 +163,7 @@ watch(
       const fromWhere = props.from ? `&from=${props.from}` : ''
       url = `/pagesSub/publisherSub/publisher-detail?id=${props.paperItem.post_id}${fromWhere}`
     }
-    commonObj.content =
-      newContent.length > overflowLength
-        ? `${newContent.slice(0, overflowLength)}......`
-        : newContent
+    commonObj.content = newContent
     commonObj.url = url
   },
   { immediate: true, deep: true }
@@ -235,13 +233,10 @@ const handleClickImage = (url: string) => {
     word-break: break-all;
     word-wrap: break-word;
     white-space: pre-wrap;
-    margin-bottom: 20rpx;
-    padding: 16rpx;
-    border-radius: 16rpx;
     font-size: 28rpx;
     text-align: justify;
-    background-color: #f5f5f5;
     color: #a4a4a4;
+    overflow: hidden;
     &.ellipsis {
       @include text-ellipsis-multi(3);
     }
