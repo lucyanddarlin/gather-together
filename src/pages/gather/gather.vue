@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
-  <view class="discovery-page bg-#f7f7f7">
+  <view class="gather-page bg-#f7f7f7">
     <NavBar />
     <GatherSelectPage w-full />
     <scroll-view
@@ -21,6 +21,8 @@
           :key="item.project_id"
           :type="GATHER"
           :paper-item="item"
+          dots
+          @more-options="handleShowMoreOptions"
         >
           <template #title>{{ item.project_name }}</template>
           <template #label>
@@ -38,8 +40,8 @@
               </view>
             </view>
           </template>
-        </PaperItem></view
-      >
+        </PaperItem>
+      </view>
       <view v-show="activeIndex == PEOPLE_LIBRARY" pt-20rpx>
         <GatherPeople
           v-for="item in gatherPaperListMap['people'].dataList"
@@ -76,6 +78,7 @@
     gather
     @back-to-top="handleBackToTop"
   />
+  <!-- <Popup ref="popup" :select-item="selectItem" @popup="handlePopup" /> -->
   <u-popup v-model="showPopup" mode="bottom" height="60%" border-radius="30">
     <view px-32rpx py-52rpx>
       <view
@@ -150,6 +153,7 @@ import {
 } from '@/api/gather'
 import { isNull } from '@/utils/common'
 import type { FilterPopupDataItem, ListMap } from '@/typings/home'
+import type { IGatherItem } from '@/typings/gather'
 interface ProjectLabelList {
   labelKey: Array<string>
   map: Array<FilterPopupDataItem>
@@ -178,6 +182,12 @@ const useGatherIndexStore = gatherIndexStore()
 const { activeIndex, scrollTop, oldScrollTop, showPopup } =
   storeToRefs(useGatherIndexStore)
 
+const selectItem = reactive<Partial<IGatherItem>>({})
+const popup = ref<any>()
+
+const handlePopup = () => {
+  popup.value.show()
+}
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: any) => {
   uni.navigateTo({
@@ -432,7 +442,6 @@ const handleConfirmFilter = async () => {
       }
     }
   }
-  console.log(ProjectFilterPopupData[currentListKey.value].result)
   showPopup.value = false
   if (activeIndex.value === PROJECT_LIBRARY) {
     await getProjectOtherList(true)
@@ -448,83 +457,88 @@ const handleRefresh = async () => {
 const handleRefresherAbort = () => {
   isTriggered.value = false
 }
+const handleShowMoreOptions = (value: any) => {
+  console.log(value)
+  popup.value.show()
+}
 </script>
 
 <style lang="scss">
-.area-1 {
-  .tab-section {
-    padding-top: 24rpx;
-    display: flex;
-    justify-content: space-around;
-    .tab-item {
-      color: #c3c3c3;
-      font-weight: 500;
-      font-size: 32rpx;
-      padding-bottom: 8rpx;
-      &.active {
-        color: #2d2d2d;
-        border-bottom: 4rpx solid #2d2d2d;
-      }
-    }
-  }
-}
-.area-2 {
-  padding: 36rpx 32rpx 24rpx 12rpx;
-  font-size: 32rpx;
-  font-weight: 500;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #c3c3c3;
-  .tab-section {
-    width: 240rpx;
-    display: flex;
-    justify-content: space-around;
-    .tab-item {
-      &.active {
-        color: #2d2d2d;
-      }
-    }
-  }
-}
-.icon-shaixuan {
-  font-size: 36rpx;
-}
-.icon-gengduo {
-  font-size: 48rpx;
-}
-.filterList {
-  grid-template-columns: 188rpx;
-  grid-template-rows: 80rpx;
-  row-gap: 16rpx;
-  column-gap: 40rpx;
-}
-.activeFilterOption {
-  background-color: #598df9;
-  color: white;
-}
-.icon-fasong,
-.icon-shouqi {
-  font-size: 56rpx;
-}
-.buttonShadow {
-  box-shadow: 0rpx 4rpx 14rpx 4rpx rgba(67, 128, 255, 0.14);
-}
-.discovery-page {
+.gather-page {
   height: 100vh;
-}
-.main-page {
-  height: calc(100% - 372rpx);
-  background-color: #f7f7f7;
-}
-.filter-btn {
-  width: 324rpx;
-  height: 72rpx;
-  border-radius: 12rpx;
-  font-size: 32rpx;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .area-1 {
+    .tab-section {
+      padding-top: 24rpx;
+      display: flex;
+      justify-content: space-around;
+      .tab-item {
+        color: #c3c3c3;
+        font-weight: 500;
+        font-size: 32rpx;
+        padding-bottom: 8rpx;
+        &.active {
+          color: #2d2d2d;
+          border-bottom: 4rpx solid #2d2d2d;
+        }
+      }
+    }
+  }
+  .area-2 {
+    padding: 36rpx 32rpx 24rpx 12rpx;
+    font-size: 32rpx;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #c3c3c3;
+    .tab-section {
+      width: 240rpx;
+      display: flex;
+      justify-content: space-around;
+      .tab-item {
+        &.active {
+          color: #2d2d2d;
+        }
+      }
+    }
+  }
+  .icon-shaixuan {
+    font-size: 36rpx;
+  }
+  .icon-gengduo {
+    font-size: 48rpx;
+  }
+  .filterList {
+    grid-template-columns: 188rpx;
+    grid-template-rows: 80rpx;
+    row-gap: 16rpx;
+    column-gap: 40rpx;
+  }
+  .activeFilterOption {
+    background-color: #598df9;
+    color: white;
+  }
+  .icon-fasong,
+  .icon-shouqi {
+    font-size: 56rpx;
+  }
+  .buttonShadow {
+    box-shadow: 0rpx 4rpx 14rpx 4rpx rgba(67, 128, 255, 0.14);
+  }
+
+  .main-page {
+    height: calc(100% - 372rpx);
+    background-color: #f7f7f7;
+  }
+  .filter-btn {
+    width: 324rpx;
+    height: 72rpx;
+    border-radius: 12rpx;
+    font-size: 32rpx;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

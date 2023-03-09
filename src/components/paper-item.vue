@@ -9,7 +9,7 @@
     relative
     @click="handleClickItem"
   >
-    <view text-40rpx font-bold class="text-#534E4E">
+    <view class="title-wrap">
       <slot name="title"></slot>
     </view>
     <span
@@ -25,8 +25,10 @@
     <view mt-20rpx>
       <slot name="label"></slot>
     </view>
-    <view class="paper-desc">
-      {{ commonObj.content }}
+    <view p-16rpx mb-20rpx rounded-16rpx class="bg-#f5f5f5">
+      <view class="content-wrap ellipsis">
+        {{ commonObj.content }}
+      </view>
     </view>
     <view
       v-if="type === HOME && !isNull(paperItem.picture_urls)"
@@ -47,7 +49,7 @@
       </view>
     </view>
     <view v-if="type === HOME" flex items-center>
-      <view h-60rpx w-60rpx rounded-full bg-pink mr-12rpx overflow-hidden>
+      <view h-60rpx w-60rpx rounded-full mr-12rpx overflow-hidden>
         <image h-60rpx w-60rpx rounded-full :src="paperItem.creator_head_url" />
       </view>
       <view flex-1>
@@ -134,7 +136,6 @@ const props = defineProps<{
   paperItem: Partial<PaperItem & IGatherItem & OtherListItem>
 }>()
 const emit = defineEmits(['moreOptions'])
-const overflowLength = 100
 const commonObj = reactive<{ content: string; url: string }>({
   content: '',
   url: '',
@@ -162,10 +163,7 @@ watch(
       const fromWhere = props.from ? `&from=${props.from}` : ''
       url = `/pagesSub/publisherSub/publisher-detail?id=${props.paperItem.post_id}${fromWhere}`
     }
-    commonObj.content =
-      newContent.length > overflowLength
-        ? `${newContent.slice(0, overflowLength)}......`
-        : newContent
+    commonObj.content = newContent
     commonObj.url = url
   },
   { immediate: true, deep: true }
@@ -196,6 +194,13 @@ const handleClickImage = (url: string) => {
 
 <style lang="scss">
 .paper-item {
+  .title-wrap {
+    width: 70%;
+    font-size: 40rpx;
+    font-weight: 700;
+    color: #534e3e;
+    @include text-ellipsis-multi(1);
+  }
   .images-wrap {
     margin: 16rpx 0;
     display: flex;
@@ -231,17 +236,17 @@ const handleClickImage = (url: string) => {
       }
     }
   }
-  .paper-desc {
+  .content-wrap {
     word-break: break-all;
     word-wrap: break-word;
     white-space: pre-wrap;
-    margin-bottom: 20rpx;
-    padding: 16rpx;
-    border-radius: 16rpx;
     font-size: 28rpx;
     text-align: justify;
-    background-color: #f5f5f5;
     color: #a4a4a4;
+    overflow: hidden;
+    &.ellipsis {
+      @include text-ellipsis-multi(3);
+    }
   }
 }
 </style>

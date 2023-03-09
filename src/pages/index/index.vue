@@ -194,7 +194,7 @@
       :is-show-popup="isShowPopup"
       @back-to-top="handleBackToTop"
     />
-    <Popup ref="popup" :select-item="selectItem" topic @popup="handlePopup" />
+    <Popup ref="popup" :select-item="selectItem" @popup="handlePopup" />
     <u-popup
       v-model="isShowFilter"
       mode="bottom"
@@ -492,7 +492,7 @@ const handleResetFilter = async () => {
     }
   }
   .home_section {
-    padding-top: 40rpx;
+    padding-top: 28rpx;
     .tab-section {
       z-index: 1 !important;
       .tab-item {

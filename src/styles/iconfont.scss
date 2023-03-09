@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3866138 */
-  src: url('//at.alicdn.com/t/c/font_3866138_61v1fcsb0ms.woff2?t=1678028796015') format('woff2'),
-       url('//at.alicdn.com/t/c/font_3866138_61v1fcsb0ms.woff?t=1678028796015') format('woff'),
-       url('//at.alicdn.com/t/c/font_3866138_61v1fcsb0ms.ttf?t=1678028796015') format('truetype');
+  src: url('//at.alicdn.com/t/c/font_3866138_p6bbnk252n.woff2?t=1678344841084') format('woff2'),
+       url('//at.alicdn.com/t/c/font_3866138_p6bbnk252n.woff?t=1678344841084') format('woff'),
+       url('//at.alicdn.com/t/c/font_3866138_p6bbnk252n.ttf?t=1678344841084') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,30 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-wechat:before {
+  content: "\e60d";
+}
+
+.icon-fanhui:before {
+  content: "\e7cb";
+}
+
+.icon-zhankai:before {
+  content: "\e7d9";
+}
+
+.icon-xiangyou1:before {
+  content: "\e775";
+}
+
+.icon-xiangzuo1:before {
+  content: "\e779";
+}
+
+.icon-tongzhi2:before {
+  content: "\e7d6";
 }
 
 .icon-add:before {

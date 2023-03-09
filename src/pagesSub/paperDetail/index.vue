@@ -54,7 +54,7 @@
           </view>
         </view>
       </view>
-      <view v-if="false" mt-54rpx flex items-center>
+      <view mt-54rpx flex items-center>
         <view class="bottoms-wrap">
           <view flex items-center mr-56rpx>
             <view class="bottom-wrap">
@@ -62,7 +62,12 @@
             </view>
             <view> {{ homeTopicInfo.like_count }}</view>
           </view>
-          <view flex items-center class="text-#4380FF">
+          <view
+            flex
+            items-center
+            class="text-#4380FF"
+            @click="handleOpenSharePopup"
+          >
             <view class="bottom-wrap">
               <view class="iconfont icon-fenxiang" />
             </view>
@@ -185,12 +190,22 @@
         </view>
       </view>
     </u-popup>
-    <Popup ref="popup" :select-item="selectItem" topic @delete="handleDelete" />
+    <Popup
+      ref="popup"
+      :select-item="selectItem"
+      :show-share="showShare"
+      @delete="handleDelete"
+    />
   </view>
 </template>
 
 <script setup lang="ts">
-import { onLoad, onReady } from '@dcloudio/uni-app'
+import {
+  onLoad,
+  onReady,
+  onShareAppMessage,
+  onShareTimeline,
+} from '@dcloudio/uni-app'
 import { type Ref, computed, ref, watch, watchEffect } from 'vue'
 import {
   reqGetCommentReply,
@@ -244,6 +259,7 @@ const placeholder = computed(() =>
 )
 const popup = ref<any>()
 const selectItem = ref<any>({})
+const showShare = ref<boolean>(false)
 
 watch(
   replyList,
@@ -267,6 +283,18 @@ onLoad(async (options) => {
   getComment()
   uni.$on('refreshComment', handleRefreshComment)
   uni.$on('refreshReply', handleRefreshReply)
+})
+onShareTimeline(() => {
+  return {
+    title: homeTopicInfo.value.title,
+    path: `/pagesSub/paperDetail/index?topic_id=${homeTopicInfo.value.topic_id}`,
+  }
+})
+onShareAppMessage(() => {
+  return {
+    title: homeTopicInfo.value.title,
+    path: `/pagesSub/paperDetail/index?topic_id=${homeTopicInfo.value.topic_id}`,
+  }
 })
 const getPaper = async () => {
   const { data } = await reqGetHomeTopicInfo(topic_id.value)
@@ -407,6 +435,7 @@ onReady(() => {
   })
 })
 const handleShowMoreOptions = (item: any) => {
+  showShare.value = false
   selectItem.value = item
   console.log(selectItem.value)
 
@@ -426,6 +455,10 @@ const handleRefreshComment = () => {
 }
 const handleRefreshReply = () => {
   getReply(true)
+}
+const handleOpenSharePopup = () => {
+  showShare.value = true
+  popup.value.show()
 }
 </script>
 

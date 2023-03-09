@@ -12,10 +12,16 @@
       @click="handleClickBackground"
     />
     <view class="popup" :class="{ hide: !showPopup }">
-      <view flex-center pt-20rpx text-28rpx class="text-#707070">
+      <view
+        v-if="!showShare"
+        flex-center
+        pt-20rpx
+        text-28rpx
+        class="text-#707070"
+      >
         <text>我想....</text>
       </view>
-      <view flex p-30rpx>
+      <view v-if="!showShare" flex p-30rpx>
         <view
           v-if="isNull(props.selectItem.comment_id)"
           class="button-wrap"
@@ -38,6 +44,29 @@
           </view>
           <view class="notice">删除</view>
         </view>
+      </view>
+      <view v-else class="share-wrap">
+        <view flex-center pt-20rpx text-28rpx class="text-#707070">
+          <text>分享一下</text>
+        </view>
+        <view class="share-body">
+          <button
+            class="share-button"
+            :plain="true"
+            open-type="share"
+            @click.stop="handleShareWechat"
+          >
+            <text class="iconfont icon-wechat"></text>
+            <view class="notice notice-wechat">分享到微信</view>
+          </button>
+          <view class="line"></view>
+          <view class="share-button" @click.stop="handleShareToFriendCircle">
+            <image class="circle" src="/static/images/friendCircle.png"></image>
+            <view class="notice">分享到朋友圈</view>
+          </view>
+        </view>
+        <view class="line"></view>
+        <view class="cancel" @click="hide">取消</view>
       </view>
     </view>
   </view>
@@ -98,6 +127,7 @@ interface ICommentItem {
 
 const props = defineProps<{
   selectItem: Partial<IPaperItem & IGatherItem & ICommentItem>
+  showShare?: boolean
 }>()
 const emit = defineEmits(['popup', 'delete'])
 const { userProfile } = storeToRefs(useUserStore())
@@ -134,6 +164,7 @@ const hide = () => {
 }
 const handleClickBackground = () => {
   shouldHide.value = true
+  console.log(shouldHide.value)
 }
 const handleClickCopy = (type: number) => {
   let copyContent = null
@@ -174,6 +205,16 @@ const handleDelete = async () => {
     }
   }
   hide()
+}
+const handleShareWechat = () => {
+  console.log('ready to share')
+}
+const handleShareToFriendCircle = () => {
+  uni.showModal({
+    title: '请点击右上角 ··· 转发朋友圈',
+    content: '微信当前仅支持安卓及部分IOS设备转发朋友圈',
+    confirmColor: '#4F89BE',
+  })
 }
 defineExpose({
   show,
@@ -220,6 +261,72 @@ defineExpose({
         font-size: 28rpx;
       }
     }
+  }
+  .share-wrap {
+    background-color: #ffffff;
+    border-top-left-radius: 40rpx;
+    border-top-right-radius: 40rpx;
+    height: 100%;
+    .title {
+      display: flex;
+      justify-content: center;
+      font-size: 34rpx;
+      font-weight: bold;
+      color: #000;
+    }
+    .share-body {
+      display: flex;
+      justify-content: center;
+      .share-button {
+        width: 170rpx;
+        height: 170rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin: 24rpx 0rpx;
+        margin-bottom: 10rpx;
+        padding: 0;
+        .iconfont {
+          color: #28c445;
+          width: 100rpx;
+          height: 100rpx;
+          font-size: 96rpx;
+          margin-top: -74rpx;
+        }
+        .notice {
+          padding-top: 20rpx;
+          color: #000;
+          font-size: 28rpx;
+        }
+        .notice-wechat {
+          padding-top: 90rpx;
+        }
+        .circle {
+          width: 100rpx;
+          height: 100rpx;
+          margin-bottom: 14rpx;
+        }
+      }
+      .line {
+        height: 120rpx;
+        width: 2rpx;
+        background-color: #e7e6e6;
+        margin: 35rpx 90rpx;
+      }
+    }
+  }
+  .line {
+    margin-top: 10rpx;
+    background-color: #e7e6e6;
+    height: 5rpx;
+  }
+  .cancel {
+    display: flex;
+    justify-content: center;
+    margin: 20rpx 0;
+    font-size: 34rpx;
+    border-radius: 26rpx;
   }
 }
 </style>
