@@ -5,7 +5,7 @@
         <u-icon mt-16rpx name="map" size="46rpx" color="#598DF9" />
       </view>
       <view h-72rpx>
-        <div mt-12rpx ml-24rpx>{{ props.cur_area }}</div>
+        <view mt-12rpx ml-24rpx>{{ props.cur_area }}</view>
       </view>
     </view>
     <view class="bar filter" @tap="handleFilter">
