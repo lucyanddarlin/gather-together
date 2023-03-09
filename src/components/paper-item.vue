@@ -47,7 +47,7 @@
       </view>
     </view>
     <view v-if="type === HOME" flex items-center>
-      <view h-60rpx w-60rpx rounded-full bg-pink mr-12rpx overflow-hidden>
+      <view h-60rpx w-60rpx rounded-full mr-12rpx overflow-hidden>
         <image h-60rpx w-60rpx rounded-full :src="paperItem.creator_head_url" />
       </view>
       <view flex-1>
