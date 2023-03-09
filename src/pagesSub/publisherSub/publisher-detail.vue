@@ -140,6 +140,7 @@
         bg-color="#FF6969"
         rounded="12rpx"
         icon="icon-fenxiang"
+        share
       ></PublishButton>
     </view>
   </view>
