@@ -269,14 +269,14 @@ onShareTimeline(() => {
   if (!description.value) return {}
   return {
     title: description.value.title,
-    path: `/pagesSub/publisherSub/publisher-publish?id=${id.value}`,
+    path: `/pagesSub/publisherSub/publisher-detail?id=${id.value}`,
   }
 })
 onShareAppMessage(() => {
   if (!description.value) return {}
   return {
     title: description.value.title,
-    path: `/pagesSub/publisherSub/publisher-publish?id=${id.value}`,
+    path: `/pagesSub/publisherSub/publisher-detail?id=${id.value}`,
   }
 })
 
