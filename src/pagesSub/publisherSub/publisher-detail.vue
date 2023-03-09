@@ -174,7 +174,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref, watch } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import { storeToRefs } from 'pinia'
 import { usePublisherStore } from '@/store/modules/publisher'
@@ -244,24 +244,8 @@ onLoad((options) => {
   uni.setNavigationBarTitle({
     title: `${post_type}管理`,
   })
-})
 
-onShareTimeline(() => {
-  if (!description.value) return {}
-  return {
-    title: description.value.title,
-    path: `/pagesSub/publisherSub/publisher-publish?id=${id.value}`,
-  }
-})
-onShareAppMessage(() => {
-  if (!description.value) return {}
-  return {
-    title: description.value.title,
-    path: `/pagesSub/publisherSub/publisher-publish?id=${id.value}`,
-  }
-})
-
-onMounted(() => {
+  // 检测行数，是否需要省略
   setTimeout(() => {
     uni
       .createSelectorQuery()
@@ -279,6 +263,21 @@ onMounted(() => {
       })
       .exec()
   }, 500)
+})
+
+onShareTimeline(() => {
+  if (!description.value) return {}
+  return {
+    title: description.value.title,
+    path: `/pagesSub/publisherSub/publisher-publish?id=${id.value}`,
+  }
+})
+onShareAppMessage(() => {
+  if (!description.value) return {}
+  return {
+    title: description.value.title,
+    path: `/pagesSub/publisherSub/publisher-publish?id=${id.value}`,
+  }
 })
 
 onBeforeMount(() => {
