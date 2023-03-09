@@ -1,5 +1,4 @@
 <template>
-  <u-navbar :border-bottom="false"></u-navbar>
   <view v-if="!isNull(currentPerson)">
     <!-- 顶部名字 和 学校信息 -->
     <GatherSubAvaterSection
@@ -69,7 +68,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import { isNull } from '@/utils/common'
 import GatherSubContentSection from '@/pagesSub/gatherSub/components/gatherSub-ContentSection.vue'
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
@@ -88,6 +87,18 @@ onLoad((option: any) => {
   }
 
   getCurrentPagePerson()
+})
+onShareTimeline(() => {
+  return {
+    title: currentPerson.value.name,
+    path: `/pagesSub/gatherSub/gatherSub-person?user_id=${currentPerson.value.user_id}`,
+  }
+})
+onShareAppMessage(() => {
+  return {
+    title: currentPerson.value.name,
+    path: `/pagesSub/gatherSub/gatherSub-person?user_id=${currentPerson.value.user_id}`,
+  }
 })
 const realMannerType = computed(() => {
   return (

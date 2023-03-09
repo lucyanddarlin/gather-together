@@ -120,15 +120,14 @@
         {
           "path": "gatherSub/gatherSub-person",
           "style": {
-            "navigationStyle": "custom",
-            "navigationBarTextStyle": "white"
+            "navigationBarTitleText": "详情"
+            
           }
         },
         {
           "path": "gatherSub/gatherSub-project",
           "style": {
-            "navigationStyle": "custom",
-            "navigationBarTextStyle": "white"
+            "navigationBarTitleText": "详情"
           }
         },
         {

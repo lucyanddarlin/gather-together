@@ -67,7 +67,6 @@
         </view>
         <view class="line"></view>
         <view class="cancel" @click="hide">取消</view>
-        <!-- <view class="line"></view> -->
       </view>
     </view>
   </view>
@@ -165,6 +164,7 @@ const hide = () => {
 }
 const handleClickBackground = () => {
   shouldHide.value = true
+  console.log(shouldHide.value)
 }
 const handleClickCopy = (type: number) => {
   let copyContent = null
