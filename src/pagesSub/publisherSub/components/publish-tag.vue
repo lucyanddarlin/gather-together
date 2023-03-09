@@ -1,5 +1,5 @@
 <template>
-  <div
+  <view
     :style="{
       color: tag.color,
       backgroundColor: '#F5F5F5',
@@ -18,20 +18,20 @@
       whiteSpace: 'nowrap',
     }"
   >
-    <div v-if="tag.date">
+    <view v-if="tag.date">
       {{ format(Number(tag.date.start), 'yyyy-MM-dd HH:mm') }} 至
       {{ format(Number(tag.date.end), 'yyyy-MM-dd HH:mm') }}
-    </div>
-    <div v-else-if="tag.filter"># {{ tag.title }}</div>
-    <div
+    </view>
+    <view v-else-if="tag.filter"># {{ tag.title }}</view>
+    <view
       v-else
       :class="{
         'text-ellipsis': tag.longTag,
       }"
     >
       {{ tag.title }}
-    </div>
-  </div>
+    </view>
+  </view>
 </template>
 
 <script setup lang="ts">

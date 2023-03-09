@@ -1,5 +1,5 @@
 <template>
-  <div bg-white relative mt-12rpx min-h-346rpx>
+  <view bg-white relative mt-12rpx min-h-346rpx>
     <PaperItem
       :type="props.description.post_type + 1"
       :paper-item="props.description"
@@ -57,7 +57,7 @@
         <!-- 详情描述 -->
       </template>
     </PaperItem>
-  </div>
+  </view>
 </template>
 
 <script setup lang="ts">

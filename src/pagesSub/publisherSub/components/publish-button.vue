@@ -1,5 +1,6 @@
 <template>
   <button
+    :open-type="share ? 'share' : undefined"
     class="publish-button"
     :style="{
       lineHeight: props.height ? props.height : 'inherit',
@@ -44,6 +45,7 @@ const props = defineProps<{
   height?: string
   width?: string
   fontSize?: string
+  share?: boolean
 }>()
 const isReversed = computed(() => (isNull(props.reverse) ? false : true))
 const borderRadius = computed(() => (isNull(props.rounded) ? 0 : props.rounded))

@@ -35,18 +35,18 @@
   </view>
 
   <u-popup v-model="show" mode="bottom" height="836rpx" border-radius="20">
-    <div mx-32rpx relative>
-      <div v-for="option in filterData.map" :key="hash(option.title)">
+    <view mx-32rpx relative>
+      <view v-for="option in filterData.map" :key="hash(option.title)">
         <PublishRadioGroup
           :title="option.title"
           :options="option.list"
         ></PublishRadioGroup>
-      </div>
-    </div>
+      </view>
+    </view>
     <!-- 占位 -->
-    <div h-134rpx></div>
-    <div fixed bottom-26rpx left-40rpx>
-      <div grid grid-cols-2 gap-x-22rpx>
+    <view h-134rpx></view>
+    <view fixed bottom-26rpx left-40rpx>
+      <view grid grid-cols-2 gap-x-22rpx>
         <PublishButton
           w-324rpx
           height="72rpx"
@@ -67,8 +67,8 @@
           rounded="12rpx"
           @tap="handleResetFilter"
         ></PublishButton>
-      </div>
-    </div>
+      </view>
+    </view>
   </u-popup>
 </template>
 
