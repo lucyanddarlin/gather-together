@@ -25,7 +25,7 @@
     <view mt-20rpx>
       <slot name="label"></slot>
     </view>
-    <view class="paper-desc">
+    <view class="content-wrap ellipsis">
       {{ commonObj.content }}
     </view>
     <view
@@ -231,7 +231,7 @@ const handleClickImage = (url: string) => {
       }
     }
   }
-  .paper-desc {
+  .content-wrap {
     word-break: break-all;
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -242,6 +242,9 @@ const handleClickImage = (url: string) => {
     text-align: justify;
     background-color: #f5f5f5;
     color: #a4a4a4;
+    &.ellipsis {
+      @include text-ellipsis-multi(3);
+    }
   }
 }
 </style>
