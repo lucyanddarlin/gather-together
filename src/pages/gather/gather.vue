@@ -21,6 +21,7 @@
           :key="item.project_id"
           :type="GATHER"
           :paper-item="item"
+          dots
         >
           <template #title>{{ item.project_name }}</template>
           <template #label>

@@ -51,7 +51,7 @@
         </view>
         <view class="share-body">
           <button
-            class="share-botton"
+            class="share-button"
             :plain="true"
             open-type="share"
             @click.stop="handleShareWechat"
@@ -60,7 +60,7 @@
             <view class="notice notice-wechat">分享到微信</view>
           </button>
           <view class="line"></view>
-          <view class="share-botton" @click.stop="handleShareToFriendCircle">
+          <view class="share-button" @click.stop="handleShareToFriendCircle">
             <image class="circle" src="/static/images/friendCircle.png"></image>
             <view class="notice">分享到朋友圈</view>
           </view>
@@ -277,7 +277,7 @@ defineExpose({
     .share-body {
       display: flex;
       justify-content: center;
-      .share-botton {
+      .share-button {
         width: 170rpx;
         height: 170rpx;
         display: flex;

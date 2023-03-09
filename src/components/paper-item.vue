@@ -9,7 +9,7 @@
     relative
     @click="handleClickItem"
   >
-    <view text-40rpx font-bold class="text-#534E4E">
+    <view class="title-wrap">
       <slot name="title"></slot>
     </view>
     <span
@@ -194,6 +194,13 @@ const handleClickImage = (url: string) => {
 
 <style lang="scss">
 .paper-item {
+  .title-wrap {
+    width: 70%;
+    font-size: 40rpx;
+    font-weight: 700;
+    color: #534e3e;
+    @include text-ellipsis-multi(1);
+  }
   .images-wrap {
     margin: 16rpx 0;
     display: flex;
