@@ -56,9 +56,14 @@
       </view>
       <view mt-54rpx flex items-center>
         <view class="bottoms-wrap">
-          <view flex items-center mr-56rpx>
+          <view flex items-center mr-56rpx @click="handleLikeTopic">
             <view class="bottom-wrap">
-              <view class="iconfont icon-shoucang" />
+              <view
+                transition
+                duration-300
+                class="iconfont icon-shoucang"
+                :class="{ '!text-pink': homeTopicInfo.like }"
+              />
             </view>
             <view> {{ homeTopicInfo.like_count }}</view>
           </view>
@@ -207,15 +212,18 @@ import {
   onShareTimeline,
 } from '@dcloudio/uni-app'
 import { type Ref, computed, ref, watch, watchEffect } from 'vue'
+import { storeToRefs } from 'pinia'
 import {
   reqGetCommentReply,
   reqGetHomeTopicInfo,
   reqGetTopicComments,
+  reqLikeHomeTopic,
   reqSendComment,
   reqSendReply,
 } from '@/api'
-import { isNull, useScrollHeight } from '@/utils/common'
+import { isNull, throttle, useScrollHeight } from '@/utils/common'
 import { DEFAULT_PAGE } from '@/utils/constant'
+import { useUserStore } from '@/store/modules/user'
 import CommentItem from './comment-item.vue'
 import type { HomeTopicInfo, ICommentItem } from '@/typings/home'
 const topic_id = ref<string | number>('')
@@ -260,6 +268,8 @@ const placeholder = computed(() =>
 const popup = ref<any>()
 const selectItem = ref<any>({})
 const showShare = ref<boolean>(false)
+const { isLogin } = storeToRefs(useUserStore())
+const { userLogin } = useUserStore()
 
 watch(
   replyList,
@@ -362,7 +372,10 @@ const getReply = async (isClear?: boolean) => {
   }
 }
 const handleSendReply = async () => {
-  console.log(content.value)
+  if (!isLogin.value) {
+    await userLogin()
+    return
+  }
   if (isNull(content.value)) {
     return
   }
@@ -441,6 +454,17 @@ const handleShowMoreOptions = (item: any) => {
 
   popup.value.show()
 }
+const handleLikeTopic = throttle(async () => {
+  const { data } = await reqLikeHomeTopic(homeTopicInfo.value.topic_id)
+  if (!isNull(data)) {
+    homeTopicInfo.value.like = !homeTopicInfo.value.like
+    if (homeTopicInfo.value.like) {
+      homeTopicInfo.value.like_count++
+    } else {
+      homeTopicInfo.value.like_count--
+    }
+  }
+}, 800)
 const handleDelete = (value: any) => {
   if (value.topic) {
     setTimeout(() => {

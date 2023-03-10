@@ -72,3 +72,6 @@ export const reqPostTopic = (data: {
     '/home/send/forum/topic',
     data
   )
+
+export const reqLikeHomeTopic = (topic_id: string) =>
+  post<{ [key: string]: string }>(`/home/like/forum?topic_id=${topic_id}`)

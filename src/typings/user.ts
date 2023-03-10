@@ -79,7 +79,7 @@ export enum MODIFY_PROFILE {
 }
 
 export interface ModifyUserProfile {
-  nickname: string
+  name: string
 }
 
 export interface PostOSSResult {

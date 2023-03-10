@@ -52,4 +52,9 @@ input {
 uni-modal .uni-modal__bd {
   white-space: pre-wrap;
 }
+.tips-text {
+  font-size: 60rpx;
+  color: #c0c0c0;
+  font-weight: 700;
+}
 </style>

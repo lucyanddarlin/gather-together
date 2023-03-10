@@ -23,7 +23,7 @@
             <text>{{ item.title }}</text>
           </TabItem>
         </TabSection>
-        <Empty v-if="!isLogin" type="empty" text="登陆查看更多~" />
+        <Empty v-if="!isLogin" type="login" text="登陆查看更多~" />
         <template v-else>
           <view v-show="activeIndex === HOME">
             <Home @more="handleShowMoreOptions" />
@@ -379,6 +379,7 @@ watch(
   isLogin,
   () => {
     if (isLogin.value) {
+      activeIndex.value = HOME
       handleRefresh()
     }
   },
