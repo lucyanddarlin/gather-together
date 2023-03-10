@@ -246,7 +246,12 @@
 
 <script setup lang="ts">
 import { computed, nextTick, reactive, ref, watch } from 'vue'
-import { onLoad, onUnload } from '@dcloudio/uni-app'
+import {
+  onLoad,
+  onShareAppMessage,
+  onShareTimeline,
+  onUnload,
+} from '@dcloudio/uni-app'
 import { format } from 'date-fns'
 import { storeToRefs } from 'pinia'
 import {
@@ -339,6 +344,18 @@ onLoad(() => {
     getHomePaperList()
   }
   uni.$on('updateHomeTopic', handleRefresh)
+})
+onShareTimeline(() => {
+  return {
+    title: '荟聚通',
+    path: '/pages/index/index',
+  }
+})
+onShareAppMessage(() => {
+  return {
+    title: '荟聚通',
+    path: '/pages/index/index',
+  }
 })
 onUnload(() => {
   uni.$off('updateHomeTopic')
