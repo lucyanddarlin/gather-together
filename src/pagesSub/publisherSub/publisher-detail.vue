@@ -60,7 +60,19 @@
         <view class="line" mt-26rpx></view>
         <view ml-36rpx>
           <!-- 详情标题 -->
-          <view text-36rpx mt-24rpx fw-600>{{ post_type }}详情</view>
+          <view mt-24rpx
+            ><view text-36rpx fw-600>
+              {{ post_type }}详情
+              <view
+                float-right
+                mr-40rpx
+                class="side-button collapse-button"
+                @tap="isOmitted = !isOmitted"
+              >
+                <span>{{ isOmitted ? '查看全部' : '收起' }}</span>
+              </view>
+            </view>
+          </view>
           <!-- TODO: 插入图片 -->
           <view grid grid-cols-3 gap-x-20rpx color="#A4A4A4" pl-36rpx mt-36rpx>
             <view v-for="img in description.imgs" :key="hash(img)">
@@ -85,16 +97,6 @@
               {{ description.detail }}
             </view>
           </view>
-          <view ml-18rpx>
-            <PublishTag
-              v-if="isOverflow"
-              text-28rpx
-              color="#598DF9"
-              bg-color="#F5F5F5"
-              :title="isOmitted ? '查看全部' : '收起'"
-              @tap="isOmitted = !isOmitted"
-            ></PublishTag>
-          </view>
         </view>
         <!-- 分割线 -->
         <view class="line" mt-26rpx></view>
@@ -103,7 +105,12 @@
           <view relative>
             <view color="#4D4D4D" text-36rpx mt-52rpx fw-600>
               报名方式
-              <view class="copy-button" float-right mr-40rpx @tap="copyAccess">
+              <view
+                class="side-button copy-button"
+                float-right
+                mr-40rpx
+                @tap="copyAccess"
+              >
                 <span>复制</span>
               </view>
             </view>
@@ -197,8 +204,7 @@ import PublishTag from './components/publish-tag.vue'
 const id = ref('')
 const description = ref<IDescription | undefined>()
 
-const isOmitted = ref(false)
-const isOverflow = ref(false)
+const isOmitted = ref(true)
 const isManagerMode = ref<boolean>(false)
 const publisherStore = usePublisherStore()
 const { userProfile } = storeToRefs(useUserStore())
@@ -244,25 +250,6 @@ onLoad((options) => {
   uni.setNavigationBarTitle({
     title: `${post_type}管理`,
   })
-
-  // 检测行数，是否需要省略
-  setTimeout(() => {
-    uni
-      .createSelectorQuery()
-      .select('#view_detail')
-      .boundingClientRect((res: any) => {
-        // console.log(res)
-        // console.log(res.height / 20)
-        // 由于$ref不可用、uniapp没有提供文字行高的API
-        // 行高已定为40rpx，更改时请注意
-        // 此处得到单位为px
-        if (Math.ceil(res.height / 20) > 5) {
-          isOmitted.value = true
-          isOverflow.value = true
-        }
-      })
-      .exec()
-  }, 500)
 })
 
 onShareTimeline(() => {
@@ -338,16 +325,25 @@ function previewImg(url: string) {
   height: 4rpx;
 }
 
-.copy-button {
+.side-button {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 28rpx;
   font-weight: 400;
-  width: 96rpx;
   height: 46rpx;
   background-color: #f5f5f5;
   color: #598df9;
   border-radius: 8rpx;
+}
+
+.copy-button {
+  width: 96rpx;
+}
+
+.collapse-button {
+  width: fit-content;
+  padding-left: 20rpx;
+  padding-right: 20rpx;
 }
 </style>
