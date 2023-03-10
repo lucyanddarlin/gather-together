@@ -26,7 +26,12 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/store/modules/user'
 import { GATHER, HOME, SHOW_TOP } from '@/utils/constant'
+
+const { isLogin } = storeToRefs(useUserStore())
+const { userLogin } = useUserStore()
 
 const props = defineProps<{
   type: number
@@ -37,7 +42,11 @@ const props = defineProps<{
   url?: string
 }>()
 const emit = defineEmits(['backToTop'])
-const handleLinkToPublish = () => {
+const handleLinkToPublish = async () => {
+  if (!isLogin.value) {
+    await userLogin()
+    return
+  }
   if (props.home) {
     uni.navigateTo({
       url: '/pagesSub/publishPage/index',

@@ -28,6 +28,19 @@ const getUserCode = () => {
     })
   })
 }
+const handleConfirmPolicy = () => {
+  return new Promise((resolve) => {
+    uni.showModal({
+      title: '确认即视为同意',
+      content: '荟聚通用户协议与隐私政策\n(详情请在设置查看)',
+      async success(res) {
+        if (res.confirm) {
+          resolve(await popupDialog())
+        }
+      },
+    })
+  })
+}
 const popupDialog = () => {
   return new Promise((resolve) => {
     uni.showModal({
@@ -84,7 +97,7 @@ export const useUserStore = defineStore('user', () => {
 
   const userLogin = async () => {
     const code = (await getUserCode()) as string
-    const isConfirm = await popupDialog()
+    const isConfirm = await handleConfirmPolicy()
     if (code && isConfirm) {
       const { iv, encryptedData } = await getProfile()
       const query = { code, iv, encryptedData }
@@ -155,9 +168,7 @@ export const useUserStore = defineStore('user', () => {
   const modifyUserProfile = async (info: Partial<ModifyUserProfile>) => {
     const { data } = await reqModifyUserProfile(info)
     if (!isNull(data)) {
-      userProfile.value = Object.assign({}, userProfile.value, {
-        name: info.nickname,
-      })
+      userProfile.value = Object.assign({}, userProfile.value, info)
       showMsg('修改成功')
       setTimeout(() => {
         uni.navigateBack()
@@ -168,6 +179,16 @@ export const useUserStore = defineStore('user', () => {
     const { data } = await reqModifyUserAvatar()
     if (!isNull(data)) {
       const { error } = await reqUploadUserAvatar([imageUrl], data.body)
+      if (!error) {
+        userProfile.value = Object.assign({}, userProfile.value, {
+          head_url: imageUrl,
+        })
+        showMsg('修改成功')
+        setTimeout(() => {
+          uni.navigateBack()
+        }, 800)
+        return true
+      }
       return isNull(error) ? true : false
     }
   }

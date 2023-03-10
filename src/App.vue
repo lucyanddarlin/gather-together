@@ -23,7 +23,7 @@ const checkVersionUpdate = () => {
   const updateManager = uni.getUpdateManager()
   updateManager.onCheckForUpdate((res) => {
     // 请求完新版本信息的回调
-    console.log(res.hasUpdate)
+    console.log('新版本请求回调结果', res.hasUpdate)
   })
   updateManager.onUpdateReady(() => {
     uni.showModal({
@@ -51,5 +51,10 @@ input {
 }
 uni-modal .uni-modal__bd {
   white-space: pre-wrap;
+}
+.tips-text {
+  font-size: 60rpx;
+  color: #c0c0c0;
+  font-weight: 700;
 }
 </style>

@@ -1,23 +1,45 @@
 <template>
   <view class="empty-page">
-    <view class="empty-image">
-      <image
-        v-show="type === 'empty'"
-        class="image"
-        src="https://cdn-team.gzjcth.com/image/comment_empty.jpg"
-      />
-    </view>
-    <view class="empty-text"> {{ text }}</view>
+    <template v-if="type === 'empty'">
+      <view class="empty-image">
+        <image
+          class="image"
+          src="https://cdn-team.gzjcth.com/image/comment_empty.jpg"
+        />
+      </view>
+      <view class="empty-text"> {{ text }}</view>
+    </template>
+    <template v-if="type === 'login'">
+      <view flex-center flex-col justify-center>
+        <view class="tips-text">登陆</view>
+        <view class="tips-text">查看更多</view>
+        <view flex-center text-main @click="handleLinkToLogin">
+          <view>前往登陆</view>
+          <view class="iconfont icon-qianwang" />
+        </view>
+      </view>
+    </template>
   </view>
 </template>
 
 <script setup lang="ts">
-defineProps<{ type: string; text: string }>()
+import { useUserStore } from '@/store/modules/user'
+
+defineProps<{ type: 'empty' | 'login'; text: string }>()
+
+const { userLogin } = useUserStore()
+
+const handleLinkToLogin = async () => {
+  uni.switchTab({
+    url: '/pages/profile/profile',
+  })
+  await userLogin()
+}
 </script>
 
 <style lang="scss">
 .empty-page {
-  height: 600rpx;
+  padding-top: 100rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;

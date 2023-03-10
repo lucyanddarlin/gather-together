@@ -41,6 +41,7 @@ const toPublishApi = async () => {
         icon: 'success',
         duration: 2000,
       })
+      uni.$emit('refreshProject')
       uni.navigateBack()
     }
   } else {

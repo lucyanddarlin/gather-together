@@ -42,19 +42,8 @@ import { useScrollHeight } from '@/utils/common'
 const { isLogin, userProfile } = storeToRefs(useUserStore())
 const { userLogin } = useUserStore()
 
-const showPolicyModal = ref(false)
-
-const handleLogin = () => {
-  uni.showModal({
-    title: '确认即视为同意',
-    content: '荟聚通用户协议与隐私政策\n(详情请在设置查看)',
-    async success(res) {
-      if (res.confirm) {
-        await userLogin()
-      }
-    },
-  })
-  showPolicyModal.value = true
+const handleLogin = async () => {
+  await userLogin()
 }
 
 const inputH = ref<number>(0)

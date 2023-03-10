@@ -1,7 +1,7 @@
 <template>
   <view v-if="!isNull(currentPerson)">
     <!-- 顶部名字 和 学校信息 -->
-    <GatherSubAvaterSection
+    <GatherSubAvatarSection
       :name="currentPerson.name"
       :profession="currentPerson.profession"
       :school="currentPerson.school"
@@ -62,7 +62,7 @@
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
 
     <!-- 功能 按钮 -->
-    <GatherSubFucntionButton />
+    <GatherSubFunctionButton />
   </view>
 </template>
 <script setup lang="ts">
@@ -72,8 +72,8 @@ import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import { isNull } from '@/utils/common'
 import GatherSubContentSection from '@/pagesSub/gatherSub/components/gatherSub-ContentSection.vue'
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
-import GatherSubAvaterSection from '@/pagesSub/gatherSub/components/gatherSub-AvaterSection.vue'
-import GatherSubFucntionButton from '@/pagesSub/gatherSub/components/gatherSub-fucntionButton.vue'
+import GatherSubAvatarSection from '@/pagesSub/gatherSub/components/gatherSub-AvatarSection.vue'
+import GatherSubFunctionButton from '@/pagesSub/gatherSub/components/gatherSub-functionButton.vue'
 import GatherSubContact from '@/pagesSub/gatherSub/components/gatherSub-Contact.vue'
 import { reqGatherPersonSingle } from '@/api/gather'
 import { MANNERp_TYPE_LIST } from '@/utils/constant'

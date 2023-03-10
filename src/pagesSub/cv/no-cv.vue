@@ -43,12 +43,4 @@ const handleShowTips = () => {
 }
 </script>
 
-<style lang="scss">
-.no-cv-page {
-  .tips-text {
-    font-size: 60rpx;
-    color: #c0c0c0;
-    font-weight: 700;
-  }
-}
-</style>
+<style lang="scss"></style>

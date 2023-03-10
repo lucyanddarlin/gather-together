@@ -26,8 +26,11 @@
       </view>
     </view>
     <view v-if="type === MODIFY_PROFILE.avatar">
-      {{ userProfile.head_url }}
-      {{ imageUrl }}
+      <view class="image-wrap">
+        <view>
+          <image class="image" :src="avatarImagePath" mode="aspectFill"></image>
+        </view>
+      </view>
     </view>
     <button
       v-if="type === MODIFY_PROFILE.avatar"
@@ -58,6 +61,9 @@ const showContentTips = computed(() => content.value.length > maxContentLength)
 const checkContent = computed(
   () => !isNull(content.value) && !showContentTips.value
 )
+const avatarImagePath = computed(() =>
+  isNull(imageUrl.value) ? userProfile.value.head_url : imageUrl.value
+)
 const { modifyUserProfile, modifyUserAvatar } = useUserStore()
 onLoad((options) => {
   if (isNull(options)) return
@@ -80,7 +86,7 @@ const handleClickConfirm = async () => {
     await modifyUserAvatar(imageUrl.value)
   } else if (type.value === MODIFY_PROFILE.username) {
     if (!checkContent.value) return
-    query = { nickname: content.value }
+    query = { name: content.value }
     modifyUserProfile(query)
   }
 }
@@ -123,6 +129,17 @@ const handleSelectImage = (e: any) => {
     align-items: center;
     justify-content: center;
     color: #fff;
+  }
+  .image-wrap {
+    margin: 0 auto;
+    width: 674rpx;
+    height: 674rpx;
+    background-color: #fff;
+    margin-bottom: 100rpx;
+    .image {
+      width: 674rpx;
+      height: 674rpx;
+    }
   }
 }
 </style>
