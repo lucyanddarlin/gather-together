@@ -8,7 +8,9 @@
       <GatherContentBlock :content="props.title" class="text-#598DF9" />
     </view>
     <!-- 简介介绍 -->
-    <view v-show="props.content !== ''"> {{ props.content }}</view>
+    <view v-show="props.content !== ''">
+      <text>{{ props.content }}</text>
+    </view>
   </view>
 </template>
 <script setup lang="ts">

@@ -9,7 +9,7 @@
       bottom-0
       z-99
       class="bg-black/20"
-      @click="handleClickBackground"
+      @click.stop="handleClickBackground"
     />
     <view class="popup" :class="{ hide: !showPopup }">
       <view
@@ -79,6 +79,7 @@ import { CONTENT, TITLE } from '@/utils/constant'
 import { isNull, showMsg } from '@/utils/common'
 import { useUserStore } from '@/store/modules/user'
 import { reqRemoveComment, reqRemoveReply, reqRemoveTopic } from '@/api/user'
+import { reqRemoveProject } from '@/api/gather'
 interface IPaperItem {
   topic_id: string
   creator_id: string
@@ -95,19 +96,20 @@ interface IPaperItem {
   like: boolean
 }
 interface IGatherItem {
-  college_id: Number
-  college_name: string
-  create_time: string
+  project_id: string
+  project_mode: number
+  project_type: number
+  contact: string
+  zone_id: string
+  project_name: string
   creator_id: string
   introduce: string
-  member_num: Number
-  members: any
   needs: string
-  project_id: string
-  project_name: string
-  race_id: Number
-  race_name: any
-  state: Number
+  create_at: Date
+  state: number
+  members?: any
+  picture_urls?: any
+  race_name?: any
 }
 
 interface ICommentItem {
@@ -164,9 +166,9 @@ const hide = () => {
 }
 const handleClickBackground = () => {
   shouldHide.value = true
-  console.log(shouldHide.value)
 }
 const handleClickCopy = (type: number) => {
+  console.log(props.selectItem)
   let copyContent = null
   if (type === TITLE) {
     copyContent = props.selectItem.title || props.selectItem.project_name
@@ -202,6 +204,14 @@ const handleDelete = async () => {
       await showMsg('删除成功')
       uni.$emit('refreshReply')
       emit('delete', { comment: true })
+    }
+  } else if (props.selectItem.project_id) {
+    // TODO: delete project
+    const { data } = await reqRemoveProject(props.selectItem.project_id)
+    if (!isNull(data)) {
+      await showMsg('删除成功')
+      emit('delete', { project: true })
+      uni.$emit('refreshProject')
     }
   }
   hide()

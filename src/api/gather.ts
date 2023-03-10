@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { get, post } from './request'
+import type { IGatherItem } from '@/typings/gather'
 
 export const reqGatherProjectList = (page: number, size: number) => {
   return get<{ code: number; body: any }>(
@@ -19,7 +19,7 @@ export const reqOtherGatherProjectList = (
   if (project_type !== undefined) {
     url += `&projectType=${project_type}`
   }
-  return get<{ code: number; body: any }>(url)
+  return get<{ code: number; body: { result: Array<IGatherItem> } }>(url)
 }
 export const reqGatherPersonList = (page: number, size: number) => {
   return get<{ code: number; body: any }>(
@@ -43,7 +43,9 @@ export const reqOtherGatherPersonList = (
 }
 
 export const reqGatherProjectSingle = (project_id: any) =>
-  get<{ code: number; body: any }>('/gather/get/project', { project_id })
+  get<{ code: number; body: IGatherItem }>('/gather/get/project', {
+    project_id,
+  })
 
 export const reqPublishProject = (data: {
   contact: string
@@ -58,3 +60,8 @@ export const reqPublishProject = (data: {
 
 export const reqGatherPersonSingle = (user_id: any) =>
   get<{ code: number; body: any }>('/gather/get/vita', { user_id })
+
+export const reqRemoveProject = (project_id: string) =>
+  get<{ [key: string]: string }>(
+    `/gather/remove/project?project_id=${project_id}`
+  )

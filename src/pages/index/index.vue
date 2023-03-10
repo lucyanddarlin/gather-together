@@ -457,7 +457,6 @@ const handleConfirmFilter = async () => {
       }
     }
   }
-  console.log(filterPopupData[currentListKey.value])
   await getHomeOtherList(
     activeIndex.value,
     filterPopupData[currentListKey.value].result,
@@ -492,7 +491,6 @@ const handleResetFilter = async () => {
       display: flex;
       padding: 24rpx 12rpx;
       top: 0rpx;
-      // height: 74rpx;
       z-index: 9;
       justify-content: space-around;
       background-color: #fff;

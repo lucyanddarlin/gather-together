@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
   <view class="gather-page bg-#f7f7f7">
     <NavBar />
@@ -50,7 +49,7 @@
           :school="item.school"
           :profession="item.profession"
           :content="item.profile"
-          @toPeopleDetail="toPeopleDetail(item.user_id)"
+          @to-people-detail="toPeopleDetail(item.user_id)"
         >
           <template #tags>
             <view flex flex-wrap>
@@ -78,7 +77,7 @@
     gather
     @back-to-top="handleBackToTop"
   />
-  <!-- <Popup ref="popup" :select-item="selectItem" @popup="handlePopup" /> -->
+  <Popup ref="popup" :select-item="selectItem" />
   <u-popup v-model="showPopup" mode="bottom" height="60%" border-radius="30">
     <view px-32rpx py-52rpx>
       <view
@@ -126,7 +125,12 @@
 import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
 import { computed, nextTick, reactive, ref, watch } from 'vue'
-import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+import {
+  onLoad,
+  onShareAppMessage,
+  onShareTimeline,
+  onUnload,
+} from '@dcloudio/uni-app'
 
 // 切换页面
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
@@ -194,12 +198,12 @@ onShareAppMessage(() => {
 const { activeIndex, scrollTop, oldScrollTop, showPopup } =
   storeToRefs(useGatherIndexStore)
 
-const selectItem = reactive<Partial<IGatherItem>>({})
+const selectItem = ref<Partial<IGatherItem>>({})
 const popup = ref<any>()
 
-const handlePopup = () => {
-  popup.value.show()
-}
+// const handlePopup = () => {
+//   // popup.value.show()
+// }
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: any) => {
   uni.navigateTo({
@@ -240,6 +244,10 @@ const gatherPaperListMap = reactive<{ [key: string]: ListMap }>({
   },
 })
 
+const handleRefreshProject = () => {
+  activeIndex.value = PROJECT_LIBRARY
+  getDataList(true)
+}
 const getDataList = async (isClear?: boolean) => {
   const type = apiKeyMap[activeIndex.value][0]
   const requestApi = apiKeyMap[activeIndex.value][1]
@@ -368,6 +376,10 @@ const getPeopleOtherList = async (isClear?: boolean) => {
 
 onLoad(() => {
   getDataList()
+  uni.$on('refreshProject', handleRefreshProject)
+})
+onUnload(() => {
+  uni.$off('refreshProject')
 })
 watch(
   activeIndex,
@@ -469,8 +481,8 @@ const handleRefresh = async () => {
 const handleRefresherAbort = () => {
   isTriggered.value = false
 }
-const handleShowMoreOptions = (value: any) => {
-  console.log(value)
+const handleShowMoreOptions = (value: Partial<IGatherItem>) => {
+  selectItem.value = value
   popup.value.show()
 }
 </script>
@@ -514,9 +526,7 @@ const handleShowMoreOptions = (value: any) => {
       }
     }
   }
-  .icon-shaixuan {
-    font-size: 36rpx;
-  }
+
   .icon-gengduo {
     font-size: 48rpx;
   }
@@ -542,15 +552,18 @@ const handleShowMoreOptions = (value: any) => {
     height: calc(100% - 372rpx);
     background-color: #f7f7f7;
   }
-  .filter-btn {
-    width: 324rpx;
-    height: 72rpx;
-    border-radius: 12rpx;
-    font-size: 32rpx;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+}
+.icon-shaixuan {
+  font-size: 44rpx;
+}
+.filter-btn {
+  width: 324rpx;
+  height: 72rpx;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
