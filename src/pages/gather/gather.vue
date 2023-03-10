@@ -126,7 +126,7 @@
 import { storeToRefs } from 'pinia'
 // 人才库 和 项目库数据
 import { computed, nextTick, reactive, ref, watch } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 
 // 切换页面
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
@@ -177,6 +177,18 @@ const peopleLabelList: ProjectLabelList = {
 }
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()
+onShareTimeline(() => {
+  return {
+    title: '荟聚通',
+    path: '/pages/gather/gather',
+  }
+})
+onShareAppMessage(() => {
+  return {
+    title: '荟聚通',
+    path: '/pages/gather/gather',
+  }
+})
 
 // 导入 nav 栏 活动的值 ； 导入是否展示 筛选
 const { activeIndex, scrollTop, oldScrollTop, showPopup } =
