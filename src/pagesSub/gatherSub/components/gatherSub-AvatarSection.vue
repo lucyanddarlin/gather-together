@@ -15,12 +15,12 @@
       }}</view>
       <view v-show="activeIndex == 1" flex mb-12rpx
         ><GatherContentBlock
-          :content="props.school"
+          :content="!props.school ? '未知学校' : props.school"
           class="text-#598DF9 text-24rpx" />
         <GatherContentBlock
-          :content="props.profession"
+          :content="!props.profession ? '未知专业' : props.profession"
           class="text-#598DF9 text-24rpx" /><GatherContentBlock
-          :content="realGrade + '级'"
+          :content="!props.year ? '未知年级' : props.year + '级'"
           class="text-#598DF9 text-24rpx"
       /></view>
       <view flex
@@ -36,7 +36,6 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
 // 导入 gatherIndex 的 pinia
 import { gatherIndexStore } from '@/store/gatherIndex'
@@ -48,26 +47,9 @@ const props = defineProps({
   name: { type: String, default: '' },
   school: { type: String, default: '' },
   profession: { type: String, default: '' },
-  grade: { type: [String, Number], default: '' },
+  year: { type: [String, Number], default: '' },
   tags: { type: Array, default: () => [] },
 })
-const realGrade = ref()
-switch (props.grade) {
-  case 1:
-    realGrade.value = 2022
-    break
-  case 2:
-    realGrade.value = 2021
-    break
-  case 3:
-    realGrade.value = 2020
-    break
-  case 4:
-    realGrade.value = 2019
-    break
-  default:
-    realGrade.value = '未知年'
-}
 </script>
 
 <style lang="less" scoped></style>

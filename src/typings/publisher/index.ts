@@ -376,6 +376,7 @@ export type BodyFilter = {
 }
 
 export interface LabelItem {
+[x: string]: any
   value: string
   isSelected?: boolean
 }
