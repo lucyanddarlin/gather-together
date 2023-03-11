@@ -34,9 +34,10 @@
                 #{{
                   projectLabelList.map[index].list.find(
                     (i) => i.index === item[key]
-                  )?.value || '未知字段'
+                  )?.value || '未知'
                 }}
               </view>
+              <view class="label-item text-#FFAF50">#广州大学</view>
             </view>
           </template>
         </PaperItem>
@@ -176,8 +177,9 @@ const peopleLabelList: ProjectLabelList = {
   map: [
     { title: '能力类型', list: MANNERp_TYPE_LIST },
     { title: '学习方向', list: LEARNING_DIRECTION_LIST },
+    { title: '发布分区', list: LEARNING_DIRECTION_LIST },
   ],
-  labelKey: ['manner_type', 'learning_direction'],
+  labelKey: ['skill_id', 'direction'],
 }
 // 实例化 gatherIndex pinia
 const useGatherIndexStore = gatherIndexStore()

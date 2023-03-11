@@ -5,8 +5,12 @@
       :name="currentPerson.name"
       :profession="currentPerson.profession"
       :school="currentPerson.school"
-      :grade="currentPerson.grade"
+      :year="currentPerson.year"
     />
+    <view flex pl-20px pb-12px class="text-#FFAF50"
+      ><GatherContentBlock :content="realMannerType" /><GatherContentBlock
+        :content="realMannerDirection"
+    /></view>
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <GatherSubContentSection
@@ -20,7 +24,7 @@
     <!-- 项目/实践 -->
     <view class="p-32rpx text-28rpx text-#4D4D4D">
       <!-- 种类 -->
-      <view class="text-32rpx font-bold mb-24rpx">技能/类型</view>
+      <view class="text-32rpx font-bold mb-24rpx">项目/实践</view>
       <view v-for="project in currentPerson.projects" :key="project" mb-36rpx>
         <!-- tag 类型 -->
         <view flex mb-20rpx>
@@ -102,8 +106,18 @@ onShareAppMessage(() => {
 })
 const realMannerType = computed(() => {
   return (
-    MANNERp_TYPE_LIST.find((index) => index === currentPerson.value.skill_id)
-      ?.value || '未知能力'
+    `#${
+      MANNERp_TYPE_LIST.find((i) => i.index === currentPerson.value.skill_id)
+        ?.value
+    }` || '未知能力'
+  )
+})
+const realMannerDirection = computed(() => {
+  return (
+    `#${
+      MANNERp_TYPE_LIST.find((i) => i.index === currentPerson.value.direction)
+        ?.value
+    }` || '未知能力'
   )
 })
 </script>
