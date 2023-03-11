@@ -7,10 +7,10 @@
       :school="currentPerson.school"
       :year="currentPerson.year"
     />
-    <view flex pl-20px pb-12px class="text-#FFAF50"
-      ><GatherContentBlock :content="realMannerType" /><GatherContentBlock
-        :content="realMannerDirection"
-    /></view>
+    <view flex pl-20px pb-12px class="text-#FFAF50">
+      <GatherContentBlock :content="realMannerType" />
+      <GatherContentBlock :content="realMannerDirection" />
+    </view>
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
     <GatherSubContentSection
@@ -20,7 +20,6 @@
     />
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
-
     <!-- 项目/实践 -->
     <view class="p-32rpx text-28rpx text-#4D4D4D">
       <!-- 种类 -->
@@ -51,7 +50,6 @@
     </view>
     <!-- 分割线 -->
     <u-divider :use-slot="false" :half-width="'100%'"></u-divider>
-
     <!-- 个人介绍 -->
     <GatherSubContentSection
       :type="'个人介绍'"
@@ -80,7 +78,7 @@ import GatherSubAvatarSection from '@/pagesSub/gatherSub/components/gatherSub-Av
 import GatherSubFunctionButton from '@/pagesSub/gatherSub/components/gatherSub-functionButton.vue'
 import GatherSubContact from '@/pagesSub/gatherSub/components/gatherSub-Contact.vue'
 import { reqGatherPersonSingle } from '@/api/gather'
-import { MANNERp_TYPE_LIST } from '@/utils/constant'
+import { LEARNING_DIRECTION_LIST, MANNERp_TYPE_LIST } from '@/utils/constant'
 
 const currentPerson = ref()
 onLoad((option: any) => {
@@ -115,8 +113,9 @@ const realMannerType = computed(() => {
 const realMannerDirection = computed(() => {
   return (
     `#${
-      MANNERp_TYPE_LIST.find((i) => i.index === currentPerson.value.direction)
-        ?.value
+      LEARNING_DIRECTION_LIST.find(
+        (i) => i.index === currentPerson.value.direction
+      )?.value
     }` || '未知能力'
   )
 })
