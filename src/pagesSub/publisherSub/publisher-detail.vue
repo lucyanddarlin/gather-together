@@ -2,12 +2,12 @@
   <view>
     <view v-if="description" relative>
       <u-icon absolute right-24rpx size="40rpx" name="more-dot-fill"></u-icon>
-      <view mt-4rpx ml-36rpx mr-60rpx text-56rpx fw-600 select-text>
+      <view mt-4rpx pl-36rpx pr-60rpx text-56rpx fw-600 select-text>
         {{ description.title }}
       </view>
       <view>
         <!-- 分割线上部 -->
-        <view ml-36rpx>
+        <view px-36rpx>
           <!-- 活动类型 -->
           <PublishTag
             filter
@@ -58,23 +58,19 @@
         </view>
         <!-- 分割线 -->
         <view class="line" mt-26rpx></view>
-        <view ml-36rpx>
+        <view px-36rpx pt-24rpx>
           <!-- 详情标题 -->
-          <view mt-24rpx
-            ><view text-36rpx fw-600>
-              {{ post_type }}详情
-              <view
-                float-right
-                mr-40rpx
-                class="side-button collapse-button"
-                @tap="isOmitted = !isOmitted"
-              >
-                <span>{{ isOmitted ? '查看全部' : '收起' }}</span>
-              </view>
+          <view flex justify-between items-center
+            ><view text-36rpx fw-600> {{ post_type }}详情 </view>
+            <view
+              class="side-button collapse-button"
+              @tap="isOmitted = !isOmitted"
+            >
+              <span>{{ isOmitted ? '查看全部' : '收起' }}</span>
             </view>
           </view>
           <!-- TODO: 插入图片 -->
-          <view grid grid-cols-3 gap-x-20rpx color="#A4A4A4" pl-36rpx mt-36rpx>
+          <view grid grid-cols-3 gap-x-20rpx color="#A4A4A4" mt-36rpx>
             <view v-for="img in description.imgs" :key="hash(img)">
               <img
                 :src="img"
@@ -86,7 +82,7 @@
             </view>
           </view>
           <!-- 详情描述 -->
-          <view pl-4rpx pr-36rpx mt-36rpx>
+          <view pl-4rpx mt-36rpx>
             <view
               id="view_detail"
               whitespace-pre-wrap
@@ -100,23 +96,16 @@
         </view>
         <!-- 分割线 -->
         <view class="line" mt-26rpx></view>
-        <view ml-36rpx>
+        <view px-36rpx pt-52rpx>
           <!-- 报名方式 -->
-          <view relative>
-            <view color="#4D4D4D" text-36rpx mt-52rpx fw-600>
-              报名方式
-              <view
-                class="side-button copy-button"
-                float-right
-                mr-40rpx
-                @tap="copyAccess"
-              >
-                <span>复制</span>
-              </view>
+          <view flex justify-between items-center>
+            <view color="#4D4D4D" text-36rpx fw-600> 报名方式 </view>
+            <view class="side-button copy-button" @tap="copyAccess">
+              <span>复制</span>
             </view>
-            <view color="#A4A4A4" text-32rpx pr-36rpx mt-36rpx select-text>
-              {{ description.access }}
-            </view>
+          </view>
+          <view color="#A4A4A4" text-32rpx mt-36rpx select-text>
+            {{ description.access }}
           </view>
         </view>
         <!-- 分割线 -->
