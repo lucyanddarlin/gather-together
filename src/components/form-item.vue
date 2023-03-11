@@ -18,11 +18,12 @@
       px-30rpx
       py-20rpx
     >
-      <view w-70% :class="{ 'w-full': add }">
+      <view w-80% :class="{ 'w-full': add }">
         <template v-if="input">
           <input
             type="text"
             :value="modelValue as string"
+            :maxlength="maxLength"
             :placeholder="placeholder"
             placeholder-class="placeholder"
             @input="emit('update:modelValue', $event.detail?.value)"
@@ -125,8 +126,8 @@
 import { computed } from 'vue'
 import { GENDER, PROJECT_MODE_LIST, PROJECT_TYPE_LIST } from '@/utils/constant'
 
-const props = defineProps<{
-  modelValue?: string | number
+interface Props {
+  modelValue: string | number
   title?: string
   placeholder?: string
   arrow?: boolean
@@ -139,7 +140,15 @@ const props = defineProps<{
   intro?: boolean
   add?: boolean
   addType?: number
-}>()
+  maxLength: number
+}
+const props = withDefaults(defineProps<Props>(), {
+  maxLength: 10,
+  title: '',
+  placeholder: '',
+  addType: 0,
+})
+
 const emit = defineEmits(['update:modelValue'])
 const startDate = computed(() => getDate('start'))
 const endDate = computed(() => getDate())
@@ -147,7 +156,6 @@ const genderList = [
   { index: GENDER.woman, value: '女' },
   { index: GENDER.man, value: '男' },
 ]
-const maxLength = 800
 
 const getDate = (type?: string) => {
   if (!props.date) return false

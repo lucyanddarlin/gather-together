@@ -10,9 +10,9 @@
       mt-12rpx
     />
     <view>
-      <view class="text-#534E4E text-52rpx mb-12rpx font-bold">{{
-        props.name
-      }}</view>
+      <view class="text-#534E4E text-52rpx mb-12rpx font-bold">
+        {{ props.name }}
+      </view>
       <view v-show="activeIndex == 1" flex mb-12rpx
         ><GatherContentBlock
           :content="!props.school ? '未知学校' : props.school"

@@ -23,7 +23,7 @@
       </view>
       <view v-if="!showShare" flex p-30rpx>
         <view
-          v-if="isNull(props.selectItem.comment_id)"
+          v-if="isNull(props.selectItem?.comment_id)"
           class="button-wrap"
           @click="handleClickCopy(TITLE)"
         >
@@ -134,7 +134,7 @@ const props = defineProps<{
 const emit = defineEmits(['popup', 'delete'])
 const { userProfile } = storeToRefs(useUserStore())
 const isOwn = computed(
-  () => userProfile.value.user_id === props.selectItem.creator_id
+  () => userProfile.value.user_id === props.selectItem?.creator_id
 )
 
 const showPopup = ref<boolean>(false)
@@ -168,7 +168,6 @@ const handleClickBackground = () => {
   shouldHide.value = true
 }
 const handleClickCopy = (type: number) => {
-  console.log(props.selectItem)
   let copyContent = null
   if (type === TITLE) {
     copyContent = props.selectItem.title || props.selectItem.project_name
@@ -206,12 +205,12 @@ const handleDelete = async () => {
       emit('delete', { comment: true })
     }
   } else if (props.selectItem.project_id) {
-    // TODO: delete project
     const { data } = await reqRemoveProject(props.selectItem.project_id)
     if (!isNull(data)) {
       await showMsg('删除成功')
       emit('delete', { project: true })
       uni.$emit('refreshProject')
+      uni.$emit('updateProfileListData')
     }
   }
   hide()

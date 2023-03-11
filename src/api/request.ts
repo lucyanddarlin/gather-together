@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import BaseRequestConfig from '@/config/config'
-import { showLoading } from '@/utils/common'
+// import { showLoading } from '@/utils/common'
 import { TOKEN_KEY } from '@/utils/constant'
 type RequestData<T> = {
   /** 请求方式 */
@@ -64,7 +64,7 @@ const RequestMethod: request = (
   //加载动画
   if (loading && loadingBox === null) {
     //开启加载动画
-    loadingBox = showLoading()
+    // loadingBox = showLoading()
   }
   const token = uni.getStorageSync(TOKEN_KEY)
   // const token =

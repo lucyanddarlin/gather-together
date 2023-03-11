@@ -8,6 +8,7 @@
         title="标题"
         placeholder="请输入项目标题"
         input
+        max-length="30"
       />
 
       <FormItem
@@ -28,15 +29,17 @@
         v-model="publishProject.contact"
         title="联系方式"
         placeholder="请输入联系方式，如微信等..."
-        input
+        textarea
+        max-length="50"
       />
       <FormItem
         v-model="publishProject.needs"
         title="项目需求"
         placeholder="请输入您的需求(没有可填无)"
-        input
+        textarea
+        max-length="200"
+        intro
       />
-
       <!-- 留言 -->
       <view mb-48rpx relative
         ><view class="text-#8C99A0 mb-28rpx font-bold">项目详情</view>

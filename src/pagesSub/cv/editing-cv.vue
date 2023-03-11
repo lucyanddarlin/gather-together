@@ -18,6 +18,7 @@
       title="您的学校"
       placeholder="请输入您的学校"
       input
+      max-length="15"
     />
     <FormItem
       v-model="userCV.year"
@@ -31,6 +32,7 @@
       title="学习方向"
       placeholder="请输入您的所学专业"
       input
+      max-length="15"
     >
       <view class="select-button-wrap" @click="handleOpenPopup('profession')">
         <view>{{ currentProfession?.value || '选择方向' }}</view>
@@ -72,7 +74,8 @@
       v-model="userCV.contact"
       title="联系方式"
       placeholder="输入您的联系方式"
-      input
+      textarea
+      max-length="50"
     />
     <FormItem
       v-model="userCV.profile"
@@ -80,6 +83,7 @@
       placeholder="请输入您的个人介绍"
       textarea
       intro
+      max-length="700"
     />
     <view
       class="confirm-button-wrap transition"

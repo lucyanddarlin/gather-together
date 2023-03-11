@@ -286,6 +286,11 @@ watch(
   },
   { deep: true }
 )
+watch(isLogin, () => {
+  if (isLogin.value) {
+    getPaper()
+  }
+})
 
 onLoad(async (options) => {
   topic_id.value = options!.topic_id
@@ -455,6 +460,10 @@ const handleShowMoreOptions = (item: any) => {
   popup.value.show()
 }
 const handleLikeTopic = throttle(async () => {
+  if (!isLogin.value) {
+    await userLogin()
+    return
+  }
   const { data } = await reqLikeHomeTopic(homeTopicInfo.value.topic_id)
   if (!isNull(data)) {
     homeTopicInfo.value.like = !homeTopicInfo.value.like

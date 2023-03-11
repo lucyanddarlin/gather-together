@@ -36,6 +36,8 @@
               :key="item.topic_id"
               :paper-item="item"
               :type="HOME"
+              dots
+              @more-options="handleShowOptions"
             >
               <template #title>{{ item.title }}</template>
               <template #content>{{ item.content }}</template>
@@ -54,6 +56,8 @@
               :key="item.project_id"
               :type="GATHER"
               :paper-item="item"
+              dots
+              @more-options="handleShowOptions"
             >
               <template #title>{{ item.project_name }}</template>
               <template #label>
@@ -80,6 +84,7 @@
         />
       </template>
     </scroll-view>
+    <Popup ref="popup" :select-item="selectItem" />
   </view>
 </template>
 
@@ -102,12 +107,20 @@ import { isNull } from '@/utils/common'
 import { useUserStore } from '@/store/modules/user'
 import ProfileHeader from './profile-header.vue'
 import ProfileCard from './profile-card.vue'
-import type { FilterPopupDataItem, ListMap, TopSection } from '@/typings/home'
+import type {
+  FilterPopupDataItem,
+  IPaperItem,
+  ListMap,
+  TopSection,
+} from '@/typings/home'
+import type { IGatherItem } from '@/typings/gather'
 
 const { isLogin } = storeToRefs(useUserStore())
 const { getUserCV } = useUserStore()
 const headerHeight = ref(uni.getStorageSync('PROFILE_HEADER_HEIGHT'))
 const cardHeight = ref(uni.getStorageSync('PROFILE_CARD_HEIGHT'))
+const selectItem = ref<Partial<IPaperItem & IGatherItem>>()
+const popup = ref<any>(null)
 const activeIndex = ref<number>(OWN_TOPIC)
 const isTriggered = ref<boolean>(false)
 const topSectionList: TopSection[] = [
@@ -231,13 +244,17 @@ const handleRefresh = async () => {
 const handleRefresherAbort = () => {
   isTriggered.value = false
 }
-const handleRefreshAll = () => {
-  console.log('emit')
-  topSectionList.forEach(async (item) => {
-    activeIndex.value = item.index
+const handleRefreshAll = async () => {
+  for await (const index of topSectionList) {
+    activeIndex.value = index.index
     await handleRefresh()
-  })
-  activeIndex.value = OWN_TOPIC
+    activeIndex.value = OWN_TOPIC
+  }
+  console.log(activeIndex.value)
+}
+const handleShowOptions = (value: Partial<IPaperItem & IGatherItem>) => {
+  selectItem.value = value
+  popup.value.show()
 }
 </script>
 
