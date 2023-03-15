@@ -55,7 +55,7 @@ export interface RawUserCv {
   skill_des: any
   zone_id?: any
   year: any
-  certs?: Array<CVCert>
+  certs?: Array<CVCert> | undefined
   projects?: Array<CVProject>
 }
 

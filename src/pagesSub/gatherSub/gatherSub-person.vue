@@ -25,6 +25,7 @@
     <view class="p-32rpx text-28rpx text-#4D4D4D">
       <!-- 种类 -->
       <view class="text-32rpx font-bold mb-24rpx">项目/实践</view>
+      <text v-if="currentPerson.projects.length === 0">暂无</text>
       <view v-for="project in currentPerson.projects" :key="project" mb-36rpx>
         <!-- tag 类型 -->
         <view flex mb-20rpx>
@@ -42,6 +43,7 @@
     <view class="p-32rpx text-28rpx text-#4D4D4D">
       <!-- 种类 -->
       <view class="text-32rpx font-bold mb-24rpx">证书/荣誉</view>
+      <text v-if="currentPerson.certs.length === 0">暂无</text>
       <view v-for="cert in currentPerson.certs" :key="cert" mb-36rpx>
         <!-- tag 类型 -->
         <view flex mb-20rpx>
