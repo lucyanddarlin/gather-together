@@ -6,6 +6,7 @@
       :profession="currentPerson.profession"
       :school="currentPerson.school"
       :year="currentPerson.year"
+      :sex="currentPerson.sex"
     />
     <view flex pl-20px pb-12px class="text-#FFAF50">
       <GatherContentBlock :content="realMannerType" />
@@ -105,8 +106,9 @@ onShareAppMessage(() => {
 const realMannerType = computed(() => {
   return (
     `#${
-      MANNERp_TYPE_LIST.find((i) => i.index === currentPerson.value.skill_id)
-        ?.value
+      MANNERp_TYPE_LIST.find(
+        (i) => i.index === currentPerson.value.skill_id - 1
+      )?.value
     }` || '未知能力'
   )
 })
@@ -114,7 +116,7 @@ const realMannerDirection = computed(() => {
   return (
     `#${
       LEARNING_DIRECTION_LIST.find(
-        (i) => i.index === currentPerson.value.direction
+        (i) => i.index === currentPerson.value.direction - 1
       )?.value
     }` || '未知能力'
   )
