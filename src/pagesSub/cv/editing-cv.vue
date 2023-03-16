@@ -44,6 +44,7 @@
       title="能力/技能"
       placeholder="请列举您的能力/技能"
       textarea
+      max-length="300"
     >
       <view class="select-button-wrap" @click="handleOpenPopup('ability')">
         <view>{{ currentAbility?.value || '能力类型' }}</view>
@@ -207,19 +208,17 @@ watch(
 
 onLoad(() => {
   if (userCV.value.skill_id && userCV.value.direction) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const index in popupData['profession'].list) {
+    for (const i of popupData['profession'].list) {
       if (
-        popupData['profession'].list[index].index === userCV.value.direction
+        popupData['profession'].list[i.index].index === userCV.value.direction
       ) {
-        popupData['profession'].list[index].isSelected = true
+        popupData['profession'].list[i.index].isSelected = true
         break
       }
     }
-    // eslint-disable-next-line no-restricted-syntax
-    for (const index in popupData['ability'].list) {
-      if (popupData['ability'].list[index].index === userCV.value.skill_id) {
-        popupData['ability'].list[index].isSelected = true
+    for (const i of popupData['ability'].list) {
+      if (popupData['ability'].list[i.index].index === userCV.value.skill_id) {
+        popupData['ability'].list[i.index].isSelected = true
         break
       }
     }
