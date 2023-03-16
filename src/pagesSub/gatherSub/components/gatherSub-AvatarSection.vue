@@ -2,8 +2,12 @@
   <!-- 顶部名字 和 学校信息 -->
   <view flex mb-24rpx pl-40rpx>
     <img
-      v-show="activeIndex === 1"
-      src="@/static/avater_default.png"
+      v-if="activeIndex === 1"
+      :src="
+        props.sex
+          ? '../../../static/avater_default.png'
+          : '../../../static/avater_woman.jpg'
+      "
       w-130rpx
       h-130rpx
       mr-30rpx
@@ -43,10 +47,12 @@ import { gatherIndexStore } from '@/store/gatherIndex'
 const useGatherIndexStore = gatherIndexStore()
 // 导入 nav 栏 活动的值 ； 导入是否展示 筛选
 const { activeIndex } = storeToRefs(useGatherIndexStore)
+
 const props = defineProps({
   name: { type: String, default: '' },
   school: { type: String, default: '' },
   profession: { type: String, default: '' },
+  sex: { type: Number, default: 0 },
   year: { type: [String, Number], default: '' },
   tags: { type: Array, default: () => [] },
 })

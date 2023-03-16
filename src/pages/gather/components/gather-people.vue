@@ -26,7 +26,16 @@
       </view>
       <!-- 头绪 -->
 
-      <img src="@/static/avater_default.png" w-140rpx h-140rpx mr-60rpx />
+      <img
+        :src="
+          props.sex
+            ? '../../../static/avater_default.png'
+            : '../../../static/avater_woman.jpg'
+        "
+        w-140rpx
+        h-140rpx
+        mr-60rpx
+      />
     </view>
     <!-- tag 类 -->
     <view flex>
@@ -65,6 +74,10 @@ const props = defineProps({
   content: {
     type: String,
     default: '',
+  },
+  sex: {
+    type: Number,
+    default: 0,
   },
 })
 </script>

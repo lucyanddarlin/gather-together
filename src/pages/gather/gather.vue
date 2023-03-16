@@ -47,6 +47,7 @@
           v-for="item in gatherPaperListMap['people'].dataList"
           :key="item.user_id"
           :name="item.name"
+          :sex="item.sex"
           :school="item.school"
           :profession="item.profession"
           :content="item.profile"
@@ -61,7 +62,7 @@
               >
                 #{{
                   peopleLabelList.map[index].list.find(
-                    (i) => i.index === item[key]
+                    (i) => i.index + 1 === item[key]
                   )?.value || '未知能力'
                 }}
               </view>
@@ -177,7 +178,6 @@ const peopleLabelList: ProjectLabelList = {
   map: [
     { title: '能力类型', list: MANNERp_TYPE_LIST },
     { title: '学习方向', list: LEARNING_DIRECTION_LIST },
-    { title: '发布分区', list: LEARNING_DIRECTION_LIST },
   ],
   labelKey: ['skill_id', 'direction'],
 }

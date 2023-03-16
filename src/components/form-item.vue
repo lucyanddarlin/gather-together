@@ -143,7 +143,7 @@ interface Props {
   maxLength: number
 }
 const props = withDefaults(defineProps<Props>(), {
-  maxLength: 10,
+  maxLength: 20,
   title: '',
   placeholder: '',
   addType: 0,
