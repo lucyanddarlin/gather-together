@@ -25,7 +25,7 @@
     <view class="p-32rpx text-28rpx text-#4D4D4D">
       <!-- 种类 -->
       <view class="text-32rpx font-bold mb-24rpx">项目/实践</view>
-      <text v-if="currentPerson.projects.length === 0">暂无</text>
+      <text v-if="isNull(currentPerson.projects)">暂无</text>
       <view v-for="project in currentPerson.projects" :key="project" mb-36rpx>
         <!-- tag 类型 -->
         <view flex mb-20rpx>
@@ -81,7 +81,7 @@ import GatherSubAvatarSection from '@/pagesSub/gatherSub/components/gatherSub-Av
 import GatherSubFunctionButton from '@/pagesSub/gatherSub/components/gatherSub-functionButton.vue'
 import GatherSubContact from '@/pagesSub/gatherSub/components/gatherSub-Contact.vue'
 import { reqGatherPersonSingle } from '@/api/gather'
-import { LEARNING_DIRECTION_LIST, MANNERp_TYPE_LIST } from '@/utils/constant'
+import { ABILITY_LIST, PROFESSION_LIST } from '@/utils/constant'
 
 const currentPerson = ref()
 onLoad((option: any) => {
@@ -108,18 +108,15 @@ onShareAppMessage(() => {
 const realMannerType = computed(() => {
   return (
     `#${
-      MANNERp_TYPE_LIST.find(
-        (i) => i.index === currentPerson.value.skill_id - 1
-      )?.value
+      ABILITY_LIST.find((i) => i.index === currentPerson.value.skill_id)?.value
     }` || '未知能力'
   )
 })
 const realMannerDirection = computed(() => {
   return (
     `#${
-      LEARNING_DIRECTION_LIST.find(
-        (i) => i.index === currentPerson.value.direction - 1
-      )?.value
+      PROFESSION_LIST.find((i) => i.index === currentPerson.value.direction)
+        ?.value
     }` || '未知能力'
   )
 })

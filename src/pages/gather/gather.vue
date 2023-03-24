@@ -137,12 +137,14 @@ import {
 // 切换页面
 import { PEOPLE_LIBRARY, PROJECT_LIBRARY } from '@/utils/gatherPage'
 import {
+  ABILITY_LIST,
   DEFAULT_PAGE,
   DEFAULT_SIZE,
   GATHER,
   GATHER_LIST_KEY,
   LEARNING_DIRECTION_LIST,
   MANNERp_TYPE_LIST,
+  PROFESSION_LIST,
   PROJECT_MODE_LIST,
   PROJECT_TYPE_LIST,
 } from '@/utils/constant'
@@ -176,8 +178,8 @@ const projectLabelList: ProjectLabelList = {
 
 const peopleLabelList: ProjectLabelList = {
   map: [
-    { title: '能力类型', list: MANNERp_TYPE_LIST },
-    { title: '学习方向', list: LEARNING_DIRECTION_LIST },
+    { title: '能力类型', list: ABILITY_LIST },
+    { title: '学习方向', list: PROFESSION_LIST },
   ],
   labelKey: ['skill_id', 'direction'],
 }
@@ -203,9 +205,6 @@ const { activeIndex, scrollTop, oldScrollTop, showPopup } =
 const selectItem = ref<Partial<IGatherItem>>({})
 const popup = ref<any>()
 
-// const handlePopup = () => {
-//   // popup.value.show()
-// }
 // 跳转到 人才库 详情页
 const toPeopleDetail = (id: any) => {
   uni.navigateTo({
@@ -248,11 +247,12 @@ const gatherPaperListMap = reactive<{ [key: string]: ListMap }>({
 
 const handleRefreshProject = () => {
   activeIndex.value = PROJECT_LIBRARY
-  getDataList(true)
+  getDataList('main', true)
 }
-const getDataList = async (isClear?: boolean) => {
+const getDataList = async (mode = 'main', isClear?: boolean) => {
   const type = apiKeyMap[activeIndex.value][0]
   const requestApi = apiKeyMap[activeIndex.value][1]
+  let data: any
   if (isClear) {
     gatherPaperListMap[type].status = 'more'
     gatherPaperListMap[type].page = DEFAULT_PAGE
@@ -264,95 +264,30 @@ const getDataList = async (isClear?: boolean) => {
   )
     return
   gatherPaperListMap[type].status = 'loading'
-  const { data } = await requestApi(
-    gatherPaperListMap[type].page++,
-    gatherPaperListMap[type].size
-  )
+  if (mode === 'main') {
+    const response = await requestApi(
+      gatherPaperListMap[type].page++,
+      gatherPaperListMap[type].size
+    )
+    data = response.data
+  } else if (mode === 'moreProject') {
+    const response = await reqOtherGatherProjectList(
+      gatherPaperListMap[type].page++,
+      gatherPaperListMap[type].size,
+      ProjectFilterPopupData[currentListKey.value].result.project_mode,
+      ProjectFilterPopupData[currentListKey.value].result.project_type
+    )
 
-  if (isClear) {
-    gatherPaperListMap[type].dataList = []
-    gatherPaperListMap[type].dataMap = {}
+    data = response.data
+  } else if (mode === 'morePeople') {
+    const response = await reqOtherGatherPersonList(
+      gatherPaperListMap[type].page++,
+      gatherPaperListMap[type].size,
+      ProjectFilterPopupData[currentListKey.value].result.manner_type,
+      ProjectFilterPopupData[currentListKey.value].result.learning_direction
+    )
+    data = response.data
   }
-  if (!isNull(data)) {
-    gatherPaperListMap[type].status =
-      data.body.result.length < gatherPaperListMap[type].size
-        ? 'noMore'
-        : 'more'
-    data.body.result.forEach((item: any) => {
-      if (
-        !gatherPaperListMap[type].dataMap[item[gatherPaperListMap[type].key]]
-      ) {
-        gatherPaperListMap[type].dataList.push(item)
-      }
-    })
-    return
-  }
-  gatherPaperListMap[type].page--
-  gatherPaperListMap[type].status = 'more'
-}
-
-const getProjectOtherList = async (isClear?: boolean) => {
-  const type = apiKeyMap[activeIndex.value][0]
-
-  if (isClear) {
-    gatherPaperListMap[type].status = 'more'
-    gatherPaperListMap[type].page = DEFAULT_PAGE
-  }
-  if (gatherPaperListMap[type].status === 'noMore') return
-  if (
-    gatherPaperListMap[type].status === 'loading' &&
-    gatherPaperListMap[type].page
-  )
-    return
-  gatherPaperListMap[type].status = 'loading'
-  const { data } = await reqOtherGatherProjectList(
-    gatherPaperListMap[type].page++,
-    gatherPaperListMap[type].size,
-    ProjectFilterPopupData[currentListKey.value].result.project_mode,
-    ProjectFilterPopupData[currentListKey.value].result.project_type
-  )
-
-  if (isClear) {
-    gatherPaperListMap[type].dataList = []
-    gatherPaperListMap[type].dataMap = {}
-  }
-  if (!isNull(data)) {
-    gatherPaperListMap[type].status =
-      data.body.result.length < gatherPaperListMap[type].size
-        ? 'noMore'
-        : 'more'
-    data.body.result.forEach((item: any) => {
-      if (
-        !gatherPaperListMap[type].dataMap[item[gatherPaperListMap[type].key]]
-      ) {
-        gatherPaperListMap[type].dataList.push(item)
-      }
-    })
-    return
-  }
-  gatherPaperListMap[type].page--
-  gatherPaperListMap[type].status = 'more'
-}
-const getPeopleOtherList = async (isClear?: boolean) => {
-  const type = apiKeyMap[activeIndex.value][0]
-
-  if (isClear) {
-    gatherPaperListMap[type].status = 'more'
-    gatherPaperListMap[type].page = DEFAULT_PAGE
-  }
-  if (gatherPaperListMap[type].status === 'noMore') return
-  if (
-    gatherPaperListMap[type].status === 'loading' &&
-    gatherPaperListMap[type].page
-  )
-    return
-  gatherPaperListMap[type].status = 'loading'
-  const { data } = await reqOtherGatherPersonList(
-    gatherPaperListMap[type].page++,
-    gatherPaperListMap[type].size,
-    ProjectFilterPopupData[currentListKey.value].result.manner_type,
-    ProjectFilterPopupData[currentListKey.value].result.learning_direction
-  )
 
   if (isClear) {
     gatherPaperListMap[type].dataList = []
@@ -470,14 +405,14 @@ const handleConfirmFilter = async () => {
   }
   showPopup.value = false
   if (activeIndex.value === PROJECT_LIBRARY) {
-    await getProjectOtherList(true)
+    await getDataList('moreProject', true)
   } else {
-    await getPeopleOtherList(true)
+    await getDataList('morePeople', true)
   }
 }
 const handleRefresh = async () => {
   isTriggered.value = true
-  await getDataList(true)
+  await getDataList('main', true)
   isTriggered.value = false
 }
 const handleRefresherAbort = () => {
