@@ -340,6 +340,7 @@ const filterPopupData = reactive<FilterPopupData>({
 const currentListKey = computed<string>(() => INDEX_LIST_KEY[activeIndex.value])
 
 onLoad(() => {
+  getApp().globalData!.failPageRoutes = new Set()
   if (isLogin.value) {
     getHomePaperList()
   }

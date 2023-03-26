@@ -12,7 +12,7 @@ import {
   reqUpdateUserCV,
   reqUserLogin,
 } from '@/api/user'
-import { GENDER, PROFILE_KEY, TOKEN_KEY } from '@/utils/constant'
+import { GENDER, PROFILE_KEY, TOKEN_KEY, tabBarArr } from '@/utils/constant'
 import { reqUploadUserAvatar } from '@/api/imageUpload'
 import type { ModifyUserProfile, RawUserCv, UserProfile } from '@/typings/user'
 
@@ -107,13 +107,28 @@ export const useUserStore = defineStore('user', () => {
         if (!isNull(data)) {
           updateToken(data.body.accessToken)
           const isDone = await getUserProfile()
+          if (getApp().globalData!.failPageRoutes.size > 0) {
+            const failPageRouteArr = Array.from(
+              getApp().globalData!.failPageRoutes
+            )
+            const popPageRoute = failPageRouteArr.pop() as string
+            getApp().globalData!.failPageRoutes.delete(popPageRoute)
+            if (tabBarArr.includes(popPageRoute)) {
+              uni.switchTab({ url: popPageRoute })
+            } else {
+              uni.navigateTo({ url: popPageRoute })
+            }
+          }
           if (isDone) return
         }
       }
     }
   }
-  const updateToken = (value: string) => {
-    token.value = value
+  const userLogout = () => {
+    updateToken()
+  }
+  const updateToken = (value?: string) => {
+    token.value = value || ''
     if (isNull(value)) {
       uni.removeStorageSync(TOKEN_KEY)
       uni.removeStorageSync(PROFILE_KEY)
@@ -197,8 +212,10 @@ export const useUserStore = defineStore('user', () => {
     userProfile,
     userCV,
     hasCV,
+    token,
     getUserProfile,
     userLogin,
+    userLogout,
     getUserCV,
     removeUserCV,
     createUserCV,

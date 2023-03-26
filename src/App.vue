@@ -5,6 +5,7 @@ import { useUserStore } from './store/modules/user'
 import { showMsg } from './utils/common'
 const { isLogin } = storeToRefs(useUserStore())
 const { getUserProfile, getUserCV } = useUserStore()
+
 onLaunch(() => {
   console.log('App Launch')
   checkVersionUpdate()
@@ -13,6 +14,7 @@ onLaunch(() => {
     getUserCV()
   }
 })
+
 onShow(() => {
   console.log('App Show')
 })

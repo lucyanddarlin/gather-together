@@ -90,7 +90,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
-import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { onLoad, onShow, onUnload } from '@dcloudio/uni-app'
 import { storeToRefs } from 'pinia'
 import {
   DEFAULT_PAGE,
@@ -116,7 +116,7 @@ import type {
 import type { IGatherItem } from '@/typings/gather'
 
 const { isLogin } = storeToRefs(useUserStore())
-const { getUserCV } = useUserStore()
+const { getUserCV, userLogin } = useUserStore()
 const headerHeight = ref(uni.getStorageSync('PROFILE_HEADER_HEIGHT'))
 const cardHeight = ref(uni.getStorageSync('PROFILE_CARD_HEIGHT'))
 const selectItem = ref<Partial<IPaperItem & IGatherItem>>()
@@ -175,6 +175,9 @@ onLoad(() => {
   getDataList()
   uni.$on('updateProfileListData', handleRefreshAll)
 })
+onShow(() => {
+  if (!isLogin.value) userLogin()
+})
 onUnload(() => {
   uni.$off('updateProfileListData')
 })
@@ -192,6 +195,7 @@ watch(
     if (isLogin.value) {
       await handleRefresh()
       await getUserCV()
+      uni.$on('updateProfileListData', handleRefreshAll)
     }
   },
   { deep: true }

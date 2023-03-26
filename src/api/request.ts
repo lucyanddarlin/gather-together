@@ -1,50 +1,39 @@
 /* eslint-disable no-unused-vars */
 import BaseRequestConfig from '@/config/config'
+import { useUserStore } from '@/store/modules/user'
 // import { showLoading } from '@/utils/common'
 import { TOKEN_KEY } from '@/utils/constant'
+
 type RequestData<T> = {
-  /** 请求方式 */
   methodType?: 'GET' | 'POST'
-  /** 传递的数据 */
   data?: T
-  /** 路径 */
   url: string
 }
-//请求设置
 type RequestConfig = {
   port?: string
   baseUrl?: string
   prefix?: string
   header?: any
-  /** 是否加载 */
   loading?: boolean
   dataType?: string
 }
-//返回数据类型
 type RequestReturnData<T> = {
   code: 200 | 500 | number
   data: T
 }
-/**
- * request请求
- */
 type request = <R = AnyObject, T extends AnyObject = AnyObject>(
   data: RequestData<T>,
   config?: RequestConfig
 ) => Promise<RequestReturnData<R>>
 /**
- * 根据访问路径和data生成key
  * @param path 路径
  * @param data 请求数据
  */
 const createKey = (path: string, data: any) => `${JSON.stringify(data)}${path}`
 
-//储存request请求map
 const requestList: Map<string, UniApp.RequestTask> = new Map()
 
-//是否正在加载中
 let loadingBox: null | (() => null) = null
-
 /**
  * request请求
  * @param param0 必要参数
@@ -61,14 +50,13 @@ const RequestMethod: request = (
     dataType = 'json',
   } = {}
 ) => {
-  //加载动画
+  const userStore = useUserStore()
   if (loading && loadingBox === null) {
-    //开启加载动画
     // loadingBox = showLoading()
   }
   const token = uni.getStorageSync(TOKEN_KEY)
   // const token =
-  //   'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzMDQzMTI5MTUzMzMyMjI0MDAiLCJpYXQiOjE2NzY1NTU4MTQsInJvbGUiOiJbe1wiYXV0aG9yaXR5XCI6XCJST0xFX1VTRVJcIn0se1wiYXV0aG9yaXR5XCI6XCJST0xFX0FETUlOXCJ9XSIsImV4cCI6MTY3NzE2MDYxNH0.aTHxAcRpQnTgubN9CdvVwZCvHwpx5CrN47d3AwDqFeBaBbrdqVkuLvYGGnXmfUEHWm4t_VEaUYTq-8KmeafX7Q'
+  //   'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzMDQzMTI5MTUzMzMyMjI0MDAiLCJpYXQiOjE2Nzg0NDA0OTAsInJvbGUiOiJbe1wiYXV0aG9yaXR5XCI6XCJST0xFX1VTRVJcIn0se1wiYXV0aG9yaXR5XCI6XCJST0xFX0FETUlOXCJ9XSIsImV4cCI6MTY3OTA0NTI5MH0.18VB636z6LJ4mgUeZR30n19Pxi3YjIospw8Ymj706o6UdvKxcQ5WwOIkWt5hlrrSf9uaXspUbZWT90wej2Xk1w'
   if (token) {
     header.Authorization = token
   }
@@ -78,9 +66,7 @@ const RequestMethod: request = (
     url: `${baseUrl}:${port}${prefix}${url}`,
   })
   return new Promise((resolve, reject) => {
-    //生成key
     const requestKey = createKey(url, data)
-    // 加载动画
     const requestClose = uni.request({
       url: `${baseUrl}:${port}${prefix}${url}`,
       data,
@@ -93,6 +79,13 @@ const RequestMethod: request = (
         console.log('response', { resultData, url })
         const resultCode = Number.parseInt(resultData!.code)
         if (resultCode > 300) {
+          if (resultCode === 403) {
+            getApp().globalData!.failPageRoutes.add(
+              getCurrentPages().at(-1)?.route
+            )
+            userStore.userLogout()
+            uni.switchTab({ url: '/pages/profile/profile' })
+          }
           console.log('error request', res)
           resolve({ code: resultCode, data: null as any })
         }
@@ -105,23 +98,17 @@ const RequestMethod: request = (
         reject(err)
       },
       complete: () => {
-        // 移除request请求
         requestList.delete(requestKey)
-        // 如果加载
         if (loadingBox !== null && requestList.size === 0) {
-          // 关闭提示
           loadingBox = loadingBox()
         }
       },
     })
-    //先关闭上一个同路径同参数请求
     requestList.get(requestKey)?.abort()
-    //存储请求
     requestList.set(requestKey, requestClose)
   })
 }
 
-//get请求
 export const get = <R = AnyObject, T extends AnyObject = AnyObject>(
   url: string,
   data?: T,
@@ -136,7 +123,6 @@ export const get = <R = AnyObject, T extends AnyObject = AnyObject>(
     config
   )
 
-//post请求
 export const post = <R = AnyObject, T extends AnyObject = AnyObject>(
   url: string,
   data?: T,
