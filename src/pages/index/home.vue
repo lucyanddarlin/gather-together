@@ -29,7 +29,7 @@
         @more-options="handleShowMoreOptions"
       >
         <template #title>{{ item.title }}</template>
-        <template #content>{{ item.content }}</template>
+        <!-- <template #content>{{ item.content }}</template> -->
       </PaperItem>
     </view>
     <LoadMore :status="homePaperListMap.status" />

@@ -128,7 +128,6 @@ export const useHomeStore = defineStore('home', () => {
           homeOtherListMap[key].dataList.push(item)
         }
       })
-      console.log(homeOtherListMap)
       return
     }
     homeOtherListMap[key].page--
