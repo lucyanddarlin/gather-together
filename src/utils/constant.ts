@@ -13,9 +13,9 @@ export const OWN_TOPIC = 0
 export const OWN_PROJECT = 1
 
 export const tabBarArr = [
-  '/pages/index/index',
-  '/page/gather/gather',
-  '/pages/profile/profile',
+  'pages/index/index',
+  'page/gather/gather',
+  'pages/profile/profile',
 ]
 
 export const INDEX_LIST_KEY: Array<string> = [

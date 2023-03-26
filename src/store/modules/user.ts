@@ -114,9 +114,9 @@ export const useUserStore = defineStore('user', () => {
             const popPageRoute = failPageRouteArr.pop() as string
             getApp().globalData!.failPageRoutes.delete(popPageRoute)
             if (tabBarArr.includes(popPageRoute)) {
-              uni.switchTab({ url: popPageRoute })
+              uni.switchTab({ url: `/${popPageRoute}` })
             } else {
-              uni.navigateTo({ url: popPageRoute })
+              uni.navigateTo({ url: `/${popPageRoute}` })
             }
           }
           if (isDone) return
