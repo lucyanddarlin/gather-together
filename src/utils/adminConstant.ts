@@ -1,11 +1,16 @@
 // 举报类型
 export enum ReportType {
-  PROJECT = 1,
-  FORUM_POST,
+  FORUM_POST = 2,
   FORUM_COMMENT,
   FORUM_REPLY,
-  USER,
   RESUME,
+  PROJECT,
+  USER, // 举报用户对应的枚举是未知的，可能和简历一样是5
+}
+// 用于发请求时的举报类型
+// 后端所给文档与接口实际有出入，比如PROJECT在请求获取中为1，在举报中为6，敬请注意
+export enum SpecEnum {
+  PROJECT = 6,
 }
 
 export enum PublishType {

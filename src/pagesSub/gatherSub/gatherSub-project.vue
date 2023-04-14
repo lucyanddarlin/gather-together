@@ -38,6 +38,7 @@
     <Popup
       ref="popup"
       :select-item="currentProject"
+      :type="ReportType.PROJECT"
       @delete="handleDeleteProject"
     />
   </view>
@@ -51,6 +52,7 @@ import { reqGatherProjectSingle } from '@/api/gather'
 import GatherSubContact from '@/pagesSub/gatherSub/components/gatherSub-Contact.vue'
 import GatherContentBlock from '@/pages/gather/components/gather-contentBlock.vue'
 import { PROJECT_MODE_LIST, PROJECT_TYPE_LIST } from '@/utils/constant'
+import { ReportType } from '@/utils/adminConstant'
 import { showMsg } from '@/utils/common'
 import type { IGatherItem } from '@/typings/gather'
 

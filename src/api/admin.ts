@@ -1,6 +1,6 @@
 import { post } from './request'
 import type { ReportItem } from '@/typings/admin'
-import type { ReportState } from '@/utils/adminConstant'
+import type { ReportState, ReportType } from '@/utils/adminConstant'
 
 export const reqGetReportList = (
   page: number,
@@ -19,3 +19,14 @@ export const reqReportHandle = (report_id: string, handle_type: ReportState) =>
     body: any
     message: string
   }>(`/admin/report/handle`, { handle_type, report_id })
+
+export const reqReport = (
+  businessId: string,
+  reason: string,
+  type: ReportType
+) =>
+  post<{
+    code: string
+    body: any
+    message: string
+  }>(`/home/report/commit`, { businessId, reason, type: `${type}` })

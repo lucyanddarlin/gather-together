@@ -122,6 +122,7 @@ import type { ReportItem } from '@/typings/admin'
 
 const isTriggered = ref<boolean>(false)
 const isShowPopup = ref<boolean>(false)
+const isReqAllowed = ref<boolean>(true)
 const scrollTop = ref<number>(0)
 const oldScrollTop = ref<number>(0)
 
@@ -145,8 +146,12 @@ const reqList = (page = 0, size = 5) => {
     state: `${selected.value}`,
   })
     .then((res) => {
-      data.splice(0, data.length)
       if (res.data.code === '200') {
+        if (res.data.body.length === 0) {
+          // 防止反复刷请求
+          isReqAllowed.value = false
+          return
+        } else isReqAllowed.value = true
         data.push(...res.data.body)
       } else {
         console.log(`请求失败，${res.data.message}`)
@@ -158,7 +163,7 @@ const reqList = (page = 0, size = 5) => {
     })
 }
 
-const reqMisc = () => {
+const reqMisc = async () => {
   if (data.length === 0) return
   // 分类型
   for (const item of data) {
@@ -166,13 +171,12 @@ const reqMisc = () => {
       item.head_url = 'https://img.yzcdn.cn/vant/cat.jpeg' // 默认头像，后续需要修改
       item.creator_name = '微信用户'
       item.creator_time = '2023-04-07 18:00:00'
-      item.report_content = '内容'
-      return // 评论缺少接口
+      item.report_content = '（待补充）'
+      continue // 接口缺少头像字段，内容暂时替代
     }
     // 帖子
     if (item.type === ReportType.FORUM_POST) {
-      console.log(item)
-      reqGetHomeTopicInfo(item.business_id).then((res) => {
+      await reqGetHomeTopicInfo(item.business_id).then((res) => {
         if (res.data.code === '200') {
           const d = res.data.body
           item.head_url = d.creator_head_url
@@ -185,7 +189,7 @@ const reqMisc = () => {
     }
     // 项目
     if (item.type === ReportType.PROJECT) {
-      reqGatherProjectSingle(item.business_id).then((res) => {
+      await reqGatherProjectSingle(item.business_id).then((res) => {
         if (res.data.code === 200) {
           const d = res.data.body
           // 项目暂不显示头像
@@ -198,7 +202,7 @@ const reqMisc = () => {
     }
     // 简历
     if (item.type === ReportType.RESUME) {
-      reqGatherPersonSingle(item.business_id).then((res) => {
+      await reqGatherPersonSingle(item.business_id).then((res) => {
         if (res.data.code === 200) {
           const d = res.data.body
           item.head_url = d.creator_head_url
@@ -209,6 +213,7 @@ const reqMisc = () => {
       })
     }
   }
+  console.log('数据:', data)
 }
 
 onLoad(() => {
@@ -231,7 +236,8 @@ function handleScroll(options: any) {
 }
 
 function handleScrollToLower() {
-  console.log('handleScrollToLower')
+  console.log('handleScrollToLower, forbidden?', !isReqAllowed.value)
+  if (!isReqAllowed.value) return
   if (data.length < 3) return
   reqList(++cur_page.value)
 }
@@ -313,7 +319,10 @@ const handleUndo = (report_id: string, type: ReportState) => {
 }
 
 const handleSwitch = (key: number) => {
+  console.log('handleSwitch', key, selected.value)
   if (key === selected.value) return
+  // 切换tab，清空数据
+  data.splice(0, data.length)
   selected.value = key
   reqList()
 }

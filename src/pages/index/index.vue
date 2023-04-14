@@ -194,7 +194,12 @@
       :is-show-popup="isShowPopup"
       @back-to-top="handleBackToTop"
     />
-    <Popup ref="popup" :select-item="selectItem" @popup="handlePopup" />
+    <Popup
+      ref="popup"
+      :select-item="selectItem"
+      @popup="handlePopup"
+      :type="ReportType.FORUM_POST"
+    />
     <u-popup
       v-model="isShowFilter"
       mode="bottom"
@@ -270,6 +275,7 @@ import {
 } from '@/utils/constant'
 import { useHomeStore } from '@/store/modules/home'
 import { deepClone, isNull, toDate } from '@/utils/common'
+import { ReportType } from '@/utils/adminConstant'
 import { useUserStore } from '@/store/modules/user'
 import { TIME_STATE } from '@/utils/publishConstant'
 import ChangeFilter from './change-filter.vue'

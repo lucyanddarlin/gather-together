@@ -79,7 +79,11 @@
     gather
     @back-to-top="handleBackToTop"
   />
-  <Popup ref="popup" :select-item="selectItem" />
+  <Popup
+    ref="popup"
+    :select-item="selectItem"
+    :type="getReportType(activeIndex)"
+  />
   <u-popup v-model="showPopup" mode="bottom" height="60%" border-radius="30">
     <view px-32rpx py-52rpx>
       <view
@@ -158,6 +162,7 @@ import {
   reqOtherGatherProjectList,
 } from '@/api/gather'
 import { isNull } from '@/utils/common'
+import { ReportType } from '@/utils/adminConstant'
 import type { FilterPopupDataItem, ListMap } from '@/typings/home'
 import type { IGatherItem } from '@/typings/gather'
 interface ProjectLabelList {
@@ -486,6 +491,13 @@ const handleRefresherAbort = () => {
 const handleShowMoreOptions = (value: Partial<IGatherItem>) => {
   selectItem.value = value
   popup.value.show()
+}
+
+const getReportType = (index: number) => {
+  // 项目库
+  if (index === PROJECT_LIBRARY) return ReportType.PROJECT
+  // 人才库
+  if (index === PEOPLE_LIBRARY) return ReportType.RESUME
 }
 </script>
 

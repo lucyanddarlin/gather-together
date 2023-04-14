@@ -147,6 +147,12 @@
           "style": {
             "navigationBarTitleText": ""
           }
+        },
+        {
+          "path": "adminSub/report",
+          "style": {
+            "navigationBarTitleText": "举报"
+          }
         }
       ]
     }
