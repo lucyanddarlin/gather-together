@@ -17,16 +17,7 @@
     </view>
     <view flex justify-between py-10rpx>
       <view>举报时间:</view>
-      <view
-        >{{
-          new Date(item.date)
-            .toLocaleString('zh-CN', {
-              timeZone: 'Asia/Shanghai', // 时区UTC+8
-              hour12: false, // 24小时制
-            })
-            .replace(/\//g, '-')
-        }}
-      </view>
+      <view>{{ getStringFromDate(new Date(item.date)) }} </view>
     </view>
     <view>
       <view pt-10rpx pb-20rpx>举报说明:</view>
@@ -51,11 +42,7 @@
     </view>
     <view flex justify-between py-10rpx>
       <view>处理时间:</view>
-      <view>{{
-        new Date(item.date)
-          .toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false })
-          .replace(/\//g, '-')
-      }}</view>
+      <view>{{ getStringFromDate(new Date(item.date)) }}</view>
     </view>
   </view>
 </template>
@@ -69,6 +56,31 @@ const props = defineProps<{
   info: ReportItem
 }>()
 const item = reactive(props.info)
+const getStringFromDate = (date: Date): string => {
+  let year = date.getFullYear()
+  let month: number | string = date.getMonth() + 1
+  let day: number | string = date.getDate()
+  let hour: number | string = date.getHours()
+  let minute: number | string = date.getMinutes()
+  let second: number | string = date.getSeconds()
+  if (month < 10) {
+    month = `0${month}`
+  }
+  if (day < 10) {
+    day = `0${day}`
+  }
+  if (hour < 10) {
+    hour = `0${hour}`
+  }
+  if (minute < 10) {
+    minute = `0${minute}`
+  }
+  if (second < 10) {
+    second = `0${second}`
+  }
+  let formattedDate = `${year}-${month}-${day}  ${hour}:${minute}:${second}`
+  return formattedDate
+}
 </script>
 
 <style scoped></style>

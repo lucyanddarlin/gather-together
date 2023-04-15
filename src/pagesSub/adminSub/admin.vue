@@ -279,7 +279,7 @@ const handleAdmin = (report_id: string, type: ReportState) => {
               title: '处理成功',
               icon: 'none',
             })
-            reqList()
+            handleRefresh()
           } else {
             uni.showToast({
               title: '处理失败',
