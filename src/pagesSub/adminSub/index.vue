@@ -17,50 +17,10 @@
 <script setup lang="ts">
 import { useManagerStore } from '@/store/modules/admin'
 import { PublishType, ReportSrc, ReportType } from '@/utils/adminConstant'
-import type { Module, ReportItem, Sector } from '@/typings/admin'
+import type { Module, Sector } from '@/typings/admin'
 const managerStore = useManagerStore()
 
 const tempPath = '/pagesSub/adminSub/manage'
-
-const exampleData: Array<ReportItem> = [
-  {
-    admin_name: '管理员',
-    business_id: 114514,
-    date: '2021-09-01 12:00:00',
-    reason: '灌水/该处为举报说明显示，这是一段示例文字',
-    report_id: 0,
-    reporter_id: 0,
-    reporter_name: '管理员',
-    report_desc: '该处为举报说明显示，这是一段示例文字',
-    state: 0,
-    type: 1,
-  },
-  {
-    admin_name: '管理员',
-    business_id: 114514,
-    date: '2021-09-01 12:00:00',
-    reason: '灌水/该处为举报说明显示，这是一段示例文字',
-    report_id: 0,
-    reporter_id: 0,
-    reporter_name: '管理员',
-    report_desc: '该处为举报说明显示，这是一段示例文字',
-    state: 1, // 1为已删除
-    type: 1,
-  },
-]
-// 对应请求的api
-const reqPost = () => {
-  return exampleData
-}
-const reqComment = () => {
-  return exampleData
-}
-const reqProject = () => {
-  return exampleData
-}
-const reqResume = () => {
-  return exampleData
-}
 
 const data: Array<Sector> = [
   {
@@ -77,7 +37,6 @@ const data: Array<Sector> = [
           title: '查看原帖',
           path: '/pagesSub/postSub/detail',
         },
-        api: reqPost,
       },
       {
         title: '评论管理',
@@ -90,7 +49,6 @@ const data: Array<Sector> = [
           title: '',
           path: '',
         },
-        api: reqComment,
       },
       // {
       //   title: '用户管理',
@@ -109,7 +67,6 @@ const data: Array<Sector> = [
           title: '查看项目',
           path: '/pagesSub/projectSub/detail',
         },
-        api: reqProject,
       },
       {
         title: '简历管理',
@@ -122,7 +79,6 @@ const data: Array<Sector> = [
           title: '查看简历',
           path: '/pagesSub/resumeSub/detail',
         },
-        api: reqResume,
       },
     ],
   },

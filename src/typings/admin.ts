@@ -34,5 +34,5 @@ export type Module = {
     title: string
     path: string
   }
-  api: Function
+  api?: Function
 }

@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { reqReport } from '@/api/admin'
 import { showMsg } from '@/utils/common'
@@ -56,6 +56,8 @@ import PublishTextCounter from '../publisherSub/components/publish-text-counter.
 import type { ReportType } from '@/utils/adminConstant'
 // 初始不选中任何项
 const isSelected = ref<number>(-1)
+// 举报成功后、返回上一页前，不允许再次举报
+const isSubmit = ref<boolean>(false)
 const reason = ref<string>('')
 const report_type = ref<ReportType>(0) // 0是未定义，不属于任何一种类型
 const business_id = ref<string>('')
@@ -111,6 +113,8 @@ const handleInput = (event: any) => {
   }
 }
 const handleSubmit = () => {
+  // 已经举报成功了，防止用户反复点击
+  if (isSubmit.value) return
   // 原因前缀（类型）
   let prefix = report_types.find((item) => item.key === isSelected.value)?.value
   if (prefix) prefix += '/'
@@ -122,6 +126,7 @@ const handleSubmit = () => {
     if (res.data.code === '200') {
       console.log('举报成功')
       showMsg('举报成功', 'success', 2000)
+      isSubmit.value = true
       setTimeout(() => {
         uni.navigateBack()
       }, 2000)
