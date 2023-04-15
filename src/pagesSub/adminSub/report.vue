@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { reqReport } from '@/api/admin'
 import { showMsg } from '@/utils/common'
@@ -121,8 +121,10 @@ const handleSubmit = () => {
   ).then((res) => {
     if (res.data.code === '200') {
       console.log('举报成功')
-      uni.navigateBack()
       showMsg('举报成功', 'success', 2000)
+      setTimeout(() => {
+        uni.navigateBack()
+      }, 2000)
     } else {
       showMsg('举报失败', 'error', 2000)
     }

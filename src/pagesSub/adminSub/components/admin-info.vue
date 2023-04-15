@@ -18,9 +18,15 @@
     <view flex justify-between py-10rpx>
       <view>举报时间:</view>
       <view
-        >{{ item.date.split('T')[0] }}
-        {{ item.date.split('T')[1].slice(0, 8) }}</view
-      >
+        >{{
+          new Date(item.date)
+            .toLocaleString('zh-CN', {
+              timeZone: 'Asia/Shanghai', // 时区UTC+8
+              hour12: false, // 24小时制
+            })
+            .replace(/\//g, '-')
+        }}
+      </view>
     </view>
     <view>
       <view pt-10rpx pb-20rpx>举报说明:</view>
@@ -45,10 +51,11 @@
     </view>
     <view flex justify-between py-10rpx>
       <view>处理时间:</view>
-      <view
-        >{{ item.date.split('T')[0] }}
-        {{ item.date.split('T')[1].slice(0, 8) }}</view
-      >
+      <view>{{
+        new Date(item.date)
+          .toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false })
+          .replace(/\//g, '-')
+      }}</view>
     </view>
   </view>
 </template>
