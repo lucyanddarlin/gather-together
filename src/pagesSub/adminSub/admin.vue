@@ -95,6 +95,7 @@
             </view>
           </view>
         </view>
+        <LoadMore :status="status" />
       </view>
     </scroll-view>
     <Float
@@ -108,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref } from 'vue'
+import { computed, nextTick, reactive, ref } from 'vue'
 import { onLoad, onReady } from '@dcloudio/uni-app'
 import { storeToRefs } from 'pinia'
 import { useManagerStore } from '@/store/modules/admin'
@@ -122,7 +123,9 @@ import type { ReportItem } from '@/typings/admin'
 
 const isTriggered = ref<boolean>(false)
 const isShowPopup = ref<boolean>(false)
+// 请求返回的数据长度为0时，页数不增加、显示已经到底了
 const isReqAllowed = ref<boolean>(true)
+const isLoading = ref<boolean>(false)
 const scrollTop = ref<number>(0)
 const oldScrollTop = ref<number>(0)
 
@@ -131,6 +134,15 @@ const cur_page = ref(0)
 const managerStore = useManagerStore()
 const cur_module = managerStore.cur_module
 const data: Array<ReportItem> = reactive([])
+const status = computed(() => {
+  if (isReqAllowed.value) {
+    return 'more'
+  } else if (isLoading.value) {
+    return 'loading'
+  } else {
+    return 'noMore'
+  }
+})
 const selected = ref(0)
 const tabs = [
   {
@@ -141,6 +153,7 @@ const tabs = [
 ]
 const reqList = (page = 0, size = 5) => {
   // 请求当前选中
+  isLoading.value = true
   reqGetReportList(page, size, {
     type: `${cur_module.type}`,
     state: `${selected.value}`,
@@ -161,6 +174,7 @@ const reqList = (page = 0, size = 5) => {
       // 请求头像、被举报的项目名、被举报的发起者和项目的创建时间
       reqMisc()
     })
+  isLoading.value = false
 }
 
 const reqMisc = async () => {
