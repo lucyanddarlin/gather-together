@@ -180,17 +180,24 @@ export const useUserStore = defineStore('user', () => {
       showMsg('修改成功')
     }
   }
-  const modifyUserProfile = async (info: Partial<ModifyUserProfile>) => {
+  const modifyUserProfile = async (
+    info: Partial<ModifyUserProfile>,
+    callback?: () => any
+  ) => {
     const { data } = await reqModifyUserProfile(info)
     if (!isNull(data)) {
       userProfile.value = Object.assign({}, userProfile.value, info)
       showMsg('修改成功')
-      setTimeout(() => {
-        uni.navigateBack()
-      }, 800)
+      if (callback) {
+        callback()
+      } else {
+        setTimeout(() => {
+          uni.navigateBack()
+        }, 800)
+      }
     }
   }
-  const modifyUserAvatar = async (imageUrl: string) => {
+  const modifyUserAvatar = async (imageUrl: string, callback?: () => any) => {
     const { data } = await reqModifyUserAvatar()
     if (!isNull(data)) {
       const { error } = await reqUploadUserAvatar([imageUrl], data.body)
@@ -199,10 +206,14 @@ export const useUserStore = defineStore('user', () => {
           head_url: imageUrl,
         })
         showMsg('修改成功')
-        setTimeout(() => {
-          uni.navigateBack()
-        }, 800)
-        return true
+        if (callback) {
+          return callback()
+        } else {
+          setTimeout(() => {
+            uni.navigateBack()
+          }, 800)
+          return true
+        }
       }
       return isNull(error) ? true : false
     }

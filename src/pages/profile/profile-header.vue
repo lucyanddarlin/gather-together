@@ -24,26 +24,41 @@
       <view>请先登录</view>
     </template>
     <template v-else>
-      <view bg-white flex-center text-32rpx class="avatar text-#4380FF">
+      <view
+        bg-white
+        flex-center
+        text-32rpx
+        class="avatar text-#4380FF"
+        @click="handleModifyUserInfo"
+      >
         <image :src="userProfile.head_url" class="image" />
       </view>
       <view>{{ userProfile.name }}</view>
     </template>
+    <ModifyUserInfo ref="modifyUserInfoRef" />
   </view>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { type Ref, ref, watchEffect } from 'vue'
+import { type Ref, getCurrentInstance, ref, watchEffect } from 'vue'
 import { onReady } from '@dcloudio/uni-app'
+import ModifyUserInfo from '@/components/modify-userInfo.vue'
 import { useUserStore } from '@/store/modules/user'
 import { useScrollHeight } from '@/utils/common'
 
 const { isLogin, userProfile } = storeToRefs(useUserStore())
 const { userLogin } = useUserStore()
+const modifyUserInfoRef = ref<any>(null)
+
+// const instance = getCurrentInstance() as any
 
 const handleLogin = async () => {
   await userLogin()
+}
+const handleModifyUserInfo = () => {
+  console.log('fasdfdas', modifyUserInfoRef.value.$children[0])
+  modifyUserInfoRef.value.$children[0].open()
 }
 
 const inputH = ref<number>(0)
