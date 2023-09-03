@@ -44,6 +44,12 @@
           </view>
           <view class="notice">删除</view>
         </view>
+        <view v-if="!isOwn" class="button-wrap" @click="handleReport">
+          <view class="button">
+            <text class="iconfont icon-delete"></text>
+          </view>
+          <view class="notice">举报</view>
+        </view>
       </view>
       <view v-else class="share-wrap">
         <view flex-center pt-20rpx text-28rpx class="text-#707070">
@@ -80,6 +86,7 @@ import { isNull, showMsg } from '@/utils/common'
 import { useUserStore } from '@/store/modules/user'
 import { reqRemoveComment, reqRemoveReply, reqRemoveTopic } from '@/api/user'
 import { reqRemoveProject } from '@/api/gather'
+import { ReportType } from '@/utils/adminConstant'
 interface IPaperItem {
   topic_id: string
   creator_id: string
@@ -129,6 +136,7 @@ interface ICommentItem {
 
 const props = defineProps<{
   selectItem: Partial<IPaperItem & IGatherItem & ICommentItem>
+  type?: ReportType
   showShare?: boolean
 }>()
 const emit = defineEmits(['popup', 'delete'])
@@ -179,6 +187,32 @@ const handleClickCopy = (type: number) => {
     success: () => {
       showMsg('复制成功')
     },
+  })
+}
+const handleReport = () => {
+  console.log(props.selectItem)
+  console.log(props.type)
+  let business_id = ''
+  if (props.type === ReportType.FORUM_POST) {
+    business_id = props.selectItem.topic_id || ''
+  } else if (props.type === ReportType.PROJECT) {
+    business_id = props.selectItem.project_id || ''
+  } else if (props.type === ReportType.FORUM_COMMENT) {
+    business_id = props.selectItem.comment_id || ''
+  } else if (props.type === ReportType.FORUM_REPLY) {
+    business_id = props.selectItem.reply_id || ''
+  } else if (
+    props.type === ReportType.RESUME ||
+    props.type === ReportType.USER
+  ) {
+    business_id = props.selectItem.user_id || ''
+  }
+  if (!business_id) {
+    console.log('缺少business_id')
+    return
+  }
+  uni.navigateTo({
+    url: `/pagesSub/adminSub/report?report_type=${props.type}&business_id=${business_id}`,
   })
 }
 const handleDelete = async () => {

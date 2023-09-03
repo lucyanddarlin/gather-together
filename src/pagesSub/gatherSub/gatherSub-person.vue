@@ -1,5 +1,5 @@
 <template>
-  <view v-if="!isNull(currentPerson)">
+  <view v-if="!isNull(currentPerson)" relative>
     <!-- 顶部名字 和 学校信息 -->
     <GatherSubAvatarSection
       :name="currentPerson.name"
@@ -8,6 +8,12 @@
       :year="currentPerson.year"
       :sex="currentPerson.sex"
     />
+    <!-- 右上角更多选项 -->
+    <view
+      class="iconfont icon-gengduo more-dot"
+      @click="handleShowMoreOptions"
+    />
+
     <view flex pl-20px pb-12px class="text-#FFAF50">
       <GatherContentBlock :content="realMannerType" />
       <GatherContentBlock :content="realMannerDirection" />
@@ -68,6 +74,8 @@
 
     <!-- 功能 按钮 -->
     <GatherSubFunctionButton />
+    <!-- 展示更多功能 -->
+    <Popup ref="popup" :select-item="currentPerson" :type="ReportType.RESUME" />
   </view>
 </template>
 <script setup lang="ts">
@@ -81,9 +89,11 @@ import GatherSubAvatarSection from '@/pagesSub/gatherSub/components/gatherSub-Av
 import GatherSubFunctionButton from '@/pagesSub/gatherSub/components/gatherSub-functionButton.vue'
 import GatherSubContact from '@/pagesSub/gatherSub/components/gatherSub-Contact.vue'
 import { reqGatherPersonSingle } from '@/api/gather'
+import { ReportType } from '@/utils/adminConstant'
 import { LEARNING_DIRECTION_LIST, MANNERp_TYPE_LIST } from '@/utils/constant'
 
 const currentPerson = ref()
+const popup = ref<any>(null)
 onLoad((option: any) => {
   const user_id = option.user_id
   const getCurrentPagePerson = async () => {
@@ -123,6 +133,9 @@ const realMannerDirection = computed(() => {
     }` || '未知能力'
   )
 })
+const handleShowMoreOptions = () => {
+  popup.value.show()
+}
 </script>
 
 <style scoped>
@@ -133,5 +146,11 @@ const realMannerDirection = computed(() => {
 .icon-fenxiang {
   font-size: 40rpx;
   margin-right: 8rpx;
+}
+.more-dot {
+  position: absolute;
+  right: 32rpx;
+  top: 32rpx;
+  font-size: 40rpx;
 }
 </style>

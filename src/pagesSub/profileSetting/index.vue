@@ -90,7 +90,7 @@ const settingListB: SettingItem[] = [
   },
   {
     type: SETTING.admin,
-    url: '',
+    url: '/pagesSub/adminSub/index',
     title: '管理员模式',
   },
 ]

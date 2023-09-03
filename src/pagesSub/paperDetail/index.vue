@@ -199,6 +199,11 @@
       ref="popup"
       :select-item="selectItem"
       :show-share="showShare"
+      :type="
+        isNull(selectItem?.comment_id)
+          ? ReportType.FORUM_POST
+          : ReportType.FORUM_COMMENT
+      "
       @delete="handleDelete"
     />
   </view>
@@ -222,6 +227,7 @@ import {
   reqSendReply,
 } from '@/api'
 import { isNull, throttle, useScrollHeight } from '@/utils/common'
+import { ReportType } from '@/utils/adminConstant'
 import { DEFAULT_PAGE } from '@/utils/constant'
 import { useUserStore } from '@/store/modules/user'
 import CommentItem from './comment-item.vue'

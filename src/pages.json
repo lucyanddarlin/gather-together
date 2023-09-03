@@ -121,7 +121,6 @@
           "path": "gatherSub/gatherSub-person",
           "style": {
             "navigationBarTitleText": "详情"
-            
           }
         },
         {
@@ -135,6 +134,24 @@
           "style": {
             "navigationStyle": "custom",
             "navigationBarTextStyle": "white"
+          }
+        },
+        {
+          "path": "adminSub/index",
+          "style": {
+            "navigationBarTitleText": "管理中心"
+          }
+        },
+        {
+          "path": "adminSub/admin",
+          "style": {
+            "navigationBarTitleText": ""
+          }
+        },
+        {
+          "path": "adminSub/report",
+          "style": {
+            "navigationBarTitleText": "举报"
           }
         }
       ]
