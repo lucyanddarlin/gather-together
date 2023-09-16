@@ -21,7 +21,7 @@
             </view>
             <button
               class="button-wrap"
-              plain="true"
+              :plain="true"
               open-type="chooseAvatar"
               @chooseavatar="handleSelectImage"
             >

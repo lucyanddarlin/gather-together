@@ -93,3 +93,9 @@ export interface PostOSSResult {
   topicId?: string
   postId?: string
 }
+
+export enum UserStatus  {
+  MODIFY_NAME = 2,
+  MODIFY_AVATAR = 1,
+  GO = 0
+}

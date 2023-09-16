@@ -5,6 +5,7 @@ import type {
   PostLoginResult,
   PostOSSResult,
   RawUserCv,
+  UserStatus,
 } from '@/typings/user'
 
 export const reqUserLogin = (data: {
@@ -78,3 +79,5 @@ export const reqRemoveComment = (commentId: string) =>
 
 export const reqRemoveReply = (replyId: string) =>
   post<{ [key: string]: string }>(`/home/remove/forum/reply?replyId=${replyId}`)
+
+export const reqGetUserLoginStatus = () => get<{code: number, body: {status: UserStatus}}>('/user/v1/info/status/')

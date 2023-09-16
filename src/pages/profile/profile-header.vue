@@ -41,23 +41,36 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { type Ref, getCurrentInstance, ref, watchEffect } from 'vue'
-import { onReady } from '@dcloudio/uni-app'
+import { type Ref, ref, watchEffect, watch } from 'vue'
+import { onReady, onLoad } from '@dcloudio/uni-app'
 import ModifyUserInfo from '@/components/modify-userInfo.vue'
 import { useUserStore } from '@/store/modules/user'
 import { useScrollHeight } from '@/utils/common'
+import { reqGetUserLoginStatus } from '@/api/user'
+import { UserStatus } from '@/typings/user'
 
 const { isLogin, userProfile } = storeToRefs(useUserStore())
 const { userLogin } = useUserStore()
 const modifyUserInfoRef = ref<any>(null)
 
-// const instance = getCurrentInstance() as any
+onLoad(() => {
+  checkIsFirstLogin()
+})
+
+const checkIsFirstLogin =async () => {
+  const {data} = await reqGetUserLoginStatus()
+  const nextStatus = data.body.status
+  if(nextStatus !== UserStatus.GO) {
+    setTimeout(() => {
+     modifyUserInfoRef.value.$children[0].open()
+    }, 600);
+  }
+}
 
 const handleLogin = async () => {
   await userLogin()
 }
 const handleModifyUserInfo = () => {
-  console.log('fasdfdas', modifyUserInfoRef.value.$children[0])
   modifyUserInfoRef.value.$children[0].open()
 }
 
@@ -70,6 +83,10 @@ onReady(() => {
     inputH.value = inputHeight.value
     uni.setStorageSync('PROFILE_HEADER_HEIGHT', inputH.value)
   })
+})
+
+watch(() => isLogin.value, () => {
+  checkIsFirstLogin()
 })
 </script>
 
